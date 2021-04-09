@@ -7,19 +7,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Base64;
+
 
 @RestController
 public class PojoController {
-    PojoService pojoService;
+    private final PojoService pojoService;
 
     PojoController(PojoService pojoService){
         this.pojoService = pojoService;
     }
 
 
-@PostMapping("/pojo")
-    public Pojo createPojo(@RequestBody() String byteCodePojo)  {
-    return pojoService.createPojo(byteCodePojo);
+    @PostMapping("/pojo")
+    public Pojo createPojo(@RequestBody() String base64EncodedByteCodePojo)  {
+
+        byte[] pojoAsByteCode =   Base64.getDecoder().decode(base64EncodedByteCodePojo);
+        return pojoService.createPojo(pojoAsByteCode);
 }
 
 
