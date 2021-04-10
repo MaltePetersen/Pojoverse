@@ -11,10 +11,9 @@ import java.util.Set;
 @Node
 public class Pojo {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    private boolean emptyHull;
 
+    @Id
     private String className;
     private String packageName;
 
@@ -32,26 +31,25 @@ public class Pojo {
     };
 
     public Pojo(String className, String packageName, Set<Attribute> attributes, Pojo parentClass, Set<String> interfaces) {
-        this.id = id;
         this.className = className;
         this.packageName = packageName;
         this.attributes = attributes;
         this.parentClass = parentClass;
         this.interfaces = interfaces;
+        this.emptyHull = false;
     }
-    public Pojo(String className, String packageName){
+    public Pojo(String className, String packageName ){
         this.className = className;
         this.packageName = packageName;
+        this.emptyHull = true;
+    }
+    public Pojo(String className, String packageName, Pojo parentClass ){
+        this.className = className;
+        this.packageName = packageName;
+        this.parentClass = parentClass;
+        this.emptyHull = true;
     }
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getClassName() {
         return className;
@@ -93,12 +91,28 @@ public class Pojo {
         this.interfaces = interfaces;
     }
 
+    public boolean isEmptyHull() {
+        return emptyHull;
+    }
+
+    @Override
+    public String toString() {
+        return "Pojo{" +
+                "emptyHull=" + emptyHull +
+                ", className='" + className + '\'' +
+                ", packageName='" + packageName + '\'' +
+                ", attributes=" + attributes +
+                ", parentClass=" + parentClass +
+                ", interfaces=" + interfaces +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Pojo pojo = (Pojo) o;
-        return Objects.equals(id, pojo.id) &&
+        return emptyHull == pojo.emptyHull &&
                 Objects.equals(className, pojo.className) &&
                 Objects.equals(packageName, pojo.packageName) &&
                 Objects.equals(attributes, pojo.attributes) &&
@@ -108,18 +122,6 @@ public class Pojo {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, className, packageName, attributes, parentClass, interfaces);
-    }
-
-    @Override
-    public String toString() {
-        return "Pojo{" +
-                "id=" + id +
-                ", className='" + className + '\'' +
-                ", packageName='" + packageName + '\'' +
-                ", attributes=" + attributes +
-                ", parentClass='" + parentClass + '\'' +
-                ", interfaces=" + interfaces +
-                '}';
+        return Objects.hash(emptyHull, className, packageName, attributes, parentClass, interfaces);
     }
 }

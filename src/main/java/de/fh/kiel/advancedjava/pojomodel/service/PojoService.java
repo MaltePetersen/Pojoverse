@@ -1,66 +1,83 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 
-import de.fh.kiel.advancedjava.pojomodel.asm.DynamicClassLoader;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.model.Primitive;
+import de.fh.kiel.advancedjava.pojomodel.model.Reference;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Base64;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class PojoService {
 
+    Logger logger = LoggerFactory.getLogger(PojoService.class);
 
     private final PojoRepository pojoRepository;
+    private final DynamicClassLoaderService dynamicClassLoaderService;
 
-
-    PojoService(PojoRepository pojoRepository){
-    this.pojoRepository = pojoRepository;
+    PojoService(PojoRepository pojoRepository, DynamicClassLoaderService dynamicClassLoaderService) {
+        this.pojoRepository = pojoRepository;
+        this.dynamicClassLoaderService = dynamicClassLoaderService;
     }
 
-    public Pojo createPojo(byte[] file){
-        Class<?> clazz = decodeAndLoadClass(file);
-        var interfaces = Arrays.stream(clazz.getInterfaces()).map((Class::toString)).collect(Collectors.toSet());
-        var attributes = Arrays.stream(clazz.getDeclaredFields()).map(field  -> new Attribute(field.getName() ,field.getType().getTypeName()) ).collect(Collectors.toSet());        ;
-        var parentClazz = clazz.getSuperclass();
-        var parentClazzClazz = addAlreadyExistingPojo(new Pojo(parentClazz.getName(),parentClazz.getPackageName()));
+    public Pojo createPojo(byte[] compiledClazz) {
 
-        Pojo pojo = new Pojo(clazz.getName(), clazz.getPackageName(),attributes,parentClazzClazz ,interfaces);
+        Class<?> loadedClazz = this.dynamicClassLoaderService.loadClass(compiledClazz);
 
-        System.out.println(pojo);
+        var interfaces = extractAndDefineInterfaces(loadedClazz.getInterfaces());
+        var attributes = extractAndDefineAttributes(loadedClazz.getDeclaredFields());
+        var parentClazz = extractAndDefineParentClass(loadedClazz.getSuperclass());
 
-    if(!pojoRepository.existsByClassName(pojo.getClassName())){
-        pojoRepository.save(pojo);
-    }
-        return  pojo;
-    }
-    private Class<?> decodeAndLoadClass(byte[] file){
-        return  new DynamicClassLoader().defineClass(file);
-    }
 
-    private Set<String> extractAndDefineInterfaces( Class<?>[] interfaces){
-    return Arrays.stream(interfaces).map((Class::toString)).collect(Collectors.toSet());
-
-    }
-
-    private Pojo addAlreadyExistingPojo(Pojo pojo){
-        if(pojoRepository.existsByClassName(pojo.getClassName()))
-            return pojoRepository.findByClassName(pojo.getClassName());
-        return pojo;
+        Optional<Pojo> pojo = pojoRepository.findByClassName(loadedClazz.getName());
+        if (pojo.isEmpty() || pojo.get().isEmptyHull()) {
+            Pojo newPojo = new Pojo(loadedClazz.getName(), loadedClazz.getPackageName(), attributes, parentClazz, interfaces);
+            pojoRepository.save(newPojo);
+            logger.info("The following Pojo was created "+ newPojo);
+            return newPojo;
+        }
+    return null;
     }
 
 
-public void  createExamplePojoBase64() throws IOException {
-        byte[] data = Files.readAllBytes(Paths.get("/Users/mpetersen/Documents/pojo/src/main/java/fh/kiel/pojo/asm/Ticket.class"));
-        String test = Base64.getEncoder().encodeToString(data);
-    System.out.println(test);
+    private Set<String> extractAndDefineInterfaces(Class<?>[] interfaces) {
+        return Arrays.stream(interfaces).map((Class::toString)).collect(Collectors.toSet());
+    }
+
+    private Set<Attribute> extractAndDefineAttributes(Field[] fields){
+        return Arrays.stream(fields).map(field -> {
+            if(field.getType().isPrimitive()){
+                return new Primitive(field.getName(), field.getType().getTypeName(), field.getModifiers());
+            }else {
+                return new Reference(field.getName(), field.getType().getTypeName(), field.getModifiers(),this.checkForRootClassAndCreateAppropriateClass(field.getType()) );
+            }
+        } ).collect(Collectors.toSet());
+    }
+
+    private Pojo extractAndDefineParentClass(Class<?> parentClazz){
+        Optional<Pojo> pojo =  pojoRepository.findByClassName(parentClazz.getName());
+        if(pojo.isPresent() && pojo.get().isEmptyHull())
+            return pojo.get();
+        return this.checkForRootClassAndCreateAppropriateClass(parentClazz);
+    }
+
+    Pojo checkForRootClassAndCreateAppropriateClass(Class<?> clazz){
+        Optional<Pojo> pojo =  pojoRepository.findByClassName(clazz.getName());
+        if(pojo.isPresent()){
+            return pojo.get();
+        }
+        if(clazz.getSuperclass() == null )
+            return new  Pojo(clazz.getName(), clazz.getPackageName());
+
+        return new Pojo(clazz.getName(), clazz.getPackageName(), this.checkForRootClassAndCreateAppropriateClass(clazz.getSuperclass()));
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.data.neo4j.repository.Neo4jRepository;
 
 import java.util.Optional;
 
-public interface PojoRepository extends Neo4jRepository<Pojo, Long> {
+public interface PojoRepository extends Neo4jRepository<Pojo, String> {
     boolean existsByClassName(String name);
-    Pojo findByClassName(String name);
+    Optional<Pojo> findByClassName(String name);
 }

@@ -1,16 +1,20 @@
 package de.fh.kiel.advancedjava.pojomodel.controller;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -19,18 +23,54 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Nested
 public class PojoControllerTest {
 
+    private static String classWithPrimtives;
+    private static String defaultClass;
+    private static String notBase64EncodedClass;
+
+    private static String pathToBase64Folder ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/base64Encoded/";
     @Autowired
     private MockMvc mvc;
 
+    @Autowired
+    private PojoRepository pojoRepository;
 
+    public static String loadData(String location) throws IOException {
+        return Files.readString(Paths.get(location));
+    }
+
+    @BeforeAll()
+    static void loadClassesEncodedInBase64() throws IOException {
+        classWithPrimtives = loadData( pathToBase64Folder + "ClassWithPrimtives.txt");
+        defaultClass = loadData(pathToBase64Folder + "defaultClass.txt");
+        notBase64EncodedClass = loadData(pathToBase64Folder + "notBase64EncodedClass.txt");
+    }
+
+    @AfterEach()
+    void deleteAllSavedClasses(){
+        this.pojoRepository.deleteAll();
+    }
+
+    @BeforeEach()
+    void SetUp(){
+        pojoRepository.deleteAll();
+    }
     @Nested
     @DisplayName("When we send a new compiled Class in base64 to the endpoint")
     class  NewClass{
         @Test
-        @DisplayName("Then the endpoint should return 200 OK as an answer")
-        public void getPojo() throws Exception {
-            MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content("yv66vgAAADsAVgoAAgADBwAEDAAFAAYBABBqYXZhL2xhbmcvT2JqZWN0AQAGPGluaXQ+AQADKClWCQAIAAkHAAoMAAsADAEAGWZoL2tpZWwvcG9qby9tb2RlbC9UaWNrZXQBAAJpZAEAEExqYXZhL2xhbmcvTG9uZzsJAAgADgwADwAQAQALY29uY2VydE5hbWUBABJMamF2YS9sYW5nL1N0cmluZzsJAAgAEgwAEwAQAQAJZmlyc3ROYW1lCQAIABUMABYAEAEAB3N1ck5hbWUJAAgAGAwAGQAaAQAIZGF0ZVRpbWUBABlMamF2YS90aW1lL0xvY2FsRGF0ZVRpbWU7CgACABwMAB0AHgEACGdldENsYXNzAQATKClMamF2YS9sYW5nL0NsYXNzOwoAIAAhBwAiDAAjACQBABFqYXZhL3V0aWwvT2JqZWN0cwEABmVxdWFscwEAJyhMamF2YS9sYW5nL09iamVjdDtMamF2YS9sYW5nL09iamVjdDspWgoAIAAmDAAnACgBAARoYXNoAQAWKFtMamF2YS9sYW5nL09iamVjdDspSRIAAAAqDAArACwBABdtYWtlQ29uY2F0V2l0aENvbnN0YW50cwEAcyhMamF2YS9sYW5nL0xvbmc7TGphdmEvbGFuZy9TdHJpbmc7TGphdmEvbGFuZy9TdHJpbmc7TGphdmEvbGFuZy9TdHJpbmc7TGphdmEvdGltZS9Mb2NhbERhdGVUaW1lOylMamF2YS9sYW5nL1N0cmluZzsBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQBiKExqYXZhL2xhbmcvTG9uZztMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZztMamF2YS90aW1lL0xvY2FsRGF0ZVRpbWU7KVYBAAVnZXRJZAEAEigpTGphdmEvbGFuZy9Mb25nOwEABXNldElkAQATKExqYXZhL2xhbmcvTG9uZzspVgEADmdldENvbmNlcnROYW1lAQAUKClMamF2YS9sYW5nL1N0cmluZzsBAA5zZXRDb25jZXJ0TmFtZQEAFShMamF2YS9sYW5nL1N0cmluZzspVgEADGdldEZpcnN0TmFtZQEADHNldEZpcnN0TmFtZQEACmdldFN1ck5hbWUBAApzZXRTdXJOYW1lAQALZ2V0RGF0ZVRpbWUBABsoKUxqYXZhL3RpbWUvTG9jYWxEYXRlVGltZTsBAAtzZXREYXRlVGltZQEAHChMamF2YS90aW1lL0xvY2FsRGF0ZVRpbWU7KVYBABUoTGphdmEvbGFuZy9PYmplY3Q7KVoBAA1TdGFja01hcFRhYmxlAQAIaGFzaENvZGUBAAMoKUkBAAh0b1N0cmluZwEAClNvdXJjZUZpbGUBAAtUaWNrZXQuamF2YQEAEEJvb3RzdHJhcE1ldGhvZHMPBgBJCgBKAEsHAEwMACsATQEAJGphdmEvbGFuZy9pbnZva2UvU3RyaW5nQ29uY2F0RmFjdG9yeQEAmChMamF2YS9sYW5nL2ludm9rZS9NZXRob2RIYW5kbGVzJExvb2t1cDtMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL2ludm9rZS9NZXRob2RUeXBlO0xqYXZhL2xhbmcvU3RyaW5nO1tMamF2YS9sYW5nL09iamVjdDspTGphdmEvbGFuZy9pbnZva2UvQ2FsbFNpdGU7CABPAQBMQ29uY2VydFRpY2tldHtpZD0BLCBjb25jZXJ0TmFtZT0nAScsIGZpcnN0TmFtZT0nAScsIHN1ck5hbWU9JwEnLCBkYXRlVGltZT0BfQEADElubmVyQ2xhc3NlcwcAUgEAJWphdmEvbGFuZy9pbnZva2UvTWV0aG9kSGFuZGxlcyRMb29rdXAHAFQBAB5qYXZhL2xhbmcvaW52b2tlL01ldGhvZEhhbmRsZXMBAAZMb29rdXAAIQAIAAIAAAAFAAIACwAMAAAAAgAPABAAAAACABMAEAAAAAIAFgAQAAAAAgAZABoAAAAPAAEABQAGAAEALQAAACEAAQABAAAABSq3AAGxAAAAAQAuAAAACgACAAAADQAEAA8AAQAFAC8AAQAtAAAAUAACAAYAAAAgKrcAASortQAHKiy1AA0qLbUAESoZBLUAFCoZBbUAF7EAAAABAC4AAAAeAAcAAAAQAAQAEQAJABIADgATABMAFAAZABUAHwAWAAEAMAAxAAEALQAAAB0AAQABAAAABSq0AAewAAAAAQAuAAAABgABAAAAGQABADIAMwABAC0AAAAiAAIAAgAAAAYqK7UAB7EAAAABAC4AAAAKAAIAAAAdAAUAHgABADQANQABAC0AAAAdAAEAAQAAAAUqtAANsAAAAAEALgAAAAYAAQAAACEAAQA2ADcAAQAtAAAAIgACAAIAAAAGKiu1AA2xAAAAAQAuAAAACgACAAAAJQAFACYAAQA4ADUAAQAtAAAAHQABAAEAAAAFKrQAEbAAAAABAC4AAAAGAAEAAAApAAEAOQA3AAEALQAAACIAAgACAAAABiortQARsQAAAAEALgAAAAoAAgAAAC0ABQAuAAEAOgA1AAEALQAAAB0AAQABAAAABSq0ABSwAAAAAQAuAAAABgABAAAAMQABADsANwABAC0AAAAiAAIAAgAAAAYqK7UAFLEAAAABAC4AAAAKAAIAAAA1AAUANgABADwAPQABAC0AAAAdAAEAAQAAAAUqtAAXsAAAAAEALgAAAAYAAQAAADkAAQA+AD8AAQAtAAAAIgACAAIAAAAGKiu1ABexAAAAAQAuAAAACgACAAAAPQAFAD4AAQAjAEAAAQAtAAAAtAACAAMAAABpKiumAAUErCvGAA4qtgAbK7YAG6UABQOsK8AACE0qtAAHLLQAB7gAH5kAPyq0AA0stAANuAAfmQAxKrQAESy0ABG4AB+ZACMqtAAULLQAFLgAH5kAFSq0ABcstAAXuAAfmQAHBKcABAOsAAAAAgAuAAAAJgAJAAAAQgAHAEMAGABEAB0ARQAzAEYAQQBHAE8ASABdAEkAaABFAEEAAAANAAUHDgH8AE4HAAhAAQABAEIAQwABAC0AAABDAAQAAQAAACsIvQACWQMqtAAHU1kEKrQADVNZBSq0ABFTWQYqtAAUU1kHKrQAF1O4ACWsAAAAAQAuAAAABgABAAAATgABAEQANQABAC0AAAAyAAUAAQAAABoqtAAHKrQADSq0ABEqtAAUKrQAF7oAKQAAsAAAAAEALgAAAAYAAQAAAFMAAwBFAAAAAgBGAEcAAAAIAAEASAABAE4AUAAAAAoAAQBRAFMAVQAZ")
+        @DisplayName("Then the endpoint should return 200 OK as an answer also with just objects")
+        public void getPojoDefaultClass() throws Exception {
+            mvc.perform(MockMvcRequestBuilders.post("/pojo")
+                    .content(defaultClass)
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andReturn();
+        }
+        @Test
+        @DisplayName("Then the endpoint should return 200 OK as an answer also with primitives")
+        public void getPojoPrimitiveClass() throws Exception {
+            mvc.perform(MockMvcRequestBuilders.post("/pojo")
+                    .content(classWithPrimtives)
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -38,69 +78,55 @@ public class PojoControllerTest {
     }
     @Nested
     @DisplayName("When class already exist as an empty hull")
-    class  ClassExistsAsEmptyHull{
+    class  ClassExistsAsEmptyHull {
+        @BeforeEach()
+        public void createEmptyHullPojo() throws Exception {
+            pojoRepository.save(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData"));
+        }
         @Test
         @DisplayName("Then the endpoint should return 200 OK as an answer")
         public void getPojo() throws Exception {
-            MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content("yv66vgAAADsAVgoAAgADBwAEDAAFAAYBABBqYXZhL2xhbmcvT2JqZWN0AQAGPGluaXQ+AQADKClWCQAIAAkHAAoMAAsADAEAGWZoL2tpZWwvcG9qby9tb2RlbC9UaWNrZXQBAAJpZAEAEExqYXZhL2xhbmcvTG9uZzsJAAgADgwADwAQAQALY29uY2VydE5hbWUBABJMamF2YS9sYW5nL1N0cmluZzsJAAgAEgwAEwAQAQAJZmlyc3ROYW1lCQAIABUMABYAEAEAB3N1ck5hbWUJAAgAGAwAGQAaAQAIZGF0ZVRpbWUBABlMamF2YS90aW1lL0xvY2FsRGF0ZVRpbWU7CgACABwMAB0AHgEACGdldENsYXNzAQATKClMamF2YS9sYW5nL0NsYXNzOwoAIAAhBwAiDAAjACQBABFqYXZhL3V0aWwvT2JqZWN0cwEABmVxdWFscwEAJyhMamF2YS9sYW5nL09iamVjdDtMamF2YS9sYW5nL09iamVjdDspWgoAIAAmDAAnACgBAARoYXNoAQAWKFtMamF2YS9sYW5nL09iamVjdDspSRIAAAAqDAArACwBABdtYWtlQ29uY2F0V2l0aENvbnN0YW50cwEAcyhMamF2YS9sYW5nL0xvbmc7TGphdmEvbGFuZy9TdHJpbmc7TGphdmEvbGFuZy9TdHJpbmc7TGphdmEvbGFuZy9TdHJpbmc7TGphdmEvdGltZS9Mb2NhbERhdGVUaW1lOylMamF2YS9sYW5nL1N0cmluZzsBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQBiKExqYXZhL2xhbmcvTG9uZztMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZztMamF2YS90aW1lL0xvY2FsRGF0ZVRpbWU7KVYBAAVnZXRJZAEAEigpTGphdmEvbGFuZy9Mb25nOwEABXNldElkAQATKExqYXZhL2xhbmcvTG9uZzspVgEADmdldENvbmNlcnROYW1lAQAUKClMamF2YS9sYW5nL1N0cmluZzsBAA5zZXRDb25jZXJ0TmFtZQEAFShMamF2YS9sYW5nL1N0cmluZzspVgEADGdldEZpcnN0TmFtZQEADHNldEZpcnN0TmFtZQEACmdldFN1ck5hbWUBAApzZXRTdXJOYW1lAQALZ2V0RGF0ZVRpbWUBABsoKUxqYXZhL3RpbWUvTG9jYWxEYXRlVGltZTsBAAtzZXREYXRlVGltZQEAHChMamF2YS90aW1lL0xvY2FsRGF0ZVRpbWU7KVYBABUoTGphdmEvbGFuZy9PYmplY3Q7KVoBAA1TdGFja01hcFRhYmxlAQAIaGFzaENvZGUBAAMoKUkBAAh0b1N0cmluZwEAClNvdXJjZUZpbGUBAAtUaWNrZXQuamF2YQEAEEJvb3RzdHJhcE1ldGhvZHMPBgBJCgBKAEsHAEwMACsATQEAJGphdmEvbGFuZy9pbnZva2UvU3RyaW5nQ29uY2F0RmFjdG9yeQEAmChMamF2YS9sYW5nL2ludm9rZS9NZXRob2RIYW5kbGVzJExvb2t1cDtMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL2ludm9rZS9NZXRob2RUeXBlO0xqYXZhL2xhbmcvU3RyaW5nO1tMamF2YS9sYW5nL09iamVjdDspTGphdmEvbGFuZy9pbnZva2UvQ2FsbFNpdGU7CABPAQBMQ29uY2VydFRpY2tldHtpZD0BLCBjb25jZXJ0TmFtZT0nAScsIGZpcnN0TmFtZT0nAScsIHN1ck5hbWU9JwEnLCBkYXRlVGltZT0BfQEADElubmVyQ2xhc3NlcwcAUgEAJWphdmEvbGFuZy9pbnZva2UvTWV0aG9kSGFuZGxlcyRMb29rdXAHAFQBAB5qYXZhL2xhbmcvaW52b2tlL01ldGhvZEhhbmRsZXMBAAZMb29rdXAAIQAIAAIAAAAFAAIACwAMAAAAAgAPABAAAAACABMAEAAAAAIAFgAQAAAAAgAZABoAAAAPAAEABQAGAAEALQAAACEAAQABAAAABSq3AAGxAAAAAQAuAAAACgACAAAADQAEAA8AAQAFAC8AAQAtAAAAUAACAAYAAAAgKrcAASortQAHKiy1AA0qLbUAESoZBLUAFCoZBbUAF7EAAAABAC4AAAAeAAcAAAAQAAQAEQAJABIADgATABMAFAAZABUAHwAWAAEAMAAxAAEALQAAAB0AAQABAAAABSq0AAewAAAAAQAuAAAABgABAAAAGQABADIAMwABAC0AAAAiAAIAAgAAAAYqK7UAB7EAAAABAC4AAAAKAAIAAAAdAAUAHgABADQANQABAC0AAAAdAAEAAQAAAAUqtAANsAAAAAEALgAAAAYAAQAAACEAAQA2ADcAAQAtAAAAIgACAAIAAAAGKiu1AA2xAAAAAQAuAAAACgACAAAAJQAFACYAAQA4ADUAAQAtAAAAHQABAAEAAAAFKrQAEbAAAAABAC4AAAAGAAEAAAApAAEAOQA3AAEALQAAACIAAgACAAAABiortQARsQAAAAEALgAAAAoAAgAAAC0ABQAuAAEAOgA1AAEALQAAAB0AAQABAAAABSq0ABSwAAAAAQAuAAAABgABAAAAMQABADsANwABAC0AAAAiAAIAAgAAAAYqK7UAFLEAAAABAC4AAAAKAAIAAAA1AAUANgABADwAPQABAC0AAAAdAAEAAQAAAAUqtAAXsAAAAAEALgAAAAYAAQAAADkAAQA+AD8AAQAtAAAAIgACAAIAAAAGKiu1ABexAAAAAQAuAAAACgACAAAAPQAFAD4AAQAjAEAAAQAtAAAAtAACAAMAAABpKiumAAUErCvGAA4qtgAbK7YAG6UABQOsK8AACE0qtAAHLLQAB7gAH5kAPyq0AA0stAANuAAfmQAxKrQAESy0ABG4AB+ZACMqtAAULLQAFLgAH5kAFSq0ABcstAAXuAAfmQAHBKcABAOsAAAAAgAuAAAAJgAJAAAAQgAHAEMAGABEAB0ARQAzAEYAQQBHAE8ASABdAEkAaABFAEEAAAANAAUHDgH8AE4HAAhAAQABAEIAQwABAC0AAABDAAQAAQAAACsIvQACWQMqtAAHU1kEKrQADVNZBSq0ABFTWQYqtAAUU1kHKrQAF1O4ACWsAAAAAQAuAAAABgABAAAATgABAEQANQABAC0AAAAyAAUAAQAAABoqtAAHKrQADSq0ABEqtAAUKrQAF7oAKQAAsAAAAAEALgAAAAYAAQAAAFMAAwBFAAAAAgBGAEcAAAAIAAEASAABAE4AUAAAAAoAAQBRAFMAVQAZ")
+            mvc.perform(MockMvcRequestBuilders.post("/pojo")
+                    .content(defaultClass)
                     .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isInternalServerError())
+                    .andExpect(status().isOk())
                     .andReturn();
         }
-    }
-    @Nested
-    @DisplayName("When a already existing class is send to to the endpoint in base64 and the exisitng class is not an empty hull")
-    class  AlreadyExistingClass{
-        @Test
-        @DisplayName("Then the endpoint should return an 500 internal Server error")
-        public void getPojo() throws Exception {
-            MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content("yv66vgAAADsAVgoAAgADBwAEDAAFAAYBABBqYXZhL2xhbmcvT2JqZWN0AQAGPGluaXQ+AQADKClWCQAIAAkHAAoMAAsADAEAGWZoL2tpZWwvcG9qby9tb2RlbC9UaWNrZXQBAAJpZAEAEExqYXZhL2xhbmcvTG9uZzsJAAgADgwADwAQAQALY29uY2VydE5hbWUBABJMamF2YS9sYW5nL1N0cmluZzsJAAgAEgwAEwAQAQAJZmlyc3ROYW1lCQAIABUMABYAEAEAB3N1ck5hbWUJAAgAGAwAGQAaAQAIZGF0ZVRpbWUBABlMamF2YS90aW1lL0xvY2FsRGF0ZVRpbWU7CgACABwMAB0AHgEACGdldENsYXNzAQATKClMamF2YS9sYW5nL0NsYXNzOwoAIAAhBwAiDAAjACQBABFqYXZhL3V0aWwvT2JqZWN0cwEABmVxdWFscwEAJyhMamF2YS9sYW5nL09iamVjdDtMamF2YS9sYW5nL09iamVjdDspWgoAIAAmDAAnACgBAARoYXNoAQAWKFtMamF2YS9sYW5nL09iamVjdDspSRIAAAAqDAArACwBABdtYWtlQ29uY2F0V2l0aENvbnN0YW50cwEAcyhMamF2YS9sYW5nL0xvbmc7TGphdmEvbGFuZy9TdHJpbmc7TGphdmEvbGFuZy9TdHJpbmc7TGphdmEvbGFuZy9TdHJpbmc7TGphdmEvdGltZS9Mb2NhbERhdGVUaW1lOylMamF2YS9sYW5nL1N0cmluZzsBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQBiKExqYXZhL2xhbmcvTG9uZztMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL1N0cmluZztMamF2YS90aW1lL0xvY2FsRGF0ZVRpbWU7KVYBAAVnZXRJZAEAEigpTGphdmEvbGFuZy9Mb25nOwEABXNldElkAQATKExqYXZhL2xhbmcvTG9uZzspVgEADmdldENvbmNlcnROYW1lAQAUKClMamF2YS9sYW5nL1N0cmluZzsBAA5zZXRDb25jZXJ0TmFtZQEAFShMamF2YS9sYW5nL1N0cmluZzspVgEADGdldEZpcnN0TmFtZQEADHNldEZpcnN0TmFtZQEACmdldFN1ck5hbWUBAApzZXRTdXJOYW1lAQALZ2V0RGF0ZVRpbWUBABsoKUxqYXZhL3RpbWUvTG9jYWxEYXRlVGltZTsBAAtzZXREYXRlVGltZQEAHChMamF2YS90aW1lL0xvY2FsRGF0ZVRpbWU7KVYBABUoTGphdmEvbGFuZy9PYmplY3Q7KVoBAA1TdGFja01hcFRhYmxlAQAIaGFzaENvZGUBAAMoKUkBAAh0b1N0cmluZwEAClNvdXJjZUZpbGUBAAtUaWNrZXQuamF2YQEAEEJvb3RzdHJhcE1ldGhvZHMPBgBJCgBKAEsHAEwMACsATQEAJGphdmEvbGFuZy9pbnZva2UvU3RyaW5nQ29uY2F0RmFjdG9yeQEAmChMamF2YS9sYW5nL2ludm9rZS9NZXRob2RIYW5kbGVzJExvb2t1cDtMamF2YS9sYW5nL1N0cmluZztMamF2YS9sYW5nL2ludm9rZS9NZXRob2RUeXBlO0xqYXZhL2xhbmcvU3RyaW5nO1tMamF2YS9sYW5nL09iamVjdDspTGphdmEvbGFuZy9pbnZva2UvQ2FsbFNpdGU7CABPAQBMQ29uY2VydFRpY2tldHtpZD0BLCBjb25jZXJ0TmFtZT0nAScsIGZpcnN0TmFtZT0nAScsIHN1ck5hbWU9JwEnLCBkYXRlVGltZT0BfQEADElubmVyQ2xhc3NlcwcAUgEAJWphdmEvbGFuZy9pbnZva2UvTWV0aG9kSGFuZGxlcyRMb29rdXAHAFQBAB5qYXZhL2xhbmcvaW52b2tlL01ldGhvZEhhbmRsZXMBAAZMb29rdXAAIQAIAAIAAAAFAAIACwAMAAAAAgAPABAAAAACABMAEAAAAAIAFgAQAAAAAgAZABoAAAAPAAEABQAGAAEALQAAACEAAQABAAAABSq3AAGxAAAAAQAuAAAACgACAAAADQAEAA8AAQAFAC8AAQAtAAAAUAACAAYAAAAgKrcAASortQAHKiy1AA0qLbUAESoZBLUAFCoZBbUAF7EAAAABAC4AAAAeAAcAAAAQAAQAEQAJABIADgATABMAFAAZABUAHwAWAAEAMAAxAAEALQAAAB0AAQABAAAABSq0AAewAAAAAQAuAAAABgABAAAAGQABADIAMwABAC0AAAAiAAIAAgAAAAYqK7UAB7EAAAABAC4AAAAKAAIAAAAdAAUAHgABADQANQABAC0AAAAdAAEAAQAAAAUqtAANsAAAAAEALgAAAAYAAQAAACEAAQA2ADcAAQAtAAAAIgACAAIAAAAGKiu1AA2xAAAAAQAuAAAACgACAAAAJQAFACYAAQA4ADUAAQAtAAAAHQABAAEAAAAFKrQAEbAAAAABAC4AAAAGAAEAAAApAAEAOQA3AAEALQAAACIAAgACAAAABiortQARsQAAAAEALgAAAAoAAgAAAC0ABQAuAAEAOgA1AAEALQAAAB0AAQABAAAABSq0ABSwAAAAAQAuAAAABgABAAAAMQABADsANwABAC0AAAAiAAIAAgAAAAYqK7UAFLEAAAABAC4AAAAKAAIAAAA1AAUANgABADwAPQABAC0AAAAdAAEAAQAAAAUqtAAXsAAAAAEALgAAAAYAAQAAADkAAQA+AD8AAQAtAAAAIgACAAIAAAAGKiu1ABexAAAAAQAuAAAACgACAAAAPQAFAD4AAQAjAEAAAQAtAAAAtAACAAMAAABpKiumAAUErCvGAA4qtgAbK7YAG6UABQOsK8AACE0qtAAHLLQAB7gAH5kAPyq0AA0stAANuAAfmQAxKrQAESy0ABG4AB+ZACMqtAAULLQAFLgAH5kAFSq0ABcstAAXuAAfmQAHBKcABAOsAAAAAgAuAAAAJgAJAAAAQgAHAEMAGABEAB0ARQAzAEYAQQBHAE8ASABdAEkAaABFAEEAAAANAAUHDgH8AE4HAAhAAQABAEIAQwABAC0AAABDAAQAAQAAACsIvQACWQMqtAAHU1kEKrQADVNZBSq0ABFTWQYqtAAUU1kHKrQAF1O4ACWsAAAAAQAuAAAABgABAAAATgABAEQANQABAC0AAAAyAAUAAQAAABoqtAAHKrQADSq0ABEqtAAUKrQAF7oAKQAAsAAAAAEALgAAAAYAAQAAAFMAAwBFAAAAAgBGAEcAAAAIAAEASAABAE4AUAAAAAoAAQBRAFMAVQAZ")
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
-        }
-    }
-    @Nested
-    @DisplayName("When the class is not base64 encoded")
-    class  InputNotBase64{
-        @Test
-        @DisplayName("Then the endpoint should return an 500 internal Server error")
-        public void getPojo() throws Exception {
-            MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(";V\n" +
-                            "\u0002\u0003\u0007\u0004\f\u0005\u0006\u0001\u0010java/lang/Object\u0001\u0006<init>\u0001\u0003()V\t\b\t\u0007\n" +
-                            "\f\u000B\f\u0001\u0019fh/kiel/pojo/model/Ticket\u0001\u0002id\u0001\u0010Ljava/lang/Long;\t\b\u000E\f\u000F\u0010\u0001\u000BconcertName\u0001\u0012Ljava/lang/String;\t\b\u0012\f\u0013\u0010\u0001\tfirstName\t\b\u0015\f\u0016\u0010\u0001\u0007surName\t\b\u0018\f\u0019\u001A\u0001\bdateTime\u0001\u0019Ljava/time/LocalDateTime;\n" +
-                            "\u0002\u001C\f\u001D\u001E\u0001\bgetClass\u0001\u0013()Ljava/lang/Class;\n" +
-                            " !\u0007\"\f#$\u0001\u0011java/util/Objects\u0001\u0006equals\u0001'(Ljava/lang/Object;Ljava/lang/Object;)Z\n" +
-                            " &\f'(\u0001\u0004hash\u0001\u0016([Ljava/lang/Object;)I\u0012*\f+,\u0001\u0017makeConcatWithConstants\u0001s(Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;)Ljava/lang/String;\u0001\u0004Code\u0001\u000FLineNumberTable\u0001b(Ljava/lang/Long;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/time/LocalDateTime;)V\u0001\u0005getId\u0001\u0012()Ljava/lang/Long;\u0001\u0005setId\u0001\u0013(Ljava/lang/Long;)V\u0001\u000EgetConcertName\u0001\u0014()Ljava/lang/String;\u0001\u000EsetConcertName\u0001\u0015(Ljava/lang/String;)V\u0001\fgetFirstName\u0001\fsetFirstName\u0001\n" +
-                            "getSurName\u0001\n" +
-                            "setSurName\u0001\u000BgetDateTime\u0001\u001B()Ljava/time/LocalDateTime;\u0001\u000BsetDateTime\u0001\u001C(Ljava/time/LocalDateTime;)V\u0001\u0015(Ljava/lang/Object;)Z\u0001\n" +
-                            "StackMapTable\u0001\bhashCode\u0001\u0003()I\u0001\btoString\u0001\n" +
-                            "SourceFile\u0001\u000BTicket.java\u0001\u0010BootstrapMethods\u000F\u0006I\n" +
-                            "JK\u0007L\f+M\u0001$java/lang/invoke/StringConcatFactory\u0001(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;\bO\u0001LConcertTicket{id=\u0001, concertName='\u0001', firstName='\u0001', surName='\u0001', dateTime=\u0001}\u0001\fInnerClasses\u0007R\u0001%java/lang/invoke/MethodHandles$Lookup\u0007T\u0001\u001Ejava/lang/invoke/MethodHandles\u0001\u0006Lookup!\b\u0002\u0005\u0002\u000B\f\u0002\u000F\u0010\u0002\u0013\u0010\u0002\u0016\u0010\u0002\u0019\u001A\u000F\u0001\u0005\u0006\u0001-!\u0001\u0001\u0005*\u0001\u0001.\n" +
-                            "\u0002\n" +
-                            "\u0004\u000F\u0001\u0005/\u0001-P\u0002\u0006 *\u0001*+\u0007*,\n" +
-                            "*-\u0011*\u0019\u0004\u0014*\u0019\u0005\u0017\u0001.\u001E\u0007\u0010\u0004\u0011\t\u0012\u000E\u0013\u0013\u0014\u0019\u0015\u001F\u0016\u000101\u0001-\u001D\u0001\u0001\u0005*\u0007\u0001.\u0006\u0001\u0019\u000123\u0001-\"\u0002\u0002\u0006*+\u0007\u0001.\n" +
-                            "\u0002\u001D\u0005\u001E\u000145\u0001-\u001D\u0001\u0001\u0005*\n" +
-                            "\u0001.\u0006\u0001!\u000167\u0001-\"\u0002\u0002\u0006*+\n" +
-                            "\u0001.\n" +
-                            "\u0002%\u0005&\u000185\u0001-\u001D\u0001\u0001\u0005*\u0011\u0001.\u0006\u0001)\u000197\u0001-\"\u0002\u0002\u0006*+\u0011\u0001.\n" +
-                            "\u0002-\u0005.\u0001:5\u0001-\u001D\u0001\u0001\u0005*\u0014\u0001.\u0006\u00011\u0001;7\u0001-\"\u0002\u0002\u0006*+\u0014\u0001.\n" +
-                            "\u00025\u00056\u0001<=\u0001-\u001D\u0001\u0001\u0005*\u0017\u0001.\u0006\u00019\u0001>?\u0001-\"\u0002\u0002\u0006*+\u0017\u0001.\n" +
-                            "\u0002=\u0005>\u0001#@\u0001-\u0002\u0003i*+\u0005\u0004+\u000E*\u001B+\u001B\u0005\u0003+\bM*\u0007,\u0007\u001F?*\n" +
-                            ",\n" +
-                            "\u001F1*\u0011,\u0011\u001F#*\u0014,\u0014\u001F\u0015*\u0017,\u0017\u001F\u0007\u0004\u0004\u0003\u0002.&\tB\u0007C\u0018D\u001DE3FAGOH]IhEA\n" +
-                            "\u0005\u0007\u000E\u0001N\u0007\b@\u0001\u0001BC\u0001-C\u0004\u0001+\b\u0002Y\u0003*\u0007SY\u0004*\n" +
-                            "SY\u0005*\u0011SY\u0006*\u0014SY\u0007*\u0017S%\u0001.\u0006\u0001N\u0001D5\u0001-2\u0005\u0001\u001A*\u0007*\n" +
-                            "*\u0011*\u0014*\u0017)\u0001.\u0006\u0001S\u0003E\u0002FG\b\u0001H\u0001NP\n" +
-                            "\u0001QSU\u0019")
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isInternalServerError())
-                    .andReturn();
-        }
-    }
 
+        @Nested
+        @DisplayName("When a already existing class is send to to the endpoint in base64 and the exisitng class is not an empty hull")
+        class AlreadyExistingClass {
+            @BeforeEach()
+            public void createPojo() throws Exception {
+                pojoRepository.save(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData", null, null, null));
+            }
 
+            @Test
+            @DisplayName("Then the endpoint should return an is internal Server error status")
+            public void createTheSamePojoAgain()  {
+             assertThrows(Exception.class, () -> {
+                         mvc.perform(MockMvcRequestBuilders.post("/pojo")
+                                 .content(defaultClass)
+                                 .accept(MediaType.APPLICATION_JSON))
+                                 .andExpect(status().isInternalServerError())
+                                 .andReturn();
+                     });
+            }
+        }
+
+        @Nested
+        @DisplayName("When the class is not base64 encoded")
+        class InputNotBase64 {
+            @Test
+            @DisplayName("Then the endpoint should return an 500 internal Server error")
+            public void getPojo() throws Exception {
+                mvc.perform(MockMvcRequestBuilders.post("/pojo")
+                        .content(notBase64EncodedClass)
+                        .accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isInternalServerError())
+                        .andReturn();
+            }
+        }
+
+    }
 }
