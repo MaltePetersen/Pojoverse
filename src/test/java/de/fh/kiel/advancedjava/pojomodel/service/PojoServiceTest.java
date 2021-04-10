@@ -83,10 +83,14 @@ public class PojoServiceTest {
     @Nested
     @DisplayName("When the pojo already Exists")
     class AlreadyExists {
+        @BeforeEach()
+        void SetUp(){
+            pojoRepository.save(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtives", "", null, null, null));
+        }
         @Test
-        @DisplayName("Then a 'pojo already exist error should be thrown'")
+        @DisplayName("Then null should be returned")
         public void pojoAlreadyExist() throws Exception {
-            fail();
+           assertNull( pojoService.createPojo(classWithPrimtives));
         }
     }
 }
