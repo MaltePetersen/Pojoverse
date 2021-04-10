@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
 
 
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.service.DynamicClassLoaderService;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,6 @@ import java.util.Base64;
 @RequestMapping("pojo")
 public class PojoController {
     private final PojoService pojoService;
-
     PojoController(PojoService pojoService) {
         this.pojoService = pojoService;
     }

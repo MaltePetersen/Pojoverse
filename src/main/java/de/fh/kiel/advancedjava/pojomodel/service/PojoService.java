@@ -33,21 +33,21 @@ public class PojoService {
 
         Class<?> loadedClazz = this.dynamicClassLoaderService.loadClass(compiledClazz);
 
+        Optional<Pojo> pojo = pojoRepository.findById(loadedClazz.getName());
+        if (pojo.isEmpty() || pojo.get().isEmptyHull()) {
+
         var interfaces = extractAndDefineInterfaces(loadedClazz.getInterfaces());
         var attributes = extractAndDefineAttributes(loadedClazz.getDeclaredFields());
         var parentClazz = extractAndDefineParentClass(loadedClazz.getSuperclass());
 
-
-        Optional<Pojo> pojo = pojoRepository.findByClassName(loadedClazz.getName());
-        if (pojo.isEmpty() || pojo.get().isEmptyHull()) {
-            Pojo newPojo = new Pojo(loadedClazz.getName(), loadedClazz.getPackageName(), attributes, parentClazz, interfaces);
+        Pojo newPojo = new Pojo(loadedClazz.getName(), loadedClazz.getPackageName(), attributes, parentClazz, interfaces);
             pojoRepository.save(newPojo);
+
             logger.info("The following Pojo was created "+ newPojo);
             return newPojo;
         }
     return null;
     }
-
 
     private Set<String> extractAndDefineInterfaces(Class<?>[] interfaces) {
         return Arrays.stream(interfaces).map((Class::toString)).collect(Collectors.toSet());
@@ -64,14 +64,14 @@ public class PojoService {
     }
 
     private Pojo extractAndDefineParentClass(Class<?> parentClazz){
-        Optional<Pojo> pojo =  pojoRepository.findByClassName(parentClazz.getName());
+        Optional<Pojo> pojo =  pojoRepository.findById(parentClazz.getName());
         if(pojo.isPresent() && pojo.get().isEmptyHull())
             return pojo.get();
         return this.checkForRootClassAndCreateAppropriateClass(parentClazz);
     }
 
     private Pojo checkForRootClassAndCreateAppropriateClass(Class<?> clazz){
-        Optional<Pojo> pojo =  pojoRepository.findByClassName(clazz.getName());
+        Optional<Pojo> pojo =  pojoRepository.findById(clazz.getName());
         if(pojo.isPresent()){
             return pojo.get();
         }
@@ -80,8 +80,9 @@ public class PojoService {
 
         return new Pojo(clazz.getName(), clazz.getPackageName(), this.checkForRootClassAndCreateAppropriateClass(clazz.getSuperclass()));
     }
+
     public boolean deletePojo(String pojoName){
-            if(pojoRepository.existsByClassName(pojoName)){
+            if(pojoRepository.existsById(pojoName)){
                 pojoRepository.deleteById(pojoName);
                 return true;
             }

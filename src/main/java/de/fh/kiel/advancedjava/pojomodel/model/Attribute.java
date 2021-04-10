@@ -7,7 +7,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import java.lang.reflect.Modifier;
 
 @Node
-public class Attribute {
+public abstract class Attribute {
     @Id
     @GeneratedValue
     private Long id;
@@ -25,9 +25,8 @@ public class Attribute {
     }
 
     public Attribute(String name, String dataType,int accessModifier ) {
-        this.name = name;
+        this(name, accessModifier);
         this.dataType = dataType;
-        this.accessModifier =  Modifier.toString(accessModifier);
     }
 
     public Long getId() {
