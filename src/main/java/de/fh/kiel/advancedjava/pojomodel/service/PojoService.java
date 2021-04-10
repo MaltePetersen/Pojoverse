@@ -70,7 +70,7 @@ public class PojoService {
         return this.checkForRootClassAndCreateAppropriateClass(parentClazz);
     }
 
-    Pojo checkForRootClassAndCreateAppropriateClass(Class<?> clazz){
+    private Pojo checkForRootClassAndCreateAppropriateClass(Class<?> clazz){
         Optional<Pojo> pojo =  pojoRepository.findByClassName(clazz.getName());
         if(pojo.isPresent()){
             return pojo.get();
@@ -80,4 +80,12 @@ public class PojoService {
 
         return new Pojo(clazz.getName(), clazz.getPackageName(), this.checkForRootClassAndCreateAppropriateClass(clazz.getSuperclass()));
     }
+    public boolean deletePojo(String pojoName){
+            if(pojoRepository.existsByClassName(pojoName)){
+                pojoRepository.deleteById(pojoName);
+                return true;
+            }
+            throw new Error("Pojo does not exist");
+    }
+
 }

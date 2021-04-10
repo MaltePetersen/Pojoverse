@@ -5,15 +5,13 @@ import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
 
 
-@RestController
+@RestController()
+@RequestMapping("pojo")
 public class PojoController {
     private final PojoService pojoService;
 
@@ -22,7 +20,7 @@ public class PojoController {
     }
 
 
-    @PostMapping("/pojo")
+    @PostMapping
     public ResponseEntity<Pojo> createPojo(@RequestBody() String base64EncodedByteCodePojo) throws Exception {
         byte[] pojoAsByteCode;
 
@@ -38,5 +36,12 @@ public class PojoController {
 
         return ResponseEntity.ok(pojo);
 
+    }
+    @DeleteMapping
+    public ResponseEntity<?> deletePojo(@RequestParam String pojoName){
+        if(pojoService.deletePojo(pojoName)){
+            return ResponseEntity.ok("Successfull");
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 }
