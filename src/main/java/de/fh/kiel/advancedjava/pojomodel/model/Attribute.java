@@ -60,4 +60,14 @@ public abstract class Attribute {
     public void setAccessModifier(String accessModifier) {
         this.accessModifier = accessModifier;
     }
+
+    @Override
+    public String toString() {
+        return "Attribute{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", dataType='" + dataType + '\'' +
+                ", accessModifier='" + accessModifier + '\'' +
+                '}';
+    }
 }
