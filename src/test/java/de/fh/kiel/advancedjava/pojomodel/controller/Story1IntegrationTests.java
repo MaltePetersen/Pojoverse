@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @DisplayName("Given the developer wants to add a pojo to the database")
 @Nested
-public class PojoControllerTest {
+public class Story1IntegrationTests {
 
     private static String classWithPrimtives;
     private static String defaultClass;

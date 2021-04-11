@@ -2,19 +2,18 @@ package de.fh.kiel.advancedjava.pojomodel.model;
 
 public class Primitive extends  Attribute{
 
-    private PrimitiveDataType dataType;
+    private PrimitiveDataType primitiveDataType;
 
-    public Primitive(String name, String dataType, int accessModifier) {
+    public Primitive(String name, PrimitiveDataType primitiveDataType, String accessModifier) {
         super(name,  accessModifier);
-        this.dataType = new PrimitiveDataType(dataType);
+        this.primitiveDataType = primitiveDataType;
     }
 
-    @Override
-    public String getDataType() {
-        return dataType.toString();
+    public PrimitiveDataType getPrimitiveDataType() {
+        return primitiveDataType;
     }
 
-    public void setDataType(PrimitiveDataType dataType) {
-        this.dataType = dataType;
+    public void setPrimitiveDataType(PrimitiveDataType primitiveDataType) {
+        this.primitiveDataType = primitiveDataType;
     }
 }

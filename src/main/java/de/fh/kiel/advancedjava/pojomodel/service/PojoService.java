@@ -1,18 +1,18 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 
-import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
-import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
-import de.fh.kiel.advancedjava.pojomodel.model.Primitive;
-import de.fh.kiel.advancedjava.pojomodel.model.Reference;
+import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
+import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -56,9 +56,9 @@ public class PojoService {
     private Set<Attribute> extractAndDefineAttributes(Field[] fields){
         return Arrays.stream(fields).map(field -> {
             if(field.getType().isPrimitive()){
-                return new Primitive(field.getName(), field.getType().getTypeName(), field.getModifiers());
+                return new Primitive(field.getName(), new PrimitiveDataType(field.getType().getTypeName()), Modifier.toString(field.getModifiers()));
             }else {
-                return new Reference(field.getName(), field.getType().getTypeName(), field.getModifiers(),this.checkForRootClassAndCreateAppropriateClass(field.getType()) );
+                return new Reference(field.getName(), field.getType().getTypeName(), Modifier.toString(field.getModifiers()),this.checkForRootClassAndCreateAppropriateClass(field.getType()) );
             }
         } ).collect(Collectors.toSet());
     }
@@ -86,7 +86,20 @@ public class PojoService {
                 pojoRepository.deleteById(pojoName);
                 return true;
             }
-            throw new Error("Pojo does not exist");
+           return false;
+    }
+    public boolean changeAttribute(AttributeChangeDTO attributeChangeDTO){
+        Optional<Pojo> pojo = pojoRepository.findById(attributeChangeDTO.getClassName());
+        if(pojo.isPresent()){
+           var attr =  pojo.get().getAttributes().stream().filter((attribute)-> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst();
+           if(attr.isPresent()){
+               pojo.get().getAttributes().remove(attr.get());
+                pojoRepository.deleteById(pojo.get().getClassName());
+               pojoRepository.save(pojo.get());
+            return true;
+           }
+        }
+        return false;
     }
 
 }

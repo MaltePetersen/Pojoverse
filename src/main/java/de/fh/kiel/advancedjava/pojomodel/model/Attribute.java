@@ -19,12 +19,12 @@ public abstract class Attribute {
     }
 
 
-    public Attribute(String name, int accessModifier) {
+    public Attribute(String name, String accessModifier) {
         this.name = name;
-        this.accessModifier = Modifier.toString(accessModifier);
+        this.accessModifier = accessModifier;
     }
 
-    public Attribute(String name, String dataType,int accessModifier ) {
+    public Attribute(String name, String dataType,String accessModifier ) {
         this(name, accessModifier);
         this.dataType = dataType;
     }

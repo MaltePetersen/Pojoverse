@@ -59,7 +59,7 @@ public class PojoServiceTest {
         public void saveToDb() {
             Pojo pojo = pojoService.createPojo(classWithPrimtives);
             assertNotNull(pojo);
-            assertTrue(pojoRepository.existsByClassName(pojo.getClassName()));
+            assertTrue(pojoRepository.existsById(pojo.getClassName()));
         }
     }
 
@@ -68,16 +68,16 @@ public class PojoServiceTest {
     class ReplaceEmptyHullWithNewPojo {
         @BeforeEach()
         void SetUp(){
-            pojoRepository.save(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtives", ""));
+            pojoRepository.save(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData"));
         }
 
         @Test
         @DisplayName("Then the empty hull should be replaced wih the new pojo")
         public void replace() throws Exception {
-            Pojo pojo = pojoService.createPojo(classWithPrimtives);
+            Pojo pojo = pojoService.createPojo(defaultClass);
             assertNotNull(pojo);
-            assertTrue(pojoRepository.existsByClassName(pojo.getClassName()));
-            assertFalse(pojoRepository.existsByClassNameAndEmptyHull(pojo.getClassName(),true));
+            assertTrue(pojoRepository.existsById(pojo.getClassName()));
+            assertFalse(pojoRepository.findById(pojo.getClassName()).get().isEmptyHull());
         }
     }
     @Nested
