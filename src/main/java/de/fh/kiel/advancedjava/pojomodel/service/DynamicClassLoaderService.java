@@ -20,8 +20,9 @@ public class DynamicClassLoaderService  {
             }
         }.defineClass(clazz);
     }
-
-    public void getURLClassLoader() throws MalformedURLException {
+        //TODO https://stackoverflow.com/questions/1529611/how-to-write-a-java-program-which-can-extract-a-jar-file-and-store-its-data-in-s
+    //https://coderecipes.blog/2018/12/08/unzipping-a-jar-file-programmatically/
+    public void getURLClassLoader() throws MalformedURLException, ClassNotFoundException {
         var myJar =       new File("/Users/mpetersen/Desktop/pojo-malte/build/libs/pojomodel-0.0.1-SNAPSHOT.jar").toURI().toURL();
 
         URLClassLoader child = new URLClassLoader(
@@ -29,6 +30,10 @@ public class DynamicClassLoaderService  {
                 this.getClass().getClassLoader()
         );
         System.out.println("got here");
+       // System.out.println(child.loadClass("ClassWithPrimtives.class"));
+       // System.out.println(child.loadClass("ClassWithPrimtives"));
+        //System.out.println(child.loadClass("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtives.class"));
+        System.out.println(child.loadClass("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtives"));
 
         System.out.println(child);
         System.out.println(Arrays.toString(child.getURLs()));

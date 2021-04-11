@@ -44,7 +44,7 @@ public class PojoController {
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Provided Parameter is invalid");
     }
-
+    //TODO Query if has relation
     @DeleteMapping("/{name}")
     public ResponseEntity<?> deletePojo(@PathVariable("name") String pojoName){
         if(pojoService.deletePojo(pojoName)){
@@ -52,5 +52,6 @@ public class PojoController {
         }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
+
 
 }
