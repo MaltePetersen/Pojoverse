@@ -34,17 +34,13 @@ public class PojoService {
             classReader.accept(pojoClassVisitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
 
             Set<Attribute> attributes = setIdOfAttributes(pojoClassVisitor.getAttributes(),classReader.getCompletePath());
+            var superClass = getSuperClass(classReader.getSuperCompletePath(),classReader.getSuperName(), classReader.getSuperPackageName());
 
             var pojo =   Pojo.builder().completePath(classReader.getCompletePath())
                     .className(classReader.getClassName())
                     .packageName(classReader.getPackageName())
-                    .parentClass(
-                            Pojo.builder()
-                                    .completePath(classReader.getSuperCompletePath())
-                                    .className(classReader.getSuperName())
-                                    .packageName(classReader.getSuperName())
-                                    .emptyHull(true).build()
-                    ).interfaces( new HashSet<>( Arrays.asList(classReader.getInterfaces())))
+                    .parentClass(getSuperClass(classReader.getSuperCompletePath(),classReader.getSuperName(), classReader.getSuperPackageName()))
+                    .interfaces( new HashSet<>( Arrays.asList(classReader.getInterfaces())))
                     .attributes(attributes)
                     .emptyHull(false).build();
             pojoRepository.save(pojo);
@@ -71,9 +67,16 @@ public class PojoService {
             var attr =  pojo.getAttributes().stream().filter((attribute)-> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeChangeDTO.getAttributeName(), attributeChangeDTO.getClassName()));
 
                 pojo.getAttributes().remove(attr);
-                pojoRepository.deleteById(pojo.getClassName());
+                pojoRepository.deleteById(pojo.getCompletePath());
                 pojoRepository.save(pojo);
                return pojo;
+    }
+    private Pojo getSuperClass(String completePath, String className, String packageName){
+      return pojoRepository.findById(completePath).orElseGet(() -> Pojo.builder()
+                .completePath(completePath)
+                .className(className)
+                .packageName(packageName)
+                .emptyHull(true).build());
     }
 }
 

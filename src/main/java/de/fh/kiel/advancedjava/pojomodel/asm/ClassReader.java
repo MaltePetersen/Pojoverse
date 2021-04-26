@@ -23,7 +23,7 @@ public class ClassReader extends org.objectweb.asm.ClassReader {
     public String getSuperName() {
         return toOnlyClassName(toJavaURI(super.getSuperName()));
     }
-    public String getSuperClassName(){
+    public String getSuperPackageName(){
         return toOnlyPackageName(toJavaURI(super.getSuperName()));
     }
     public String getSuperCompletePath(){

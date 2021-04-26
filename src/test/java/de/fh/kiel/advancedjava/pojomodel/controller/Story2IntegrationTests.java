@@ -56,11 +56,11 @@ public class Story2IntegrationTests {
         @DisplayName("When the class does not exist")
         class DoesNotExist {
             @Test
-            @DisplayName("Then the endpoint should return an 500 internal Server error")
+            @DisplayName("Then the endpoint should return an 400 bad request")
             public void deletePojo() throws Exception {
                 mvc.perform(MockMvcRequestBuilders.delete("/pojo/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                         .accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isInternalServerError())
+                        .andExpect(status().isBadRequest())
                         .andReturn();
             }
         }
