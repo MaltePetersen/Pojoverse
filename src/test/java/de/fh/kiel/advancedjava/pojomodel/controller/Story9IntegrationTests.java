@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -66,6 +67,7 @@ public class Story9IntegrationTests {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(defaultClass)
                     .accept(MediaType.APPLICATION_JSON));
+
         }
 
         @Test
@@ -75,6 +77,7 @@ public class Story9IntegrationTests {
                     .content(attributeChangeDTO).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();
+            assertFalse( pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().anyMatch((data)-> data.getName().equals("name")));
         }
     }
     @Nested
@@ -92,7 +95,7 @@ public class Story9IntegrationTests {
         public void attributeChange() throws Exception {
             mvc.perform(MockMvcRequestBuilders.put("/pojo")
                     .content(badAttributeChangeDTO).contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.ALL)).andExpect(status().isInternalServerError())
+                    .accept(MediaType.ALL)).andExpect(status().isBadRequest())
                     .andReturn();
         }
     }

@@ -5,9 +5,7 @@ import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
-import de.fh.kiel.advancedjava.pojomodel.service.Handler;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +16,8 @@ import java.util.Base64;
 @RequestMapping("pojo")
 public class PojoController {
     private final PojoService pojoService;
-    private final Handler handler;
-    PojoController(PojoService pojoService, Handler handler) {
+    PojoController(PojoService pojoService) {
         this.pojoService = pojoService;
-        this.handler = handler;
     }
 
 
@@ -34,7 +30,7 @@ public class PojoController {
         } catch (IllegalArgumentException i) {
             throw new NoValidBase64();
         }
-        Pojo pojo = handler.read(pojoAsByteCode);
+        Pojo pojo = pojoService.createPojo(pojoAsByteCode);
 
       //  Pojo pojo = pojoService.createPojo(pojoAsByteCode);
         //if(pojo == null)
@@ -44,19 +40,14 @@ public class PojoController {
 
     }
     @PutMapping
-    public ResponseEntity<?> deleteAttribute(@RequestBody() AttributeChangeDTO attributeChangeDTO){
-        if(pojoService.changeAttribute(attributeChangeDTO)){
-            return ResponseEntity.ok("Successfull");
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Provided Parameter is invalid");
+    public ResponseEntity<Pojo> deleteAttribute(@RequestBody() AttributeChangeDTO attributeChangeDTO){
+            return ResponseEntity.ok(pojoService.changeAttribute(attributeChangeDTO));
     }
     //TODO Query if has relation
     @DeleteMapping("/{name}")
     public ResponseEntity<?> deletePojo(@PathVariable("name") String pojoName){
-        if(pojoService.deletePojo(pojoName)){
-            return ResponseEntity.ok("Successfull");
-        }
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        pojoService.deletePojo(pojoName);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

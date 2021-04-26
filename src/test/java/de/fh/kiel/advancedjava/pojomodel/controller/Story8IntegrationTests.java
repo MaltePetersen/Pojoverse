@@ -1,9 +1,5 @@
 package de.fh.kiel.advancedjava.pojomodel.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
-import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
-import de.fh.kiel.advancedjava.pojomodel.model.Primitive;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,15 +71,15 @@ public class Story8IntegrationTests {
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
         public void attributeChange() throws Exception {
-            mvc.perform(MockMvcRequestBuilders.post("/attribute/primitive/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
+            mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                     .content(attributeAddDTO).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();
                 var att = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().filter((data)-> data.getName().equals("something")).findFirst();
-                var prim = (Primitive) att.get();
+                 att.get();
 
-                assertEquals("int", prim.getPrimitiveDataType().getName());
-                assertEquals("private", prim.getAccessModifier());
+                assertEquals("java.lang.Integer", att.get().getClazz().getCompletePath());
+                assertEquals("private", att.get().getAccessModifier());
         }
     }
 
@@ -94,12 +90,12 @@ public class Story8IntegrationTests {
 
 
         @Test
-        @DisplayName("Then the endpoint should return an 500 internal server error")
+        @DisplayName("Then the endpoint should return an 200 bad request")
         public void attributeChange() throws Exception {
-           assertThrows(NestedServletException.class, () ->  mvc.perform(MockMvcRequestBuilders.post("/attribute/primitive/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
+             mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                     .content(attributeAddDTO).contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.ALL)).andExpect(status().isInternalServerError())
-                    .andReturn());
+                    .accept(MediaType.ALL)).andExpect(status().isBadRequest())
+                    .andReturn();
         }
     }
 }

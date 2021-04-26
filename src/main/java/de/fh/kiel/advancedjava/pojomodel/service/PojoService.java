@@ -1,105 +1,80 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
-
+import de.fh.kiel.advancedjava.pojomodel.asm.ClassReader;
+import de.fh.kiel.advancedjava.pojomodel.asm.PojoClassVisitor;
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
-import de.fh.kiel.advancedjava.pojomodel.model.*;
+import de.fh.kiel.advancedjava.pojomodel.exception.AttributeDoesNotExist;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
+import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
+import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Optional;
-import java.util.OptionalInt;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class PojoService {
 
-    Logger logger = LoggerFactory.getLogger(PojoService.class);
-
-    private final PojoRepository pojoRepository;
-    private final DynamicClassLoaderService dynamicClassLoaderService;
-
-    PojoService(PojoRepository pojoRepository, DynamicClassLoaderService dynamicClassLoaderService) {
+    PojoClassVisitor pojoClassVisitor;
+    PojoRepository pojoRepository;
+    PojoService(PojoClassVisitor pojoClassVisitor, PojoRepository pojoRepository){
+        this.pojoClassVisitor = pojoClassVisitor;
         this.pojoRepository = pojoRepository;
-        this.dynamicClassLoaderService = dynamicClassLoaderService;
     }
 
-    public Pojo createPojo(byte[] compiledClazz) {
+    public Pojo createPojo(byte[] clazz){
+        ClassReader classReader = new ClassReader(clazz);
 
-        Class<?> loadedClazz = this.dynamicClassLoaderService.loadClass(compiledClazz);
+       if(pojoDoesNotAlreadyExist(classReader.getCompletePath())){
 
-        Optional<Pojo> pojo = pojoRepository.findById(loadedClazz.getName());
-        if (pojo.isEmpty() || pojo.get().isEmptyHull()) {
+            classReader.accept(pojoClassVisitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
 
-        var interfaces = extractAndDefineInterfaces(loadedClazz.getInterfaces());
-        var attributes = extractAndDefineAttributes(loadedClazz.getDeclaredFields());
-        var parentClazz = extractAndDefineParentClass(loadedClazz.getSuperclass());
+            Set<Attribute> attributes = setIdOfAttributes(pojoClassVisitor.getAttributes(),classReader.getCompletePath());
 
-        Pojo newPojo = new Pojo(loadedClazz.getName(), loadedClazz.getPackageName(), attributes, parentClazz, interfaces);
-            pojoRepository.save(newPojo);
-
-            logger.info("The following Pojo was created "+ newPojo);
-            return newPojo;
+            var pojo =   Pojo.builder().completePath(classReader.getCompletePath())
+                    .className(classReader.getClassName())
+                    .packageName(classReader.getPackageName())
+                    .parentClass(
+                            Pojo.builder()
+                                    .completePath(classReader.getSuperCompletePath())
+                                    .className(classReader.getSuperName())
+                                    .packageName(classReader.getSuperName())
+                                    .emptyHull(true).build()
+                    ).interfaces( new HashSet<>( Arrays.asList(classReader.getInterfaces())))
+                    .attributes(attributes)
+                    .emptyHull(false).build();
+            pojoRepository.save(pojo);
+            return pojo;
         }
-    return null;
+        throw new PojoAlreadyExists(classReader.getCompletePath());
+
+    }
+    private Set<Attribute>   setIdOfAttributes(Set<Attribute> attributes, String completePath){
+        return attributes.stream().peek(attribute -> attribute.setId(completePath + "" + attribute.getName())).collect(Collectors.toSet());
+    }
+    private boolean pojoDoesNotAlreadyExist(String completePath){
+        Optional<Pojo> pojo = pojoRepository.findById(completePath);
+        return pojo.isEmpty() || pojo.get().isEmptyHull();
     }
 
-    private Set<String> extractAndDefineInterfaces(Class<?>[] interfaces) {
-        return Arrays.stream(interfaces).map((Class::toString)).collect(Collectors.toSet());
+    public void deletePojo(String pojoName){
+        pojoRepository.findById(pojoName).orElseThrow(() -> new PojoDoesNotExist(pojoName));
+        pojoRepository.deleteById(pojoName);
     }
+    public Pojo changeAttribute(AttributeChangeDTO attributeChangeDTO){
+        Pojo pojo = pojoRepository.findById(attributeChangeDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExist(attributeChangeDTO.getClassName()));
 
-    private Set<Attribute> extractAndDefineAttributes(Field[] fields){
-        return Arrays.stream(fields).map(field -> {
-            if(field.getType().isPrimitive()){
-                return new Primitive(field.getName(), new PrimitiveDataType(field.getType().getTypeName()), Modifier.toString(field.getModifiers()));
-            }else {
-                return new Reference(field.getName(), field.getType().getTypeName(), Modifier.toString(field.getModifiers()),this.checkForRootClassAndCreateAppropriateClass(field.getType()) );
-            }
-        } ).collect(Collectors.toSet());
+            var attr =  pojo.getAttributes().stream().filter((attribute)-> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeChangeDTO.getAttributeName(), attributeChangeDTO.getClassName()));
+
+                pojo.getAttributes().remove(attr);
+                pojoRepository.deleteById(pojo.getClassName());
+                pojoRepository.save(pojo);
+               return pojo;
     }
-
-    private Pojo extractAndDefineParentClass(Class<?> parentClazz){
-        Optional<Pojo> pojo =  pojoRepository.findById(parentClazz.getName());
-        if(pojo.isPresent() && pojo.get().isEmptyHull())
-            return pojo.get();
-        return this.checkForRootClassAndCreateAppropriateClass(parentClazz);
-    }
-
-    private Pojo checkForRootClassAndCreateAppropriateClass(Class<?> clazz){
-        Optional<Pojo> pojo =  pojoRepository.findById(clazz.getName());
-        if(pojo.isPresent()){
-            return pojo.get();
-        }
-        if(clazz.getSuperclass() == null )
-            return new  Pojo(clazz.getName(), clazz.getPackageName());
-
-        return new Pojo(clazz.getName(), clazz.getPackageName(), this.checkForRootClassAndCreateAppropriateClass(clazz.getSuperclass()));
-    }
-
-    public boolean deletePojo(String pojoName){
-            if(pojoRepository.existsById(pojoName)){
-                pojoRepository.deleteById(pojoName);
-                return true;
-            }
-           return false;
-    }
-    public boolean changeAttribute(AttributeChangeDTO attributeChangeDTO){
-        Optional<Pojo> pojo = pojoRepository.findById(attributeChangeDTO.getClassName());
-        if(pojo.isPresent()){
-           var attr =  pojo.get().getAttributes().stream().filter((attribute)-> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst();
-           if(attr.isPresent()){
-               pojo.get().getAttributes().remove(attr.get());
-                pojoRepository.deleteById(pojo.get().getClassName());
-               pojoRepository.save(pojo.get());
-            return true;
-           }
-        }
-        return false;
-    }
-
 }
+
+

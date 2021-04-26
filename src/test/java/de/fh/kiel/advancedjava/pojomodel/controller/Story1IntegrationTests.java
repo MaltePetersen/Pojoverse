@@ -81,7 +81,7 @@ public class Story1IntegrationTests {
     class  ClassExistsAsEmptyHull {
         @BeforeEach()
         public void createEmptyHullPojo() throws Exception {
-            pojoRepository.save(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData"));
+            pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").packageName("de.fh.kiel.advancedjava.pojomodel.exampleData").emptyHull(true).build());
         }
         @Test
         @DisplayName("Then the endpoint should return 200 OK as an answer")
@@ -98,19 +98,17 @@ public class Story1IntegrationTests {
         class AlreadyExistingClass {
             @BeforeEach()
             public void createPojo() throws Exception {
-                pojoRepository.save(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData", null, null, null));
+                pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").packageName("de.fh.kiel.advancedjava.pojomodel.exampleData").emptyHull(false).build());
             }
 
             @Test
-            @DisplayName("Then the endpoint should return an is internal Server error status")
-            public void createTheSamePojoAgain()  {
-             assertThrows(Exception.class, () -> {
+            @DisplayName("Then the endpoint should return an is Bad Request status")
+            public void createTheSamePojoAgain() throws Exception {
                          mvc.perform(MockMvcRequestBuilders.post("/pojo")
                                  .content(defaultClass)
                                  .accept(MediaType.APPLICATION_JSON))
-                                 .andExpect(status().isInternalServerError())
+                                 .andExpect(status().isBadRequest())
                                  .andReturn();
-                     });
             }
         }
 
@@ -118,12 +116,12 @@ public class Story1IntegrationTests {
         @DisplayName("When the class is not base64 encoded")
         class InputNotBase64 {
             @Test
-            @DisplayName("Then the endpoint should return an 500 internal Server error")
+            @DisplayName("Then the endpoint should return an 400 Bad Request")
             public void getPojo() throws Exception {
                 mvc.perform(MockMvcRequestBuilders.post("/pojo")
                         .content(notBase64EncodedClass)
                         .accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isInternalServerError())
+                        .andExpect(status().isBadRequest())
                         .andReturn();
             }
         }

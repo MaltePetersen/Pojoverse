@@ -27,9 +27,6 @@ public class PojoServiceTest {
     @Autowired
     PojoRepository pojoRepository;
 
-    @Autowired
-    DynamicClassLoaderService dynamicClassLoaderService;
-
     @AfterEach()
     void deleteAllSavedClasses(){
         this.pojoRepository.deleteAll();
@@ -59,7 +56,7 @@ public class PojoServiceTest {
         public void saveToDb() {
             Pojo pojo = pojoService.createPojo(classWithPrimtives);
             assertNotNull(pojo);
-            assertTrue(pojoRepository.existsById(pojo.getClassName()));
+            assertTrue(pojoRepository.existsById(pojo.getCompletePath()));
         }
     }
 
@@ -68,7 +65,7 @@ public class PojoServiceTest {
     class ReplaceEmptyHullWithNewPojo {
         @BeforeEach()
         void SetUp(){
-            pojoRepository.save(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData"));
+            pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").packageName("de.fh.kiel.advancedjava.pojomodel.exampleData").emptyHull(true).build());
         }
 
         @Test
@@ -76,8 +73,8 @@ public class PojoServiceTest {
         public void replace() throws Exception {
             Pojo pojo = pojoService.createPojo(defaultClass);
             assertNotNull(pojo);
-            assertTrue(pojoRepository.existsById(pojo.getClassName()));
-            assertFalse(pojoRepository.findById(pojo.getClassName()).get().isEmptyHull());
+            assertTrue(pojoRepository.existsById(pojo.getCompletePath()));
+            assertFalse(pojoRepository.findById(pojo.getCompletePath()).get().isEmptyHull());
         }
     }
     @Nested
@@ -85,12 +82,12 @@ public class PojoServiceTest {
     class AlreadyExists {
         @BeforeEach()
         void SetUp(){
-            pojoRepository.save(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtives", "", null, null, null));
+            pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").packageName("de.fh.kiel.advancedjava.pojomodel.exampleData").emptyHull(false).build());
         }
         @Test
         @DisplayName("Then null should be returned")
         public void pojoAlreadyExist() throws Exception {
-           assertNull( pojoService.createPojo(classWithPrimtives));
+           assertThrows(de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists.class,() -> pojoService.createPojo(defaultClass));
         }
     }
 }

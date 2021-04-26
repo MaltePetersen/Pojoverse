@@ -69,7 +69,7 @@ public class Story2IntegrationTests {
     class ClassExists {
         @BeforeEach()
         void SetUp(){
-            pojoRepository.save(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData", null, null, null));
+            pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").packageName("de.fh.kiel.advancedjava.pojomodel.exampleData").emptyHull(false).build());
         }
         @Test
         @DisplayName("Then the endpoint should return 200 ok")

@@ -5,7 +5,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 
 import java.util.Objects;
 
-@Node
+@Deprecated
 public class PrimitiveDataType {
  @Id
  private String name;
