@@ -1,6 +1,5 @@
 package de.fh.kiel.advancedjava.pojomodel.controller;
 
-import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest

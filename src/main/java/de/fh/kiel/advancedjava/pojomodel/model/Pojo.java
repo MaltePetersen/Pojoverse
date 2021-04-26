@@ -1,5 +1,8 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -9,11 +12,15 @@ import java.util.Objects;
 import java.util.Set;
 
 @Node
+@Builder
+@AllArgsConstructor
+@Data
 public class Pojo {
 
     private boolean emptyHull;
 
     @Id
+    private String completePath;
     private String className;
     private String packageName;
 
@@ -50,78 +57,4 @@ public class Pojo {
         this.emptyHull = true;
     }
 
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public Set<Attribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Set<Attribute> attributes) {
-        this.attributes = attributes;
-    }
-
-    public Pojo getParentClass() {
-        return parentClass;
-    }
-
-    public void setParentClass(Pojo parentClass) {
-        this.parentClass = parentClass;
-    }
-
-    public Set<String> getInterfaces() {
-        return interfaces;
-    }
-
-    public void setInterfaces(Set<String> interfaces) {
-        this.interfaces = interfaces;
-    }
-
-    public boolean isEmptyHull() {
-        return emptyHull;
-    }
-
-    @Override
-    public String toString() {
-        return "Pojo{" +
-                "emptyHull=" + emptyHull +
-                ", className='" + className + '\'' +
-                ", packageName='" + packageName + '\'' +
-                ", attributes=" + attributes +
-                ", parentClass=" + parentClass +
-                ", interfaces=" + interfaces +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Pojo pojo = (Pojo) o;
-        return emptyHull == pojo.emptyHull &&
-                Objects.equals(className, pojo.className) &&
-                Objects.equals(packageName, pojo.packageName) &&
-                Objects.equals(attributes, pojo.attributes) &&
-                Objects.equals(parentClass, pojo.parentClass) &&
-                Objects.equals(interfaces, pojo.interfaces);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(emptyHull, className, packageName, attributes, parentClass, interfaces);
-    }
 }

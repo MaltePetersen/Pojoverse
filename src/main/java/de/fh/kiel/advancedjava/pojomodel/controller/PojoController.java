@@ -2,7 +2,10 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
 
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
+import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.service.Handler;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +18,10 @@ import java.util.Base64;
 @RequestMapping("pojo")
 public class PojoController {
     private final PojoService pojoService;
-    PojoController(PojoService pojoService) {
+    private final Handler handler;
+    PojoController(PojoService pojoService, Handler handler) {
         this.pojoService = pojoService;
+        this.handler = handler;
     }
 
 
@@ -27,12 +32,13 @@ public class PojoController {
         try {
             pojoAsByteCode = Base64.getDecoder().decode(base64EncodedByteCodePojo);
         } catch (IllegalArgumentException i) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new NoValidBase64();
         }
+        Pojo pojo = handler.read(pojoAsByteCode);
 
-        Pojo pojo = pojoService.createPojo(pojoAsByteCode);
-        if(pojo == null)
-            throw new Exception("Pojo already exists and is not and empty hull");
+      //  Pojo pojo = pojoService.createPojo(pojoAsByteCode);
+        //if(pojo == null)
+          //  throw new PojoAlreadyExists("Pojo");
 
         return ResponseEntity.ok(pojo);
 
@@ -53,5 +59,8 @@ public class PojoController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
     }
 
-
+    @GetMapping
+    public String test(){
+        throw new PojoAlreadyExists("Test");
+    }
 }

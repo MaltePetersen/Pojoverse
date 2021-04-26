@@ -1,11 +1,11 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
-
+@Deprecated
 public class Primitive extends  Attribute{
 
     private PrimitiveDataType primitiveDataType;
 
     public Primitive(String name, PrimitiveDataType primitiveDataType, String accessModifier) {
-        super(name,  accessModifier);
+        super();
         this.primitiveDataType = primitiveDataType;
     }
 

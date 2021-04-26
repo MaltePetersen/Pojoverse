@@ -1,13 +1,12 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
-import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
-import de.fh.kiel.advancedjava.pojomodel.model.Primitive;
-import de.fh.kiel.advancedjava.pojomodel.model.PrimitiveDataType;
-import de.fh.kiel.advancedjava.pojomodel.model.Reference;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
+import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Modifier;
 import java.util.Optional;
 
 @Service
@@ -19,7 +18,7 @@ public class AttributeService {
         this.pojoRepository =pojoRepository;
     }
 
-    public Primitive addPrimitive(String pojoId ,AddAttributeDTO addAttributeDTO) throws Exception {
+    public Primitive addPrimitive(String pojoId ,AddAttributeDTO addAttributeDTO){
         Optional<Pojo> pojo = pojoRepository.findById(pojoId);
         if(pojo.isPresent()){
             Primitive primitive = new Primitive(addAttributeDTO.getName(), new PrimitiveDataType(addAttributeDTO.getType()), addAttributeDTO.getVisibility());
@@ -27,10 +26,10 @@ public class AttributeService {
             pojoRepository.save(pojo.get());
             return primitive;
         }
-        throw new Exception("The Pojo you want to access does not exist");
+        throw new PojoDoesNotExist(pojoId);
     }
 
-    public Reference addReference(String pojoId , AddAttributeDTO addAttributeDTO) throws Exception {
+    public Reference addReference(String pojoId , AddAttributeDTO addAttributeDTO){
         Optional<Pojo> pojo = pojoRepository.findById(pojoId);
         if(pojo.isPresent()){
             Optional<Pojo> exisitingPojoOfAttribute =  pojoRepository.findById(addAttributeDTO.getType());
@@ -44,7 +43,19 @@ public class AttributeService {
             pojoRepository.save(pojo.get());
             return reference;
         }
-        throw new Exception("The Pojo you want to access does not exist");
+        throw new PojoDoesNotExist(pojoId);
+    }
+
+    public Attribute createAttribute(String name, String dataTypeName, String access, String className, String packageName){
+       Pojo dataType = pojoRepository.findById(dataTypeName).orElse(
+               Pojo.builder()
+                       .completePath(dataTypeName)
+                       .className(className)
+                       .packageName(packageName)
+                       .emptyHull(true)
+                       .build()
+       );
+        return Attribute.builder().name(name).accessModifier(access).clazz(dataType).build();
     }
 
 

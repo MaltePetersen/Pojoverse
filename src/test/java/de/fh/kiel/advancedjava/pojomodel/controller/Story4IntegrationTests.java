@@ -1,6 +1,5 @@
 package de.fh.kiel.advancedjava.pojomodel.controller;
 
-import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

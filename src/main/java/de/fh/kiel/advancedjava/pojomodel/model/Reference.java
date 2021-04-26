@@ -1,13 +1,13 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
 import org.springframework.data.neo4j.core.schema.Relationship;
-
+@Deprecated
 public class Reference extends Attribute{
     @Relationship("DeclaringClass")
     private Pojo clazz;
 
     public Reference(String name, String dataType, String accessModifier, Pojo clazz) {
-        super(name, dataType, accessModifier);
+        super();
         this.clazz = clazz;
     }
 
