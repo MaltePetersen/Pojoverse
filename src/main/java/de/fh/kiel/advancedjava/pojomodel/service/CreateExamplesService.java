@@ -13,7 +13,7 @@ import java.util.Base64;
 public class CreateExamplesService {
 
     public void  createExamplePojoBase64() throws IOException {
-        byte[] data = Files.readAllBytes(Paths.get("/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/jars/Classes.jar"));
+        byte[] data = Files.readAllBytes(Paths.get("/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/class/Interfaces.class"));
         String test = Base64.getEncoder().encodeToString(data);
         System.out.println(test);
     }

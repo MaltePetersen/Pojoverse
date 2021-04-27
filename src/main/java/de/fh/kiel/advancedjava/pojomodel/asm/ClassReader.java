@@ -1,6 +1,12 @@
 package de.fh.kiel.advancedjava.pojomodel.asm;
 
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toCollection;
+
 public class ClassReader extends org.objectweb.asm.ClassReader {
 
     public ClassReader(byte[] classFile) {
@@ -27,6 +33,11 @@ public class ClassReader extends org.objectweb.asm.ClassReader {
     }
     public String getSuperCompletePath(){
         return toJavaURI(super.getSuperName());
+    }
+
+    @Override
+    public String[] getInterfaces() {
+        return Arrays.stream(super.getInterfaces()).map(this::toJavaURI).map(this::toOnlyClassName).toArray(String[]::new);
     }
 
     private String toJavaURI(String path){

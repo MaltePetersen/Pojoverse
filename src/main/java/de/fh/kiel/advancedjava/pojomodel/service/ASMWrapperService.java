@@ -41,7 +41,6 @@ public class ASMWrapperService {
             PojoClassVisitor pojoClassVisitor = new PojoClassVisitor();
             classReader.accept(pojoClassVisitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
             Set<AttributeInfo> attributesInfos = pojoClassVisitor.getAttributes();
-
            return new PojoInfo(classReader.getCompletePath(), classReader.getClassName(), classReader.getPackageName(), classReader.getSuperCompletePath(), classReader.getSuperName(), classReader.getSuperPackageName(),attributesInfos,new HashSet<>( Arrays.asList(classReader.getInterfaces())));
 
         }

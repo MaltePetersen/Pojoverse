@@ -16,6 +16,7 @@ public class PojoApplication {
 
 	public static void main(String[] args) throws IOException {
 		SpringApplication.run(PojoApplication.class, args);
+		new CreateExamplesService().createExamplePojoBase64();
 	}
 
 

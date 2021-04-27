@@ -8,6 +8,7 @@ import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Modifier;
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,7 @@ public class AttributeService {
 
     public Attribute addAttribute(String pojoId , AddAttributeDTO addAttributeDTO){
             Pojo pojo =  pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExist(pojoId));
-            boolean attributeAlreadyExistsInPojo  = pojo.getAttributes().stream().anyMatch(attr -> attr.getName().equals(addAttributeDTO.getName()));
+            boolean attributeAlreadyExistsInPojo  = pojo.getAttributes() != null && pojo.getAttributes().stream().anyMatch(attr -> attr.getName().equals(addAttributeDTO.getName()));
            if( attributeAlreadyExistsInPojo)
                throw new AttributeAlreadyExists(addAttributeDTO.getName(), pojoId);
 
@@ -43,7 +44,10 @@ public class AttributeService {
                 attribute.setGenericType(pojoOfGenericType);
            }
 
-           pojo.getAttributes().add(attribute);
+           if( pojo.getAttributes() == null )
+               pojo.setAttributes(Collections.singleton(attribute));
+           else
+               pojo.getAttributes().add(attribute);
 
            pojoRepository.save(pojo);
 

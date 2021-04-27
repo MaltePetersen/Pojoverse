@@ -6,6 +6,7 @@ import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
+import de.fh.kiel.advancedjava.pojomodel.service.TymeLeafTemplateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,11 @@ import java.util.Base64;
 @RequestMapping("pojo")
 public class PojoController {
     private final PojoService pojoService;
-    PojoController(PojoService pojoService) {
+    private final TymeLeafTemplateService tymeLeafTemplateService;
+
+    PojoController(PojoService pojoService, TymeLeafTemplateService tymeLeafTemplateService) {
         this.pojoService = pojoService;
+        this.tymeLeafTemplateService = tymeLeafTemplateService;
     }
 
 
@@ -50,8 +54,8 @@ public class PojoController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping
-    public String javaCode(){
-
+    @GetMapping("/{name}")
+    public ResponseEntity<String> javaCode(@PathVariable("name") String pojoName){
+       return ResponseEntity.ok(tymeLeafTemplateService.createJavaFile(pojoName));
     }
 }

@@ -1,0 +1,12 @@
+package [( ${pojo.packageName} )];
+[# th:each="attribute : ${pojo.attributes}"]
+import   [( ${attribute.clazz.completePath} )];
+[# th:if="${attribute.clazz.completePath == 'java.util.List'}"]import [( ${attribute.genericType.completePath} )];[/][/]
+
+public class [( ${pojo.className} )][# th:if="${pojo.parentClass.completePath != 'java.lang.Object'}"] extends [( ${pojo.parentClass.className} )][/][# th:each="interface, iter : ${pojo.interfaces}"][# th:if="${iter.index == 0}"] implements[/][# th:if="${iter.index != iter.size -1}"] [( ${interface} )],[/][# th:if="${iter.index == iter.size -1}"] [( ${interface} )][/][/]{
+[# th:each="attribute, iter : ${pojo.attributes}"]
+[# th:if="${attribute.clazz.completePath == 'java.util.List'}"] [( ${attribute.accessModifier} )] [( ${attribute.clazz.className} )]<[( ${attribute.genericType.className} )]> [( ${attribute.name} )];  [/]
+[# th:if="${attribute.clazz.completePath != 'java.util.List'}"] [( ${attribute.accessModifier} )] [( ${attribute.clazz.className} )] [( ${attribute.name} )]; [/]
+[/]
+
+}
