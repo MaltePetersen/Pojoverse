@@ -51,7 +51,7 @@ public class PojoController {
     }
 
     @GetMapping
-    public String test(){
-        throw new PojoAlreadyExists("Test");
+    public String javaCode(){
+
     }
 }

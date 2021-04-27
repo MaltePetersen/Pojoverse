@@ -1,0 +1,6 @@
+{
+  "name": "something",
+  "type": "java.util.List",
+  "visibility": "private",
+  "genericType": "int"
+}

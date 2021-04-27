@@ -18,6 +18,8 @@ public class Attribute {
     private String id;
     private String name;
     private String accessModifier;
+    //isOnlySet if the class is of type java.util.list
+    private Pojo genericType;
 
     @Relationship("DeclaringClass")
     private Pojo clazz;
