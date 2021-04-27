@@ -1,60 +1,59 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
-import de.fh.kiel.advancedjava.pojomodel.asm.ClassReader;
-import de.fh.kiel.advancedjava.pojomodel.asm.PojoClassVisitor;
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.AttributeDoesNotExist;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
+import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.model.PojoInfo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.stereotype.Service;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
+
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class PojoService {
 
-    PojoClassVisitor pojoClassVisitor;
     PojoRepository pojoRepository;
-    PojoService(PojoClassVisitor pojoClassVisitor, PojoRepository pojoRepository){
-        this.pojoClassVisitor = pojoClassVisitor;
+    ASMWrapperService ASMWrapperService;
+    AttributeService attributeService;
+
+    PojoService(PojoRepository pojoRepository, ASMWrapperService ASMWrapperService, AttributeService attributeService
+    ){
         this.pojoRepository = pojoRepository;
+        this.ASMWrapperService = ASMWrapperService;
+        this.attributeService = attributeService;
     }
 
     public Pojo createPojo(byte[] clazz){
-        ClassReader classReader = new ClassReader(clazz);
 
-       if(pojoDoesNotAlreadyExist(classReader.getCompletePath())){
+           PojoInfo pojoInfo = this.ASMWrapperService.read(clazz);
 
-            classReader.accept(pojoClassVisitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+            Set<Attribute> attributes = constructAttributesFromAttributesInfo(pojoInfo.getAttributes(), pojoInfo.getCompletePath());
 
-            Set<Attribute> attributes = setIdOfAttributes(pojoClassVisitor.getAttributes(),classReader.getCompletePath());
-            var superClass = getSuperClass(classReader.getSuperCompletePath(),classReader.getSuperName(), classReader.getSuperPackageName());
+            var superClass = getSuperClass(pojoInfo.getParentClassCompletePath(),pojoInfo.getParentClassName(), pojoInfo.getParentClassPackageName());
 
-            var pojo =   Pojo.builder().completePath(classReader.getCompletePath())
-                    .className(classReader.getClassName())
-                    .packageName(classReader.getPackageName())
-                    .parentClass(getSuperClass(classReader.getSuperCompletePath(),classReader.getSuperName(), classReader.getSuperPackageName()))
-                    .interfaces( new HashSet<>( Arrays.asList(classReader.getInterfaces())))
+            var pojo =   Pojo.builder().completePath(pojoInfo.getCompletePath())
+                    .className(pojoInfo.getClassName())
+                    .packageName(pojoInfo.getPackageName())
+                    .parentClass(superClass)
+                    .interfaces( pojoInfo.getInterfaces())
                     .attributes(attributes)
                     .emptyHull(false).build();
             pojoRepository.save(pojo);
             return pojo;
-        }
-        throw new PojoAlreadyExists(classReader.getCompletePath());
 
+
+    }
+    private Set<Attribute> constructAttributesFromAttributesInfo(Set<AttributeInfo> attributeInfos, String completePath){
+        Set<Attribute> attributes =   attributeInfos.stream().map(a -> attributeService.createAttribute(a.getName(), a.getDataTypeName(), a.getAccessModifier(), a.getClassName(), a.getPackageName())).collect(Collectors.toSet());
+        attributes = setIdOfAttributes(attributes, completePath);
+        return attributes;
     }
     private Set<Attribute>   setIdOfAttributes(Set<Attribute> attributes, String completePath){
         return attributes.stream().peek(attribute -> attribute.setId(completePath + "" + attribute.getName())).collect(Collectors.toSet());
-    }
-    private boolean pojoDoesNotAlreadyExist(String completePath){
-        Optional<Pojo> pojo = pojoRepository.findById(completePath);
-        return pojo.isEmpty() || pojo.get().isEmptyHull();
     }
 
     public void deletePojo(String pojoName){

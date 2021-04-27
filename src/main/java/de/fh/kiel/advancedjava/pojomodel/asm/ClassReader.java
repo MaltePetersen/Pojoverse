@@ -1,6 +1,5 @@
 package de.fh.kiel.advancedjava.pojomodel.asm;
 
-import org.springframework.stereotype.Service;
 
 public class ClassReader extends org.objectweb.asm.ClassReader {
 

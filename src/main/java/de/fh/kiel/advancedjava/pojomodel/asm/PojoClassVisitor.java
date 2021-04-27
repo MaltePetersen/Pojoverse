@@ -1,35 +1,27 @@
 package de.fh.kiel.advancedjava.pojomodel.asm;
 
-import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
-import de.fh.kiel.advancedjava.pojomodel.service.AttributeService;
-import lombok.AccessLevel;
+import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
 import lombok.Getter;
 import org.objectweb.asm.*;
-import org.springframework.stereotype.Service;
-
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 @Getter
-@Service
 public class PojoClassVisitor extends ClassVisitor {
 
-    private Set<Attribute> attributes;
-    @Getter(AccessLevel.NONE)
-    private final AttributeService attributeService;
+    private Set<AttributeInfo> attributes;
 
-    public PojoClassVisitor(AttributeService attributeService) {
+    public PojoClassVisitor() {
         super(Opcodes.ASM9);
         attributes = new HashSet<>();
-        this.attributeService = attributeService;
     }
 
     public FieldVisitor visitField(int access, String name, String desc, String signature, Object value){
         //This needs to be tested because the vistor will read a field with static two times once without acces modifiers and once more with
-        Optional<Attribute> attributeAlreadyExists = this.attributes.stream().filter(attribute -> attribute.getName().equals(name)).peek(attribute -> attribute.setAccessModifier(attribute.getAccessModifier() + " " + Modifier.toString(access))).findAny();
+        Optional<AttributeInfo> attributeAlreadyExists = this.attributes.stream().filter(attribute -> attribute.getName().equals(name)).peek(attribute -> attribute.setAccessModifier(attribute.getAccessModifier() + " " + Modifier.toString(access))).findAny();
         if(attributeAlreadyExists.isEmpty()){
             desc = toJavaURI(transformPrimtives(desc));
-            this.attributes.add(attributeService.createAttribute(name, desc, Modifier.toString(access), parseClassName(desc), parsePackageName(desc)));
+            this.attributes.add(new AttributeInfo(name, desc, Modifier.toString(access), parseClassName(desc), parsePackageName(desc)));
         }
         return super.visitField(access,name,desc,signature,value);
     }
