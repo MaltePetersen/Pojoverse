@@ -2,11 +2,13 @@ plugins {
     id 'org.springframework.boot' version '2.4.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
+    id "info.solidsoft.pitest" version '1.5.1'
 }
 
 group = 'de.fh.kiel.advancedjava'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '15'
+targetCompatibility = '15'
 
 configurations {
     compileOnly {
@@ -34,4 +36,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+pitest {
+    //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
+    junit5PluginVersion = '0.12'
 }
