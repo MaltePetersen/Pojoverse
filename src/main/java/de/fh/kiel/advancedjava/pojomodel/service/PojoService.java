@@ -1,7 +1,9 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
+import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.AttributeDoesNotExist;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
@@ -26,7 +28,7 @@ public class PojoService {
         this.attributeService = attributeService;
     }
 
-    public Pojo createPojo(byte[] clazz){
+    public Pojo readByteCodeAndCreatePojo(byte[] clazz){
 
            var pojoInfo = this.asmWrapperService.read(clazz);
 
@@ -45,6 +47,19 @@ public class PojoService {
             return pojo;
 
 
+    }
+    private String buildCompletePath(String packageName, String className){
+            return packageName + "." + className;
+    }
+    public Pojo createPojoEmptyHullFromJSON(PojoEmptyHullDTO emptyHull){
+        var completePath = buildCompletePath(emptyHull.getPackageName(), emptyHull.getClassName());
+
+        if ( pojoRepository.existsById(completePath) )
+            throw new PojoAlreadyExists(completePath);
+
+       var pojo = Pojo.builder().emptyHull(true).completePath(completePath).className(emptyHull.getClassName()).packageName(emptyHull.getPackageName()).build();
+
+       return pojoRepository.save(pojo);
     }
     private Set<Attribute> constructAttributesFromAttributesInfo(Set<AttributeInfo> attributeInfos, String completePath){
         Set<Attribute> attributes =   attributeInfos.stream().map(a -> attributeService.createAttribute(a.getName(), a.getDataTypeName(), a.getAccessModifier(), a.getClassName(), a.getPackageName())).collect(Collectors.toSet());
@@ -75,6 +90,9 @@ public class PojoService {
                 .className(className)
                 .packageName(packageName)
                 .emptyHull(true).build());
+    }
+    public Pojo getPojo(String completePath){
+        return pojoRepository.findById(completePath).orElseThrow(() -> new PojoDoesNotExist(completePath));
     }
 }
 

@@ -36,4 +36,10 @@ public class PojosController {
     public List<Pojo> getPojos(){
         return pojosService.getAllPojos();
     }
+    @PostMapping("/multiple")
+    public ResponseEntity<List<Pojo>> importPojos(@RequestBody() List<Pojo> pojos ) {
+
+    return ResponseEntity.ok(pojosService.importPojos(pojos));
+
+    }
 }

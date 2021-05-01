@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
 
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
+import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
@@ -25,7 +26,7 @@ public class PojoController {
 
 
     @PostMapping
-    public ResponseEntity<Pojo> createPojo(@RequestBody() String base64EncodedByteCodePojo) {
+    public ResponseEntity<Pojo> createPojoFromByteCode(@RequestBody() String base64EncodedByteCodePojo) {
         byte[] pojoAsByteCode;
 
         try {
@@ -33,10 +34,15 @@ public class PojoController {
         } catch (IllegalArgumentException i) {
             throw new NoValidBase64();
         }
-        var pojo = pojoService.createPojo(pojoAsByteCode);
+        var pojo = pojoService.readByteCodeAndCreatePojo(pojoAsByteCode);
 
         return ResponseEntity.ok(pojo);
+    }
+    @PostMapping("emptyHull")
+    public ResponseEntity<Pojo> createPojoFromJSON(@RequestBody() PojoEmptyHullDTO pojoEmptyHullDTO) {
+        var pojo = pojoService.createPojoEmptyHullFromJSON(pojoEmptyHullDTO);
 
+        return ResponseEntity.ok(pojo);
     }
     @PutMapping
     public ResponseEntity<Pojo> deleteAttribute(@RequestBody() AttributeChangeDTO attributeChangeDTO){
@@ -49,8 +55,12 @@ public class PojoController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/class/{name}")
     public ResponseEntity<String> javaCode(@PathVariable("name") String pojoName){
        return ResponseEntity.ok(tymeLeafTemplateService.createJavaFile(pojoName));
+    }
+    @GetMapping("/{name}")
+    public ResponseEntity<Pojo> getPojo(@PathVariable("name") String pojoName){
+        return ResponseEntity.ok(pojoService.getPojo(pojoName));
     }
 }

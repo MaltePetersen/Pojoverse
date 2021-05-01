@@ -20,4 +20,9 @@ public class PojosService {
     public List<Pojo> getAllPojos(){
         return pojoRepository.findAll();
     }
+
+    public List<Pojo> importPojos(List<Pojo> pojos){
+        pojoRepository.deleteAll();
+        return pojoRepository.saveAll(pojos);
+    }
 }

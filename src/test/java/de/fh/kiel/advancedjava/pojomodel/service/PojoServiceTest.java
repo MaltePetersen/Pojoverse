@@ -54,7 +54,7 @@ public class PojoServiceTest {
         @Test
         @DisplayName("Then it should be saved to the db")
         void saveToDb() {
-            Pojo pojo = pojoService.createPojo(classWithPrimtives);
+            Pojo pojo = pojoService.readByteCodeAndCreatePojo(classWithPrimtives);
             assertNotNull(pojo);
             assertTrue(pojoRepository.existsById(pojo.getCompletePath()));
         }
@@ -71,7 +71,7 @@ public class PojoServiceTest {
         @Test
         @DisplayName("Then the empty hull should be replaced wih the new pojo")
         void replace() throws Exception {
-            Pojo pojo = pojoService.createPojo(defaultClass);
+            Pojo pojo = pojoService.readByteCodeAndCreatePojo(defaultClass);
             assertNotNull(pojo);
             assertTrue(pojoRepository.existsById(pojo.getCompletePath()));
             assertFalse(pojoRepository.findById(pojo.getCompletePath()).get().isEmptyHull());
@@ -87,7 +87,7 @@ public class PojoServiceTest {
         @Test
         @DisplayName("Then null should be returned")
         void pojoAlreadyExist() throws Exception {
-           assertThrows(de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists.class,() -> pojoService.createPojo(defaultClass));
+           assertThrows(de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists.class,() -> pojoService.readByteCodeAndCreatePojo(defaultClass));
         }
     }
 }
