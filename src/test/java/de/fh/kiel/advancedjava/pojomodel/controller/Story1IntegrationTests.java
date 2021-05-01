@@ -59,7 +59,7 @@ public class Story1IntegrationTests {
     class  NewClass{
         @Test
         @DisplayName("Then the endpoint should return 200 OK as an answer also with just objects")
-        public void getPojoDefaultClass() throws Exception {
+        void getPojoDefaultClass() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(defaultClass)
                     .accept(MediaType.APPLICATION_JSON))
@@ -68,7 +68,7 @@ public class Story1IntegrationTests {
         }
         @Test
         @DisplayName("Then the endpoint should return 200 OK as an answer also with primitives")
-        public void getPojoPrimitiveClass() throws Exception {
+        void getPojoPrimitiveClass() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(classWithPrimtives)
                     .accept(MediaType.APPLICATION_JSON))
@@ -85,7 +85,7 @@ public class Story1IntegrationTests {
         }
         @Test
         @DisplayName("Then the endpoint should return 200 OK as an answer")
-        public void getPojo() throws Exception {
+        void getPojo() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(defaultClass)
                     .accept(MediaType.APPLICATION_JSON))
@@ -103,7 +103,7 @@ public class Story1IntegrationTests {
 
             @Test
             @DisplayName("Then the endpoint should return an is Bad Request status")
-            public void createTheSamePojoAgain() throws Exception {
+            void createTheSamePojoAgain() throws Exception {
                          mvc.perform(MockMvcRequestBuilders.post("/pojo")
                                  .content(defaultClass)
                                  .accept(MediaType.APPLICATION_JSON))
@@ -117,7 +117,7 @@ public class Story1IntegrationTests {
         class InputNotBase64 {
             @Test
             @DisplayName("Then the endpoint should return an 400 Bad Request")
-            public void getPojo() throws Exception {
+            void getPojo() throws Exception {
                 mvc.perform(MockMvcRequestBuilders.post("/pojo")
                         .content(notBase64EncodedClass)
                         .accept(MediaType.APPLICATION_JSON))

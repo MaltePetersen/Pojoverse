@@ -16,7 +16,7 @@ public class AttributeController {
     }
 
     @PostMapping("/{className}")
-    public ResponseEntity<Attribute> addPrimitive(@PathVariable String className, @RequestBody AddAttributeDTO addAttributeDTO) throws Exception {
+    public ResponseEntity<Attribute> addPrimitive(@PathVariable String className, @RequestBody AddAttributeDTO addAttributeDTO) {
         return ResponseEntity.ok(this.attributeService.addAttribute(className, addAttributeDTO));
     }
 

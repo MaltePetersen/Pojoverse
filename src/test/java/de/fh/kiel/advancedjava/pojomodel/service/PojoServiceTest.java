@@ -53,7 +53,7 @@ public class PojoServiceTest {
     class NewPojo {
         @Test
         @DisplayName("Then it should be saved to the db")
-        public void saveToDb() {
+        void saveToDb() {
             Pojo pojo = pojoService.createPojo(classWithPrimtives);
             assertNotNull(pojo);
             assertTrue(pojoRepository.existsById(pojo.getCompletePath()));
@@ -70,7 +70,7 @@ public class PojoServiceTest {
 
         @Test
         @DisplayName("Then the empty hull should be replaced wih the new pojo")
-        public void replace() throws Exception {
+        void replace() throws Exception {
             Pojo pojo = pojoService.createPojo(defaultClass);
             assertNotNull(pojo);
             assertTrue(pojoRepository.existsById(pojo.getCompletePath()));
@@ -86,7 +86,7 @@ public class PojoServiceTest {
         }
         @Test
         @DisplayName("Then null should be returned")
-        public void pojoAlreadyExist() throws Exception {
+        void pojoAlreadyExist() throws Exception {
            assertThrows(de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists.class,() -> pojoService.createPojo(defaultClass));
         }
     }

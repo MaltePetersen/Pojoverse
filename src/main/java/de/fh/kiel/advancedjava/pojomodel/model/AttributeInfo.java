@@ -6,5 +6,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AttributeInfo {
-    String name, dataTypeName, accessModifier, className, packageName;
+    String name;
+    String dataTypeName;
+    String accessModifier;
+    String className;
+    String packageName;
 }

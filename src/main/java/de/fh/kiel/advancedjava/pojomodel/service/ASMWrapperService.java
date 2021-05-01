@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
-import de.fh.kiel.advancedjava.pojomodel.asm.ClassReader;
+import de.fh.kiel.advancedjava.pojomodel.asm.PojoClassReader;
 import de.fh.kiel.advancedjava.pojomodel.asm.PojoClassVisitor;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
@@ -34,12 +34,12 @@ public class ASMWrapperService {
     }
 
     public PojoInfo read(byte[] clazz){
-        ClassReader classReader = new ClassReader(clazz);
+        var classReader = new PojoClassReader(clazz);
 
         if(pojoDoesNotAlreadyExist(classReader.getCompletePath())) {
 
-            PojoClassVisitor pojoClassVisitor = new PojoClassVisitor();
-            classReader.accept(pojoClassVisitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+            var pojoClassVisitor = new PojoClassVisitor();
+            classReader.accept(pojoClassVisitor, PojoClassReader.SKIP_DEBUG | PojoClassReader.SKIP_FRAMES);
             Set<AttributeInfo> attributesInfos = pojoClassVisitor.getAttributes();
            return new PojoInfo(classReader.getCompletePath(), classReader.getClassName(), classReader.getPackageName(), classReader.getSuperCompletePath(), classReader.getSuperName(), classReader.getSuperPackageName(),attributesInfos,new HashSet<>( Arrays.asList(classReader.getInterfaces())));
 

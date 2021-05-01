@@ -3,7 +3,6 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
 import de.fh.kiel.advancedjava.pojomodel.service.TymeLeafTemplateService;
@@ -26,7 +25,7 @@ public class PojoController {
 
 
     @PostMapping
-    public ResponseEntity<Pojo> createPojo(@RequestBody() String base64EncodedByteCodePojo) throws Exception {
+    public ResponseEntity<Pojo> createPojo(@RequestBody() String base64EncodedByteCodePojo) {
         byte[] pojoAsByteCode;
 
         try {
@@ -34,11 +33,7 @@ public class PojoController {
         } catch (IllegalArgumentException i) {
             throw new NoValidBase64();
         }
-        Pojo pojo = pojoService.createPojo(pojoAsByteCode);
-
-      //  Pojo pojo = pojoService.createPojo(pojoAsByteCode);
-        //if(pojo == null)
-          //  throw new PojoAlreadyExists("Pojo");
+        var pojo = pojoService.createPojo(pojoAsByteCode);
 
         return ResponseEntity.ok(pojo);
 

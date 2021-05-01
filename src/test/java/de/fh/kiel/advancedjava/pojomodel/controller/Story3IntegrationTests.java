@@ -55,7 +55,7 @@ public class Story3IntegrationTests {
     class DoesNotExist {
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
-        public void createPojos() throws Exception {
+        void createPojos() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojos")
                     .content(jar)
                     .accept(MediaType.APPLICATION_JSON))

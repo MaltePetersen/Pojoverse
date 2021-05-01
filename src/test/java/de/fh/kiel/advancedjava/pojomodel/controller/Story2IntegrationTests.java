@@ -57,7 +57,7 @@ public class Story2IntegrationTests {
         class DoesNotExist {
             @Test
             @DisplayName("Then the endpoint should return an 400 bad request")
-            public void deletePojo() throws Exception {
+            void deletePojo() throws Exception {
                 mvc.perform(MockMvcRequestBuilders.delete("/pojo/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isBadRequest())
@@ -73,7 +73,7 @@ public class Story2IntegrationTests {
         }
         @Test
         @DisplayName("Then the endpoint should return 200 ok")
-        public void deletePojo() throws Exception {
+        void deletePojo() throws Exception {
             mvc.perform(MockMvcRequestBuilders.delete("/pojo/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
@@ -91,7 +91,7 @@ public class Story2IntegrationTests {
         }
         @Test
         @DisplayName("Then the endpoint should return 200 ok, but should not delete the Pojo, instead it should be converted to an empty hull")
-        public void deletePojo() throws Exception {
+        void deletePojo() throws Exception {
             mvc.perform(MockMvcRequestBuilders.delete("/pojo/de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClasses")
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())

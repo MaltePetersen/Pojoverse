@@ -6,7 +6,6 @@ import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
-import de.fh.kiel.advancedjava.pojomodel.model.PojoInfo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,19 +16,19 @@ import java.util.stream.Collectors;
 public class PojoService {
 
     PojoRepository pojoRepository;
-    ASMWrapperService ASMWrapperService;
+    ASMWrapperService asmWrapperService;
     AttributeService attributeService;
 
-    PojoService(PojoRepository pojoRepository, ASMWrapperService ASMWrapperService, AttributeService attributeService
+    PojoService(PojoRepository pojoRepository, ASMWrapperService asmWrapperService, AttributeService attributeService
     ){
         this.pojoRepository = pojoRepository;
-        this.ASMWrapperService = ASMWrapperService;
+        this.asmWrapperService = asmWrapperService;
         this.attributeService = attributeService;
     }
 
     public Pojo createPojo(byte[] clazz){
 
-           PojoInfo pojoInfo = this.ASMWrapperService.read(clazz);
+           var pojoInfo = this.asmWrapperService.read(clazz);
 
             Set<Attribute> attributes = constructAttributesFromAttributesInfo(pojoInfo.getAttributes(), pojoInfo.getCompletePath());
 
@@ -53,17 +52,17 @@ public class PojoService {
         return attributes;
     }
     private Set<Attribute>   setIdOfAttributes(Set<Attribute> attributes, String completePath){
-        return attributes.stream().peek(attribute -> attribute.setId(completePath + "" + attribute.getName())).collect(Collectors.toSet());
+        return attributes.stream().map(attribute -> {  attribute.setId(completePath + "" + attribute.getName()); return attribute; }).collect(Collectors.toSet());
     }
 
     public void deletePojo(String pojoName){
-        pojoRepository.findById(pojoName).orElseThrow(() -> new PojoDoesNotExist(pojoName));
-        pojoRepository.deleteById(pojoName);
+        var pojo = pojoRepository.findById(pojoName).orElseThrow(() -> new PojoDoesNotExist(pojoName));
+        pojoRepository.deleteById(pojo.getCompletePath());
     }
     public Pojo changeAttribute(AttributeChangeDTO attributeChangeDTO){
-        Pojo pojo = pojoRepository.findById(attributeChangeDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExist(attributeChangeDTO.getClassName()));
+        var pojo = pojoRepository.findById(attributeChangeDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExist(attributeChangeDTO.getClassName()));
 
-            var attr =  pojo.getAttributes().stream().filter((attribute)-> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeChangeDTO.getAttributeName(), attributeChangeDTO.getClassName()));
+            var attr =  pojo.getAttributes().stream().filter(attribute-> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeChangeDTO.getAttributeName(), attributeChangeDTO.getClassName()));
 
                 pojo.getAttributes().remove(attr);
                 pojoRepository.deleteById(pojo.getCompletePath());

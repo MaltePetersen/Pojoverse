@@ -70,7 +70,7 @@ public class Story8IntegrationTests {
 
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
-        public void attributeChange() throws Exception {
+        void attributeChange() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                     .content(attributeAddDTO).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
@@ -91,7 +91,7 @@ public class Story8IntegrationTests {
 
         @Test
         @DisplayName("Then the endpoint should return an 200 bad request")
-        public void attributeChange() throws Exception {
+        void attributeChange() throws Exception {
              mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                     .content(attributeAddDTO).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isBadRequest())

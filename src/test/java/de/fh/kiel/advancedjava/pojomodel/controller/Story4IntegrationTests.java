@@ -65,7 +65,7 @@ public class Story4IntegrationTests {
 
         @Test
         @DisplayName("Then the endpoint should return an 200 ok and a list of all")
-        public void createPojos() throws Exception {
+        void createPojos() throws Exception {
             assertNotEquals("[]",mvc.perform(MockMvcRequestBuilders.get("/pojos")
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
@@ -79,7 +79,7 @@ public class Story4IntegrationTests {
 
         @Test
         @DisplayName("Then the endpoint should return an 200 ok and []")
-        public void createPojos() throws Exception {
+        void createPojos() throws Exception {
             assertEquals("[]",mvc.perform(MockMvcRequestBuilders.get("/pojos")
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())

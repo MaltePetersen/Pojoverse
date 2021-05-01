@@ -7,14 +7,12 @@ import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Modifier;
 import java.util.Collections;
-import java.util.Optional;
 
 @Service
 public class AttributeService {
 
-    private static final String listType = "java.util.List";
+    private static final String LIST_TYPE = "java.util.List";
 
     private final PojoRepository pojoRepository;
 
@@ -24,23 +22,23 @@ public class AttributeService {
 
 
     public Attribute addAttribute(String pojoId , AddAttributeDTO addAttributeDTO){
-            Pojo pojo =  pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExist(pojoId));
+            var pojo =  pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExist(pojoId));
             boolean attributeAlreadyExistsInPojo  = pojo.getAttributes() != null && pojo.getAttributes().stream().anyMatch(attr -> attr.getName().equals(addAttributeDTO.getName()));
            if( attributeAlreadyExistsInPojo)
                throw new AttributeAlreadyExists(addAttributeDTO.getName(), pojoId);
 
 
-           Pojo pojoOfAttributeType = transformPrimitivesAndFindIfThePojoExists(addAttributeDTO.getType());
+           var pojoOfAttributeType = transformPrimitivesAndFindIfThePojoExists(addAttributeDTO.getType());
 
-        Attribute attribute = Attribute.builder()
+        var attribute = Attribute.builder()
                 .id(pojoId+addAttributeDTO.getName())
                 .name(addAttributeDTO.getName())
                 .accessModifier(addAttributeDTO.getVisibility())
                 .clazz(pojoOfAttributeType).build();
 
-           if( pojoOfAttributeType.getCompletePath().equals(listType) ){
+           if( pojoOfAttributeType.getCompletePath().equals(LIST_TYPE) ){
 
-               Pojo pojoOfGenericType = transformPrimitivesAndFindIfThePojoExists(addAttributeDTO.getGenericType());
+               var pojoOfGenericType = transformPrimitivesAndFindIfThePojoExists(addAttributeDTO.getGenericType());
                 attribute.setGenericType(pojoOfGenericType);
            }
 

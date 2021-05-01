@@ -72,7 +72,7 @@ public class Story9IntegrationTests {
 
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
-        public void attributeChange() throws Exception {
+        void attributeChange() throws Exception {
             mvc.perform(MockMvcRequestBuilders.put("/pojo")
                     .content(attributeChangeDTO).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
@@ -92,7 +92,7 @@ public class Story9IntegrationTests {
 
         @Test
         @DisplayName("Then the endpoint should return an 500 internal server error")
-        public void attributeChange() throws Exception {
+        void attributeChange() throws Exception {
             mvc.perform(MockMvcRequestBuilders.put("/pojo")
                     .content(badAttributeChangeDTO).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isBadRequest())

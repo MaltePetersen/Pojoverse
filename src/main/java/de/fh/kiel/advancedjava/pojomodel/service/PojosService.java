@@ -4,7 +4,7 @@ import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.stereotype.Service;
 
-import java.net.MalformedURLException;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -13,8 +13,8 @@ public class PojosService {
     PojosService( PojoRepository pojoRepository){
         this.pojoRepository = pojoRepository;
     }
-    public  Class<?>[] extractPojos(byte[] pojosAsJar) throws MalformedURLException, ClassNotFoundException {
-        return null;
+    public  List<Class<?>> extractPojos(byte[] pojosAsJar)  {
+        return Collections.emptyList();
     }
 
     public List<Pojo> getAllPojos(){

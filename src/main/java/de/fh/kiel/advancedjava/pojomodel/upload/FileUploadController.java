@@ -1,5 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.upload;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,8 @@ import java.io.IOException;
 @Controller
 public class FileUploadController {
 
+	Logger logger = LoggerFactory.getLogger(FileUploadController.class);
+
 	@GetMapping("/upload")
 	public String listUploadedFiles(Model model) throws IOException {
 
@@ -29,7 +33,7 @@ public class FileUploadController {
 	@PostMapping("/upload")
 	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
 
-		System.out.println(file.getOriginalFilename());
+		logger.info(file.getOriginalFilename());
 
 		return "redirect:/upload";
 	}

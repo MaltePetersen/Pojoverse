@@ -68,7 +68,7 @@ public class Story12IntegrationTests {
 
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
-        public void attributeChange() throws Exception {
+        void attributeChange() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                     .content(attributeAddListDTO).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())

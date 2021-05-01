@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import java.net.MalformedURLException;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @RestController()
 @RequestMapping("pojos")

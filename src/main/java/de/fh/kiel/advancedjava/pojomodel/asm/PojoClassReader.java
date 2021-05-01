@@ -1,15 +1,12 @@
 package de.fh.kiel.advancedjava.pojomodel.asm;
 
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toCollection;
 
-public class ClassReader extends org.objectweb.asm.ClassReader {
+public class PojoClassReader extends org.objectweb.asm.ClassReader {
 
-    public ClassReader(byte[] classFile) {
+    public PojoClassReader(byte[] classFile) {
         super(classFile);
     }
 
@@ -41,7 +38,7 @@ public class ClassReader extends org.objectweb.asm.ClassReader {
     }
 
     private String toJavaURI(String path){
-        return path.replaceAll("/", ".");
+        return path.replace("/", ".");
     }
     private String toOnlyClassName(String completePath){
         if(completePath.lastIndexOf(".") != -1)
