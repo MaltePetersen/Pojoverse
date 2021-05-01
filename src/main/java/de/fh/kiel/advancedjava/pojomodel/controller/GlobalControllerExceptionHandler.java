@@ -1,7 +1,5 @@
 package de.fh.kiel.advancedjava.pojomodel.controller;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.model.ApiError;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;

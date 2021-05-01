@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.MalformedURLException;
 import java.util.Base64;
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class PojosController {
         this.pojosService = pojosService;
     }
     @PostMapping
-    public ResponseEntity<?> createPojos(@RequestBody() String base64EncodedJar) throws MalformedURLException, ClassNotFoundException {
+    public ResponseEntity<?> createPojos(@RequestBody() String base64EncodedJar)  {
         byte[] pojoAsByteCode;
 
         try {
