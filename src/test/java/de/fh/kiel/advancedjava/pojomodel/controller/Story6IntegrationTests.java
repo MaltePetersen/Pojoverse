@@ -15,6 +15,7 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
         import java.io.IOException;
         import java.nio.file.Files;
         import java.nio.file.Paths;
+        import java.util.HashSet;
         import java.util.List;
 
         import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -125,9 +126,9 @@ public class Story6IntegrationTests {
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
             var objectMapper = new ObjectMapper();
-            assertEquals(objectMapper.readValue(content, new TypeReference<List<Pojo>>() {
-            }), objectMapper.readValue(loadData(pathToJSONFolder + "packagesPojos.json"), new TypeReference<List<Pojo>>() {
-            }));        }
+            assertEquals(new HashSet<>(objectMapper.readValue(content, new TypeReference<List<Pojo>>() {
+            })), new HashSet<>(objectMapper.readValue(loadData(pathToJSONFolder + "packagesPojos.json"), new TypeReference<List<Pojo>>() {
+            })));        }
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
         void getAllParentPackage() throws Exception {
@@ -136,9 +137,9 @@ public class Story6IntegrationTests {
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
             var objectMapper = new ObjectMapper();
-            assertEquals(objectMapper.readValue(content, new TypeReference<List<Pojo>>() {
-            }), objectMapper.readValue(loadData(pathToJSONFolder + "packagesPojos.json"), new TypeReference<List<Pojo>>() {
-            }));
+            assertEquals(new HashSet<>(objectMapper.readValue(content, new TypeReference<List<Pojo>>() {
+            })), new HashSet<>(objectMapper.readValue(loadData(pathToJSONFolder + "packagesPojos.json"), new TypeReference<List<Pojo>>() {
+            })));
         }
         @Test
         @DisplayName("Then the endpoint should return an excetion")
