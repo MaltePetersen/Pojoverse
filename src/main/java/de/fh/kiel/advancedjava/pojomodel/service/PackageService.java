@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.exception.PackageCreationFailed;
+import de.fh.kiel.advancedjava.pojomodel.exception.PackageDoesNotExist;
 import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowed;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
@@ -26,9 +27,17 @@ public class PackageService {
 
     public List<Pojo> getPojos(String packageName){
         if(validPackageNameStructure(packageName)){
-            return pojoRepository.findAllPojosContainedInThisPackageWithAllSubPackages(packageName);
+            var aPackage = packageRepository.findById(packageName).orElseThrow(() -> new PackageDoesNotExist(packageName));
+            return getPojosFromSubPackages(aPackage);
         }
         return Collections.emptyList();
+    }
+    private List<Pojo> getPojosFromSubPackages(Package aPackage){
+        var pojos = pojoRepository.findAllByaPackage_Id(aPackage.getId());
+        if(aPackage.getParent() == null)
+            return pojos;
+        pojos.addAll(getPojosFromSubPackages(aPackage.getParent()));
+        return pojos;
     }
     private boolean validPackageNameStructure(String packageName){
         var regex = "^([A-Za-z]{1}[A-Za-z\\d_]*\\.)*[A-Za-z][A-Za-z\\d_]*$";

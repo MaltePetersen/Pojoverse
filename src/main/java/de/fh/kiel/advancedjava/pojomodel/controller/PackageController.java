@@ -18,7 +18,7 @@ public class PackageController {
     }
 
     @GetMapping("/{packageName}")
-    public ResponseEntity<List<Pojo>> addPrimitive(@PathVariable String packageName) {
+    public ResponseEntity<List<Pojo>> getAllPojosFromPackage(@PathVariable String packageName) {
         return ResponseEntity.ok(this.packageService.getPojos(packageName));
     }
 
