@@ -3,9 +3,11 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
+import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
+import de.fh.kiel.advancedjava.pojomodel.service.PojoStatisticsService;
 import de.fh.kiel.advancedjava.pojomodel.service.TymeLeafTemplateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +20,12 @@ import java.util.Base64;
 public class PojoController {
     private final PojoService pojoService;
     private final TymeLeafTemplateService tymeLeafTemplateService;
+    private final PojoStatisticsService pojoStatisticsService;
 
-    PojoController(PojoService pojoService, TymeLeafTemplateService tymeLeafTemplateService) {
+    PojoController(PojoService pojoService, TymeLeafTemplateService tymeLeafTemplateService, PojoStatisticsService pojoStatisticsService) {
         this.pojoService = pojoService;
         this.tymeLeafTemplateService = tymeLeafTemplateService;
+        this.pojoStatisticsService =pojoStatisticsService;
     }
 
 
@@ -62,5 +66,9 @@ public class PojoController {
     @GetMapping("/{name}")
     public ResponseEntity<Pojo> getPojo(@PathVariable("name") String pojoName){
         return ResponseEntity.ok(pojoService.getPojo(pojoName));
+    }
+    @GetMapping("statistics/{name}")
+    public ResponseEntity<PojoStatistics> getPojoStatistics(@PathVariable("name") String pojoName){
+        return ResponseEntity.ok(pojoStatisticsService.getStatistics(pojoName));
     }
 }

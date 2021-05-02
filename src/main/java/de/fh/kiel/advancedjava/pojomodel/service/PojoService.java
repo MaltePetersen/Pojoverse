@@ -8,25 +8,36 @@ import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import java.util.stream.Collectors;
 
 @Service
 public class PojoService {
 
+
     PojoRepository pojoRepository;
     ASMWrapperService asmWrapperService;
     AttributeService attributeService;
+    private final AttributeRepository attributeRepository;
 
-    PojoService(PojoRepository pojoRepository, ASMWrapperService asmWrapperService, AttributeService attributeService
+    PojoService(PojoRepository pojoRepository, ASMWrapperService asmWrapperService, AttributeService attributeService, AttributeRepository attributeRepository
     ){
         this.pojoRepository = pojoRepository;
         this.asmWrapperService = asmWrapperService;
         this.attributeService = attributeService;
+        this.attributeRepository = attributeRepository;
     }
+
+
 
     public Pojo readByteCodeAndCreatePojo(byte[] clazz){
 
@@ -47,6 +58,14 @@ public class PojoService {
             return pojo;
 
 
+    }
+
+    private Package parentCreate(Package currentParent, String name){
+        if(currentParent == null) {
+            currentParent =  Package.builder().name(name).build();
+            return     currentParent;
+        }
+        return   Package.builder().name(name).parent(currentParent).build();
     }
     private String buildCompletePath(String packageName, String className){
             return packageName + "." + className;
@@ -72,7 +91,13 @@ public class PojoService {
 
     public void deletePojo(String pojoName){
         var pojo = pojoRepository.findById(pojoName).orElseThrow(() -> new PojoDoesNotExist(pojoName));
-        pojoRepository.deleteById(pojo.getCompletePath());
+     if( attributeRepository.findAllByClazz_CompletePath(pojoName).isEmpty() ){
+         pojo.setAttributes(Collections.emptySet());
+         pojo.setEmptyHull(true);
+         pojoRepository.deleteById(pojo.getCompletePath());
+         pojoRepository.save(pojo);
+     } else
+         pojoRepository.deleteById(pojo.getCompletePath());
     }
     public Pojo changeAttribute(AttributeChangeDTO attributeChangeDTO){
         var pojo = pojoRepository.findById(attributeChangeDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExist(attributeChangeDTO.getClassName()));
