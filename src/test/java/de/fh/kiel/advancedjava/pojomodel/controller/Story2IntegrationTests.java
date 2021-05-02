@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -97,6 +98,8 @@ public class Story2IntegrationTests {
                     .andExpect(status().isOk())
                     .andReturn();
            assertTrue( pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClasses").get().isEmptyHull());
+            assertEquals(null, pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClasses").get().getAttributes());
+
         }
     }
 

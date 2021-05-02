@@ -3,6 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
         import com.fasterxml.jackson.core.type.TypeReference;
         import com.fasterxml.jackson.databind.ObjectMapper;
         import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+        import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
         import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
         import org.junit.jupiter.api.*;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
         import java.util.List;
 
         import static org.junit.jupiter.api.Assertions.assertEquals;
+        import static org.junit.jupiter.api.Assertions.assertTrue;
         import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -37,10 +39,23 @@ public class Story5IntegrationTests {
     @Autowired
     private PojoRepository pojoRepository;
 
+    @Autowired
+    private AttributeRepository attributeRepository;
+
+
     public static String loadData(String location) throws IOException {
         return Files.readString(Paths.get(location));
     }
+    @AfterEach()
+    void deleteAllSavedClasses(){
+        pojoRepository.deleteAll();
+    }
 
+    @BeforeEach()
+    void SetUp(){
+        pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
+    }
 
 
 
@@ -55,6 +70,7 @@ public class Story5IntegrationTests {
         @BeforeEach()
         void SetUp(){
             pojoRepository.deleteAll();
+            attributeRepository.deleteAll();
         }
 
 
@@ -66,8 +82,8 @@ public class Story5IntegrationTests {
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();
             var objectMapper = new ObjectMapper();
-
-            assertEquals(pojoRepository.findAll(),  objectMapper.readValue(loadData(pathToJSONFolder + "pojos.json"), new TypeReference<List<Pojo>>(){}));
+            assertEquals(objectMapper.readValue(loadData(pathToJSONFolder + "pojos.json"), new TypeReference<List<Pojo>>() {
+            }), pojoRepository.findAll());
         }
     }
 
