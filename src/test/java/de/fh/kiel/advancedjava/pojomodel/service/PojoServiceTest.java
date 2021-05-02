@@ -26,6 +26,9 @@ public class PojoServiceTest {
 
     @Autowired
     PojoRepository pojoRepository;
+    @Autowired
+    private PackageService packageService;
+
 
     @AfterEach()
     void deleteAllSavedClasses(){
@@ -65,7 +68,7 @@ public class PojoServiceTest {
     class ReplaceEmptyHullWithNewPojo {
         @BeforeEach()
         void SetUp(){
-            pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").packageName("de.fh.kiel.advancedjava.pojomodel.exampleData").emptyHull(true).build());
+            pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").aPackage(packageService.createPackage("de.fh.kiel.advancedjava.pojomodel.exampleData")).emptyHull(true).build());
         }
 
         @Test
@@ -82,7 +85,7 @@ public class PojoServiceTest {
     class AlreadyExists {
         @BeforeEach()
         void SetUp(){
-            pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").packageName("de.fh.kiel.advancedjava.pojomodel.exampleData").emptyHull(false).build());
+            pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").aPackage(packageService.createPackage("de.fh.kiel.advancedjava.pojomodel.exampleData")).emptyHull(false).build());
         }
         @Test
         @DisplayName("Then null should be returned")

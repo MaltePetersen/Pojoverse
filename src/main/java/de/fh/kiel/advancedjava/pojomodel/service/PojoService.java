@@ -13,11 +13,8 @@ import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,10 +24,12 @@ public class PojoService {
     PojoRepository pojoRepository;
     ASMWrapperService asmWrapperService;
     AttributeService attributeService;
+    private final PackageService packageService;
     private final AttributeRepository attributeRepository;
 
-    PojoService(PojoRepository pojoRepository, ASMWrapperService asmWrapperService, AttributeService attributeService, AttributeRepository attributeRepository
+    PojoService(PackageService packageService, PojoRepository pojoRepository, ASMWrapperService asmWrapperService, AttributeService attributeService, AttributeRepository attributeRepository
     ){
+        this.packageService =packageService;
         this.pojoRepository = pojoRepository;
         this.asmWrapperService = asmWrapperService;
         this.attributeService = attributeService;
@@ -49,7 +48,7 @@ public class PojoService {
 
             var pojo =   Pojo.builder().completePath(pojoInfo.getCompletePath())
                     .className(pojoInfo.getClassName())
-                    .packageName(pojoInfo.getPackageName())
+                    .aPackage(packageService.createPackage(pojoInfo.getPackageName()))
                     .parentClass(superClass)
                     .interfaces( pojoInfo.getInterfaces())
                     .attributes(attributes)
@@ -60,13 +59,6 @@ public class PojoService {
 
     }
 
-    private Package parentCreate(Package currentParent, String name){
-        if(currentParent == null) {
-            currentParent =  Package.builder().name(name).build();
-            return     currentParent;
-        }
-        return   Package.builder().name(name).parent(currentParent).build();
-    }
     private String buildCompletePath(String packageName, String className){
             return packageName + "." + className;
     }
@@ -76,7 +68,12 @@ public class PojoService {
         if ( pojoRepository.existsById(completePath) )
             throw new PojoAlreadyExists(completePath);
 
-       var pojo = Pojo.builder().emptyHull(true).completePath(completePath).className(emptyHull.getClassName()).packageName(emptyHull.getPackageName()).build();
+       var pojo = Pojo.builder()
+               .emptyHull(true)
+               .completePath(completePath)
+               .className(emptyHull.getClassName())
+               .aPackage(this.packageService.createPackage(emptyHull.getPackageName()))
+               .build();
 
        return pojoRepository.save(pojo);
     }
@@ -113,7 +110,7 @@ public class PojoService {
       return pojoRepository.findById(completePath).orElseGet(() -> Pojo.builder()
                 .completePath(completePath)
                 .className(className)
-                .packageName(packageName)
+                .aPackage(this.packageService.createPackage(packageName))
                 .emptyHull(true).build());
     }
     public Pojo getPojo(String completePath){

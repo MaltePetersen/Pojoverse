@@ -13,7 +13,7 @@ public interface PojoRepository extends Neo4jRepository<Pojo, String> {
 
     public List<Pojo> findAllByClassName(String className);
 
-    public List<Pojo> findAllByPackageName(String packageName);
+    public List<Pojo> findAllByaPackage_Id(String id);
 
     public List<Pojo> findAllByParentClass_CompletePath(String completePath);
 }

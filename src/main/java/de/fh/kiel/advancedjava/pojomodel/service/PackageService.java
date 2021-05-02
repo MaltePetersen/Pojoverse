@@ -1,8 +1,10 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
+import de.fh.kiel.advancedjava.pojomodel.exception.PackageCreationFailed;
 import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowed;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +17,11 @@ import java.util.List;
 public class PackageService {
 
     private final PojoRepository pojoRepository;
+    private final PackageRepository packageRepository;
 
-    public PackageService(PojoRepository pojoRepository) {
+    public PackageService(PojoRepository pojoRepository, PackageRepository packageRepository) {
         this.pojoRepository = pojoRepository;
+        this.packageRepository = packageRepository;
     }
 
     public List<Pojo> getPojos(String packageName){
@@ -32,13 +36,19 @@ public class PackageService {
     }
 
     public Package createPackage(String packageName){
+        return packageRepository.findById(packageName).orElseGet(()-> generatePackageRecursive(packageName));
+    }
+
+    private Package generatePackageRecursive(String packageName){
         if (validPackageNameStructure(packageName)) {
             var aPackage = packageName.split("\\.");
             var current = new ArrayList<String>();
             var complete = new ArrayList<String>();
             Collections.addAll(current, aPackage);
             Collections.addAll(complete, aPackage);
-            return generatePackage(current, complete);
+            var test = generatePackage(current, complete);
+            packageRepository.save(test);
+            return packageRepository.findById(packageName).orElseThrow(()-> new PackageCreationFailed(packageName));
         }
         throw new PackageNameNotAllowed(packageName);
     }

@@ -77,12 +77,12 @@ public class Story5IntegrationTests {
         @Test
         @DisplayName("Then the endpoint should return an 200 ok and all files should be uploaded")
         void allFilesShouldBeUploaded() throws Exception {
-           mvc.perform(MockMvcRequestBuilders.post("/pojos/multiple")
+          var content = mvc.perform(MockMvcRequestBuilders.post("/pojos/multiple")
                     .content(loadData(pathToJSONFolder + "pojos.json")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
-                    .andReturn();
+                    .andReturn().getResponse().getContentAsString();
             var objectMapper = new ObjectMapper();
-            assertEquals(objectMapper.readValue(loadData(pathToJSONFolder + "pojos.json"), new TypeReference<List<Pojo>>() {
+            assertEquals(objectMapper.readValue(content, new TypeReference<List<Pojo>>() {
             }), pojoRepository.findAll());
         }
     }

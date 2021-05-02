@@ -1,8 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.controller;
 
-        import com.fasterxml.jackson.core.type.TypeReference;
-        import com.fasterxml.jackson.databind.ObjectMapper;
-        import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+
         import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
         import org.junit.jupiter.api.*;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,6 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
         import java.io.IOException;
         import java.nio.file.Files;
         import java.nio.file.Paths;
-        import java.util.List;
 
         import static org.junit.jupiter.api.Assertions.assertEquals;
         import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,7 +64,7 @@ public class Story7IntegrationTests {
                     .andReturn();
                     var pojo = pojoRepository.findById("de.fh.test.hello").get();
             assertEquals("hello", pojo.getClassName());
-            assertEquals("de.fh.test", pojo.getPackageName());
+            assertEquals("de.fh.test", pojo.getAPackage().getId());
         }
     }
 

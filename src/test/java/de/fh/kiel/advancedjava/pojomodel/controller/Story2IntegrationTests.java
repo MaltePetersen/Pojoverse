@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import de.fh.kiel.advancedjava.pojomodel.service.PackageService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,6 +34,9 @@ public class Story2IntegrationTests {
 
     @Autowired
     private PojoRepository pojoRepository;
+    @Autowired
+    private PackageService packageService;
+
 
     public static String loadData(String location) throws IOException {
         return Files.readString(Paths.get(location));
@@ -70,7 +74,7 @@ public class Story2IntegrationTests {
     class ClassExists {
         @BeforeEach()
         void SetUp(){
-            pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").packageName("de.fh.kiel.advancedjava.pojomodel.exampleData").emptyHull(false).build());
+            pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").aPackage(packageService.createPackage("de.fh.kiel.advancedjava.pojomodel.exampleData")).emptyHull(false).build());
         }
         @Test
         @DisplayName("Then the endpoint should return 200 ok")

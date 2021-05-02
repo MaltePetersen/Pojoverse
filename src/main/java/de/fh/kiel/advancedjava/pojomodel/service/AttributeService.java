@@ -15,9 +15,11 @@ public class AttributeService {
     private static final String LIST_TYPE = "java.util.List";
 
     private final PojoRepository pojoRepository;
+    private final PackageService packageService;
 
-    AttributeService(PojoRepository pojoRepository){
+    AttributeService(PojoRepository pojoRepository, PackageService packageService){
         this.pojoRepository =pojoRepository;
+        this.packageService = packageService;
     }
 
 
@@ -57,7 +59,7 @@ public class AttributeService {
                 .orElse(Pojo.builder()
                         .completePath(pojoCompletePath)
                         .className(parseClassName(pojoCompletePath))
-                        .packageName(parsePackageName(pojoCompletePath))
+                        .aPackage(packageService.createPackage(parsePackageName(pojoCompletePath)))
                         .build());
     }
 
@@ -72,7 +74,7 @@ public class AttributeService {
                 Pojo.builder()
                         .completePath(dataTypeName)
                         .className(className)
-                        .packageName(packageName)
+                        .aPackage(packageService.createPackage(packageName))
                         .emptyHull(true)
                         .build()
         );
