@@ -34,20 +34,23 @@ public class PojosService {
         this.pojoRepository = pojoRepository;
         this.attributeRepository = attributeRepository;
         this.asmWrapperService = asmWrapperService;
+
+
+    }
+    public List<Pojo> addToDB(){
         var t = loadClasses(new File("/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/jars/Classes.jar"));
         var list = t.stream().map((p)->pojoService.createPojoFromPojoInfo(p)).collect(Collectors.toList());
         for (Pojo pojo:list
-             ) {
-           var exist  = pojoRepository.findById(pojo.getCompletePath());
+        ) {
+            var exist  = pojoRepository.findById(pojo.getCompletePath());
             if(exist.isPresent() && exist.get().isEmptyHull() || exist.isEmpty()) {
                 pojoRepository.deleteById(pojo.getCompletePath());
                 pojoRepository.save(pojo);
             }
         }
-
-      var all =   pojoRepository.findAll();
-        System.out.println(all);
+        return pojoRepository.findAll();
     }
+
     public  List<Class<?>> extractPojos(byte[] pojosAsJar)  {
         return Collections.emptyList();
     }
