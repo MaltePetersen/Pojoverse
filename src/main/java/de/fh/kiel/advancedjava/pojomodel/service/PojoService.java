@@ -8,6 +8,7 @@ import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.model.PojoInfo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,25 +39,28 @@ public class PojoService {
 
 
 
-    public Pojo readByteCodeAndCreatePojo(byte[] clazz){
+     public Pojo readByteCodeAndCreatePojo(byte[] clazz){
 
            var pojoInfo = this.asmWrapperService.read(clazz);
 
-            Set<Attribute> attributes = constructAttributesFromAttributesInfo(pojoInfo.getAttributes(), pojoInfo.getCompletePath());
+            var pojo = createPojoFromPojoInfo(pojoInfo);
 
-            var superClass = getSuperClass(pojoInfo.getParentClassCompletePath(),pojoInfo.getParentClassName(), pojoInfo.getParentClassPackageName());
-
-            var pojo =   Pojo.builder().completePath(pojoInfo.getCompletePath())
-                    .className(pojoInfo.getClassName())
-                    .aPackage(packageService.createPackage(pojoInfo.getPackageName()))
-                    .parentClass(superClass)
-                    .interfaces( pojoInfo.getInterfaces())
-                    .attributes(attributes)
-                    .emptyHull(false).build();
             pojoRepository.save(pojo);
+
             return pojo;
+    }
+    public Pojo createPojoFromPojoInfo(PojoInfo pojoInfo){
+        Set<Attribute> attributes = constructAttributesFromAttributesInfo(pojoInfo.getAttributes(), pojoInfo.getCompletePath());
 
+        var superClass = getSuperClass(pojoInfo.getParentClassCompletePath(),pojoInfo.getParentClassName(), pojoInfo.getParentClassPackageName());
 
+       return Pojo.builder().completePath(pojoInfo.getCompletePath())
+                .className(pojoInfo.getClassName())
+                .aPackage(packageService.createPackage(pojoInfo.getPackageName()))
+                .parentClass(superClass)
+                .interfaces( pojoInfo.getInterfaces())
+                .attributes(attributes)
+                .emptyHull(false).build();
     }
 
     private String buildCompletePath(String packageName, String className){

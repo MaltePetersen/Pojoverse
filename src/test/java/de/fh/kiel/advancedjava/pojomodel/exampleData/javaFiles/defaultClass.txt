@@ -1,0 +1,16 @@
+package de.fh.kiel.advancedjava.pojomodel.exampleData;
+
+import   java.lang.Long;
+
+import   java.lang.String;
+
+
+public class DefaultClass{
+
+
+ private Long id;
+
+ private String name;
+
+
+}

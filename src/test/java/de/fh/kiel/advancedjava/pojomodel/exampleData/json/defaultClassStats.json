@@ -1,0 +1,11 @@
+{
+  "classname": "DefaultClass",
+  "packageName": "exampleData",
+  "numberOfAttributes": 2,
+  "parentClassName": "Object",
+  "implementedInterfaces": [],
+  "numberOfDirectSubClasses": 0,
+  "numberOfAttributesThatHaveTheCorrespondingDataType": 0,
+  "numberOfClassesInTheSamePackage": 1,
+  "numberOfClassesWithTheSameName": 1
+}

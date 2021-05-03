@@ -52,7 +52,6 @@ public class PojoController {
     public ResponseEntity<Pojo> deleteAttribute(@RequestBody() AttributeChangeDTO attributeChangeDTO){
             return ResponseEntity.ok(pojoService.changeAttribute(attributeChangeDTO));
     }
-    //TODO Query if has relation
     @DeleteMapping("/{name}")
     public ResponseEntity<?> deletePojo(@PathVariable("name") String pojoName){
         pojoService.deletePojo(pojoName);

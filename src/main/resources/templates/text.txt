@@ -1,4 +1,4 @@
-package [( ${pojo.packageName} )];
+package [( ${pojo.aPackage.id} )];
 [# th:each="attribute : ${pojo.attributes}"]
 import   [( ${attribute.clazz.completePath} )];
 [# th:if="${attribute.clazz.completePath == 'java.util.List'}"]import [( ${attribute.genericType.completePath} )];[/][/]

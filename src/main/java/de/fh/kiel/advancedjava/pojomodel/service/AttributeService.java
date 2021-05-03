@@ -60,6 +60,7 @@ public class AttributeService {
                         .completePath(pojoCompletePath)
                         .className(parseClassName(pojoCompletePath))
                         .aPackage(packageService.createPackage(parsePackageName(pojoCompletePath)))
+                        .emptyHull(true)
                         .build());
     }
 

@@ -33,24 +33,6 @@ public class Pojo {
     @Relationship(type = "interfaces")
     private Set<String> interfaces;
 
-    public Pojo(String className,Package aPackage, Set<Attribute> attributes, Pojo parentClass, Set<String> interfaces) {
-        this.className = className;
-        this.aPackage = aPackage;
-        this.attributes = attributes;
-        this.parentClass = parentClass;
-        this.interfaces = interfaces;
-        this.emptyHull = false;
-    }
-    public Pojo(String className, Package aPackage ){
-        this.className = className;
-        this.aPackage = aPackage;
-        this.emptyHull = true;
-    }
-    public Pojo(String className, Package aPackage, Pojo parentClass ){
-        this.className = className;
-        this.aPackage = aPackage;
-        this.parentClass = parentClass;
-        this.emptyHull = true;
-    }
+
 
 }
