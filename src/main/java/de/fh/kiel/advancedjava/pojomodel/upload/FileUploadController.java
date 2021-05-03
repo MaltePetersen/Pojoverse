@@ -2,12 +2,15 @@ package de.fh.kiel.advancedjava.pojomodel.upload;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
@@ -31,11 +34,10 @@ public class FileUploadController {
 	}
 
 	@PostMapping("/upload")
-	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+	public String uploadFile(@RequestPart(value = "file", required = true)  MultipartFile file, RedirectAttributes redirectAttributes) {
 
 		logger.info(file.getOriginalFilename());
 
 		return "redirect:/upload";
 	}
-
 }

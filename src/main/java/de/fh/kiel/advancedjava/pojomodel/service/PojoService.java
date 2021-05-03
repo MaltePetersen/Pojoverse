@@ -13,6 +13,7 @@ import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Set;
@@ -89,7 +90,6 @@ public class PojoService {
     private Set<Attribute>   setIdOfAttributes(Set<Attribute> attributes, String completePath){
         return attributes.stream().map(attribute -> {  attribute.setId(completePath + "" + attribute.getName()); return attribute; }).collect(Collectors.toSet());
     }
-
     public void deletePojo(String pojoName){
         var pojo = pojoRepository.findById(pojoName).orElseThrow(() -> new PojoDoesNotExist(pojoName));
      if( attributeRepository.findAllByClazz_CompletePath(pojoName).isEmpty() ){

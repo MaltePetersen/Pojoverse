@@ -9,9 +9,12 @@ import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoStatisticsService;
 import de.fh.kiel.advancedjava.pojomodel.service.TymeLeafTemplateService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Base64;
 
 
@@ -69,5 +72,10 @@ public class PojoController {
     @GetMapping("statistics/{name}")
     public ResponseEntity<PojoStatistics> getPojoStatistics(@PathVariable("name") String pojoName){
         return ResponseEntity.ok(pojoStatisticsService.getStatistics(pojoName));
+    }
+    @PostMapping(  path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Pojo> handleUpload(
+            @RequestPart("file") MultipartFile file) throws IOException {
+        return  ResponseEntity.ok(pojoService.readByteCodeAndCreatePojo(file.getBytes()));
     }
 }

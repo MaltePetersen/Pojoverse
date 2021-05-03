@@ -8,13 +8,15 @@ import org.apache.commons.io.IOUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,8 +39,12 @@ public class PojosService {
 
 
     }
-    public List<Pojo> addToDB(){
-        var t = loadClasses(new File("/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/jars/Classes.jar"));
+    public List<Pojo> addToDB(MultipartFile jarFile) throws IOException {
+        var file = new File("temp.jar");
+        try (OutputStream os = new FileOutputStream(file)) {
+            os.write(jarFile.getBytes());
+        }
+        var t = loadClasses(file);
         var list = t.stream().map((p)->pojoService.createPojoFromPojoInfo(p)).collect(Collectors.toList());
         for (Pojo pojo:list
         ) {
