@@ -17,6 +17,7 @@ import java.io.OutputStream;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,14 +37,26 @@ public class PojosService {
         this.pojoRepository = pojoRepository;
         this.attributeRepository = attributeRepository;
         this.asmWrapperService = asmWrapperService;
-
-
     }
-    public List<Pojo> addToDB(MultipartFile jarFile) throws IOException {
+    public List<Pojo> uploadJarAsMultipartAndCreatePojos(MultipartFile jarFile) throws IOException {
         var file = new File("temp.jar");
         try (OutputStream os = new FileOutputStream(file)) {
             os.write(jarFile.getBytes());
+        }catch (IOException e){
+            throw e;
         }
+        return addToDB(file);
+    }
+    public List<Pojo> uploadJarAsBase64AndCreatePojos(byte[] input) throws IOException {
+        var file = new File("temp.jar");
+        try (OutputStream os = new FileOutputStream(file)) {
+            os.write(input);
+        }catch (IOException e){
+            throw e;
+        }
+        return addToDB(file);
+    }
+    public List<Pojo> addToDB(File file) throws IOException {
         var t = loadClasses(file);
         var list = t.stream().map((p)->pojoService.createPojoFromPojoInfo(p)).collect(Collectors.toList());
         for (Pojo pojo:list

@@ -11,7 +11,7 @@ import org.thymeleaf.context.Context;
 @Service
 public class TymeLeafTemplateService {
 
-    private static final String JAVATEMPLATE = "text.txt";
+    private static final String JAVATEMPLATE = "javaFileTemplate.txt";
 
 
     private final TemplateEngine textTemplateEngine;

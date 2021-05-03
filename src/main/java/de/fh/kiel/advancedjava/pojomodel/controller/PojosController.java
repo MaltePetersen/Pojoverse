@@ -22,7 +22,7 @@ public class PojosController {
         this.pojosService = pojosService;
     }
     @PostMapping
-    public ResponseEntity<?> createPojos(@RequestBody() String base64EncodedJar)  {
+    public ResponseEntity<?> createPojos(@RequestBody() String base64EncodedJar) throws IOException {
         byte[] pojoAsByteCode;
 
         try {
@@ -30,9 +30,9 @@ public class PojosController {
         } catch (IllegalArgumentException i) {
             throw new NoValidBase64();
         }
-        pojosService.extractPojos(pojoAsByteCode);
+        ;
 
-        return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        return  ResponseEntity.ok(pojosService.uploadJarAsBase64AndCreatePojos(pojoAsByteCode));
     }
     @GetMapping
     public List<Pojo> getPojos(){
@@ -46,6 +46,6 @@ public class PojosController {
     @PostMapping(  path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<Pojo>> handleUpload(
             @RequestPart("file") MultipartFile file) throws IOException {
-        return  ResponseEntity.ok(pojosService.addToDB(file));
+        return  ResponseEntity.ok(pojosService.uploadJarAsMultipartAndCreatePojos(file));
     }
 }
