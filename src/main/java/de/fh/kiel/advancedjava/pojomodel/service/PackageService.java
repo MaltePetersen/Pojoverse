@@ -34,9 +34,9 @@ public class PackageService {
     }
     private List<Pojo> getPojosFromSubPackages(Package aPackage){
         var pojos = pojoRepository.findAllByaPackage_Id(aPackage.getId());
-        if(aPackage.getParent() == null)
+        if(aPackage.getSubPackage() == null)
             return pojos;
-        pojos.addAll(getPojosFromSubPackages(aPackage.getParent()));
+        pojos.addAll(getPojosFromSubPackages(aPackage.getSubPackage()));
         return pojos;
     }
     private boolean validPackageNameStructure(String packageName){
@@ -77,7 +77,7 @@ public class PackageService {
         if (current.isEmpty()) {
             return aPackage;
         }
-        aPackage.setParent(generatePackage(current, complete));
+        aPackage.setSubPackage(generatePackage(current, complete));
         return aPackage;
     }
 

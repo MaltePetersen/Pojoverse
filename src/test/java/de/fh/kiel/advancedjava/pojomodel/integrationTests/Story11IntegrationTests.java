@@ -1,5 +1,7 @@
-package de.fh.kiel.advancedjava.pojomodel.controller;
+package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.util.NestedServletException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,16 +20,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DisplayName("Given the developer wants to add an attribute of a file")
+@DisplayName("Given the developer wants to get the pojo as a java file")
 @Nested
-public class Story8IntegrationTests {
+public class Story11IntegrationTests {
 
-    private static String attributeAddDTO;
     private static String defaultClass;
 
     private static String pathToExampleData ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/";
 
-    private static String pathToJSONFolder = pathToExampleData +"json/";
+    private static String pathToJavaFilesFolder = pathToExampleData +"javaFiles/";
 
     private static String pathToBase64Folder = pathToExampleData +"base64Encoded/";
 
@@ -41,10 +41,8 @@ public class Story8IntegrationTests {
     public static String loadData(String location) throws IOException {
         return Files.readString(Paths.get(location));
     }
-
     @BeforeAll()
     static void loadClassesEncodedInBase64() throws IOException {
-        attributeAddDTO = loadData(pathToJSONFolder + "AttributeAddDTO.json");
         defaultClass = loadData(pathToBase64Folder + "DefaultClass.txt");
     }
 
@@ -59,8 +57,8 @@ public class Story8IntegrationTests {
     }
 
     @Nested
-    @DisplayName("When the developer sends a addPrimitive request")
-    class addPrimitive {
+    @DisplayName("When the developer request a java File")
+    class loadPojo {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
@@ -69,33 +67,20 @@ public class Story8IntegrationTests {
         }
 
         @Test
-        @DisplayName("Then the endpoint should return an 200 ok")
-        void attributeChange() throws Exception {
-            mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
-                    .content(attributeAddDTO).contentType(MediaType.APPLICATION_JSON)
+        @DisplayName("Then the endpoint should return an 200 ok and return a java file")
+        void createJavaFile() throws Exception {
+            var content =  mvc.perform(MockMvcRequestBuilders.get("/pojo/class/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
+                    .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
-                    .andReturn();
-                var att = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().filter((data)-> data.getName().equals("something")).findFirst();
-                 att.get();
-
-                assertEquals("java.lang.Integer", att.get().getClazz().getCompletePath());
-                assertEquals("private", att.get().getAccessModifier());
+                    .andReturn().getResponse().getContentAsString();
+                    assertTrue(content.contains("package de.fh.kiel.advancedjava.pojomodel.exampleData;"));
+                    assertTrue( content.contains("import   java.lang.Long;"));
+                    assertTrue( content.contains("import   java.lang.String;"));
+                    assertTrue( content.contains("public class DefaultClass{"));
+                    assertTrue(  content.contains("private Long id;"));
+                    assertTrue(  content.contains("private String name;"));
+                    assertTrue(  content.contains("}"));
         }
     }
 
-
-    @Nested
-    @DisplayName("When the developer sends a request but the pojo does not exist")
-    class badDeleteAttribute {
-
-
-        @Test
-        @DisplayName("Then the endpoint should return an 200 bad request")
-        void attributeChange() throws Exception {
-             mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
-                    .content(attributeAddDTO).contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.ALL)).andExpect(status().isBadRequest())
-                    .andReturn();
-        }
-    }
 }

@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.controller;
+package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
@@ -13,16 +13,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DisplayName("Given the developer wants export all pojos")
+@DisplayName("Given the developer wants to add multiple Pojo at once as a JAR File")
 @Nested
-public class Story4IntegrationTests {
+public class Story3IntegrationTests {
 
-    private static String defaultClass;
+    private static String jar;
 
 
     private static String pathToBase64Folder ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/base64Encoded/";
@@ -38,7 +37,7 @@ public class Story4IntegrationTests {
 
     @BeforeAll()
     static void loadClassesEncodedInBase64() throws IOException {
-        defaultClass = loadData(pathToBase64Folder + "defaultClass.txt");
+        jar = loadData(pathToBase64Folder + "Jar.txt");
     }
 
     @AfterEach()
@@ -52,39 +51,16 @@ public class Story4IntegrationTests {
     }
 
     @Nested
-    @DisplayName("When he request all Pojos and one or more exists")
-    class GetAllPojos {
-        @BeforeEach()
-        void SetUp() throws Exception {
-            mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
+    @DisplayName("When he sends the jar encoded as base64")
+    class DoesNotExist {
+        @Test
+        @DisplayName("Then the endpoint should return an 200 ok")
+        void createPojos() throws Exception {
+            mvc.perform(MockMvcRequestBuilders.post("/pojos")
+                    .content(jar)
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
-        }
-
-        @Test
-        @DisplayName("Then the endpoint should return an 200 ok and a list of all")
-        void createPojos() throws Exception {
-            assertNotEquals("[]",mvc.perform(MockMvcRequestBuilders.get("/pojos")
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andReturn().getResponse().getContentAsString());
-
-        }
-    }
-    @Nested
-    @DisplayName("When he request but none exist")
-    class GetAllPojosNoExist {
-
-        @Test
-        @DisplayName("Then the endpoint should return an 200 ok and []")
-        void createPojos() throws Exception {
-            assertEquals("[]",mvc.perform(MockMvcRequestBuilders.get("/pojos")
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andReturn().getResponse().getContentAsString());
-
         }
     }
 

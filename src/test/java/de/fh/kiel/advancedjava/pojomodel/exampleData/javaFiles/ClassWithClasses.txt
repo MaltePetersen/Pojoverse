@@ -1,0 +1,30 @@
+package de.fh.kiel.advancedjava.pojomodel.exampleData;
+
+
+
+
+public class ClassWithClasses{
+
+
+    private DefaultClass defaultClass;
+
+    private AnotherClassWithPrimitives anotherClassWithPrimitives;
+
+    private ClassWithPrimtivesAndAccessModiers classWithPrimtivesAndAccessModiers;
+
+    private ClassWithPrimtives classWithPrimtives;
+
+
+}
+class DefaultClass{
+
+ }
+class AnotherClassWithPrimitives{
+
+}
+ class ClassWithPrimtivesAndAccessModiers{
+
+}
+ class ClassWithPrimtives{
+
+}

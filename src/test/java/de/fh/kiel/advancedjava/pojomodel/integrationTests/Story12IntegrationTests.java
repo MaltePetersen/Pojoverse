@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.controller;
+package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;

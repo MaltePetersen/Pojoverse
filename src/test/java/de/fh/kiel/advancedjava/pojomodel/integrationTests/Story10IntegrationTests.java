@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.controller;
+package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
         import com.fasterxml.jackson.databind.ObjectMapper;
         import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;

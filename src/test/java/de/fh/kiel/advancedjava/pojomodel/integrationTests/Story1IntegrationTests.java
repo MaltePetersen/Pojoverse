@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.controller;
+package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -45,7 +45,7 @@ public class Story1IntegrationTests {
     @BeforeAll()
     static void loadClassesEncodedInBase64() throws IOException {
         classWithPrimtives = loadData( pathToBase64Folder + "ClassWithPrimtives.txt");
-        defaultClass = loadData(pathToBase64Folder + "defaultClass.txt");
+        defaultClass = loadData(pathToBase64Folder + "DefaultClass.txt");
         notBase64EncodedClass = loadData(pathToBase64Folder + "notBase64EncodedClass.txt");
     }
 

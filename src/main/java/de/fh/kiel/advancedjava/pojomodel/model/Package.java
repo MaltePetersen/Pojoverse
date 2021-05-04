@@ -18,5 +18,5 @@ public class Package {
     private String id;
     private String name;
     @Relationship(type = "sub")
-    private Package parent;
+    private Package subPackage;
 }

@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.controller;
+package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
@@ -8,23 +8,23 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.util.NestedServletException;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DisplayName("Given the developer wants to remove an attribute of a file")
+@DisplayName("Given the developer wants to add an attribute of a file")
 @Nested
-public class Story9IntegrationTests {
+public class Story8IntegrationTests {
 
-    private static String attributeChangeDTO;
+    private static String attributeAddDTO;
     private static String defaultClass;
-    private static String badAttributeChangeDTO;
 
     private static String pathToExampleData ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/";
 
@@ -44,8 +44,7 @@ public class Story9IntegrationTests {
 
     @BeforeAll()
     static void loadClassesEncodedInBase64() throws IOException {
-        badAttributeChangeDTO = loadData(pathToJSONFolder + "BadAttributeChangeDTO.json");
-        attributeChangeDTO = loadData(pathToJSONFolder + "AttributeChangeDTO.json");
+        attributeAddDTO = loadData(pathToJSONFolder + "AttributeAddDTO.json");
         defaultClass = loadData(pathToBase64Folder + "DefaultClass.txt");
     }
 
@@ -60,41 +59,41 @@ public class Story9IntegrationTests {
     }
 
     @Nested
-    @DisplayName("When the developer sends a deleteAttrbute request")
-    class deleteAttribute {
+    @DisplayName("When the developer sends a addPrimitive request")
+    class addPrimitive {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(defaultClass)
                     .accept(MediaType.APPLICATION_JSON));
-
         }
 
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
         void attributeChange() throws Exception {
-            mvc.perform(MockMvcRequestBuilders.put("/pojo")
-                    .content(attributeChangeDTO).contentType(MediaType.APPLICATION_JSON)
+            mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
+                    .content(attributeAddDTO).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();
-            assertFalse( pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().anyMatch((data)-> data.getName().equals("name")));
+                var att = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().filter((data)-> data.getName().equals("something")).findFirst();
+                 att.get();
+
+                assertEquals("java.lang.Integer", att.get().getClazz().getCompletePath());
+                assertEquals("private", att.get().getAccessModifier());
         }
     }
+
+
     @Nested
-    @DisplayName("When the developer sends a bad deleteAttrbute request")
+    @DisplayName("When the developer sends a request but the pojo does not exist")
     class badDeleteAttribute {
-        @BeforeEach()
-        void SetUp() throws Exception {
-            mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
-                    .accept(MediaType.APPLICATION_JSON));
-        }
+
 
         @Test
-        @DisplayName("Then the endpoint should return an 500 internal server error")
+        @DisplayName("Then the endpoint should return an 200 bad request")
         void attributeChange() throws Exception {
-            mvc.perform(MockMvcRequestBuilders.put("/pojo")
-                    .content(badAttributeChangeDTO).contentType(MediaType.APPLICATION_JSON)
+             mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
+                    .content(attributeAddDTO).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isBadRequest())
                     .andReturn();
         }
