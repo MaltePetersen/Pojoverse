@@ -10,3 +10,12 @@ public class [( ${pojo.className} )][# th:if="${pojo.parentClass.completePath !=
 [/]
 
 }
+[# th:each="attribute : ${pojo.attributes}"]
+class [( ${attribute.clazz.className }  )]{
+}[/]
+[# th:if="${pojo.parentClass.completePath != 'java.lang.Object'}"]class [( ${pojo.parentClass.className} )]{
+}[/]
+[# th:each="interface : ${pojo.interfaces}"]
+interface [( ${interface} )]{
+}[/]
+

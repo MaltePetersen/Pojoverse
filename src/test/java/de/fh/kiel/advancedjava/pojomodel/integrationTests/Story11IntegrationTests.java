@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
@@ -24,27 +25,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Nested
 public class Story11IntegrationTests {
 
-    private static String defaultClass;
-
-    private static String pathToExampleData ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/";
-
-    private static String pathToJavaFilesFolder = pathToExampleData +"javaFiles/";
-
-    private static String pathToBase64Folder = pathToExampleData +"base64Encoded/";
 
     @Autowired
     private MockMvc mvc;
 
     @Autowired
     private PojoRepository pojoRepository;
+    @Autowired
+    private TestingUtil testingUtil;
 
     public static String loadData(String location) throws IOException {
         return Files.readString(Paths.get(location));
     }
-    @BeforeAll()
-    static void loadClassesEncodedInBase64() throws IOException {
-        defaultClass = loadData(pathToBase64Folder + "DefaultClass.txt");
-    }
+
 
     @AfterEach()
     void deleteAllSavedClasses(){
@@ -62,7 +55,7 @@ public class Story11IntegrationTests {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
+                    .content(testingUtil.getBase64Value ("defaultClass"))
                     .accept(MediaType.APPLICATION_JSON));
         }
 

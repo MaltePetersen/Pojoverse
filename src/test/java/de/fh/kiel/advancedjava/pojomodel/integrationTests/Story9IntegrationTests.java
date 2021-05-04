@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
+import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,32 +23,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @Nested
 public class Story9IntegrationTests {
 
-    private static String attributeChangeDTO;
-    private static String defaultClass;
-    private static String badAttributeChangeDTO;
-
-    private static String pathToExampleData ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/";
-
-    private static String pathToJSONFolder = pathToExampleData +"json/";
-
-    private static String pathToBase64Folder = pathToExampleData +"base64Encoded/";
-
     @Autowired
     private MockMvc mvc;
 
     @Autowired
     private PojoRepository pojoRepository;
 
-    public static String loadData(String location) throws IOException {
-        return Files.readString(Paths.get(location));
-    }
-
-    @BeforeAll()
-    static void loadClassesEncodedInBase64() throws IOException {
-        badAttributeChangeDTO = loadData(pathToJSONFolder + "BadAttributeChangeDTO.json");
-        attributeChangeDTO = loadData(pathToJSONFolder + "AttributeChangeDTO.json");
-        defaultClass = loadData(pathToBase64Folder + "DefaultClass.txt");
-    }
+    @Autowired
+    private TestingUtil testingUtil;
 
     @AfterEach()
     void deleteAllSavedClasses(){
@@ -65,7 +48,7 @@ public class Story9IntegrationTests {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
+                    .content(testingUtil.getBase64Value("defaultClass"))
                     .accept(MediaType.APPLICATION_JSON));
 
         }
@@ -74,7 +57,7 @@ public class Story9IntegrationTests {
         @DisplayName("Then the endpoint should return an 200 ok")
         void attributeChange() throws Exception {
             mvc.perform(MockMvcRequestBuilders.put("/pojo")
-                    .content(attributeChangeDTO).contentType(MediaType.APPLICATION_JSON)
+                    .content(testingUtil.getJSONValue("attributeChangeDTO")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();
             assertFalse( pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().anyMatch((data)-> data.getName().equals("name")));
@@ -86,7 +69,7 @@ public class Story9IntegrationTests {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
+                    .content(testingUtil.getBase64Value("defaultClass"))
                     .accept(MediaType.APPLICATION_JSON));
         }
 
@@ -94,7 +77,8 @@ public class Story9IntegrationTests {
         @DisplayName("Then the endpoint should return an 500 internal server error")
         void attributeChange() throws Exception {
             mvc.perform(MockMvcRequestBuilders.put("/pojo")
-                    .content(badAttributeChangeDTO).contentType(MediaType.APPLICATION_JSON)
+                    .content(testingUtil.getJSONValue("badAttributeChangeDTO"))
+                    .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isBadRequest())
                     .andReturn();
         }

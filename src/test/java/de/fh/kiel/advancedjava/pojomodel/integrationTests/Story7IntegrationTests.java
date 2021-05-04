@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 
+        import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
         import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
         import org.junit.jupiter.api.*;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -24,19 +25,14 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 public class Story7IntegrationTests {
 
 
-    private static String pathToExampleData ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/";
-
-    private static String pathToJSONFolder = pathToExampleData +"json/";
-
     @Autowired
     private MockMvc mvc;
 
     @Autowired
     private PojoRepository pojoRepository;
+    @Autowired
+    private TestingUtil testingUtil;
 
-    public static String loadData(String location) throws IOException {
-        return Files.readString(Paths.get(location));
-    }
 
 
 
@@ -59,7 +55,7 @@ public class Story7IntegrationTests {
         @DisplayName("Then the endpoint should return an 200 ok and the emptyHll should be created")
         void allFilesShouldBeUploaded() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo/emptyHull")
-                    .content(loadData(pathToJSONFolder + "emptyHull.json")).contentType(MediaType.APPLICATION_JSON)
+                    .content(testingUtil.getJSONValue("emptyHull")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();
                     var pojo = pojoRepository.findById("de.fh.test.hello").get();

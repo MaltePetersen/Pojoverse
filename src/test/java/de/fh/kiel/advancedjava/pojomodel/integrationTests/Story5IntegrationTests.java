@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
         import com.fasterxml.jackson.core.type.TypeReference;
         import com.fasterxml.jackson.databind.ObjectMapper;
+        import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
         import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
         import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
         import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -28,11 +29,6 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 @Nested
 public class Story5IntegrationTests {
 
-
-    private static String pathToExampleData ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/";
-
-    private static String pathToJSONFolder = pathToExampleData +"json/";
-
     @Autowired
     private MockMvc mvc;
 
@@ -42,10 +38,10 @@ public class Story5IntegrationTests {
     @Autowired
     private AttributeRepository attributeRepository;
 
+    @Autowired
+    private TestingUtil testingUtil;
 
-    public static String loadData(String location) throws IOException {
-        return Files.readString(Paths.get(location));
-    }
+
     @AfterEach()
     void deleteAllSavedClasses(){
         pojoRepository.deleteAll();
@@ -78,7 +74,7 @@ public class Story5IntegrationTests {
         @DisplayName("Then the endpoint should return an 200 ok and all files should be uploaded")
         void allFilesShouldBeUploaded() throws Exception {
           var content = mvc.perform(MockMvcRequestBuilders.post("/pojos/multiple")
-                    .content(loadData(pathToJSONFolder + "pojos.json")).contentType(MediaType.APPLICATION_JSON)
+                    .content(testingUtil.getJSONValue("pojos")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
             var objectMapper = new ObjectMapper();

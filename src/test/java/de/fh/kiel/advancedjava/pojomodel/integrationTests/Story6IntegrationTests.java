@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
         import com.fasterxml.jackson.core.type.TypeReference;
         import com.fasterxml.jackson.databind.ObjectMapper;
+        import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
         import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
         import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
         import org.junit.jupiter.api.*;
@@ -17,6 +18,7 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
         import java.nio.file.Paths;
         import java.util.HashSet;
         import java.util.List;
+        import java.util.Set;
 
         import static org.junit.jupiter.api.Assertions.assertEquals;
         import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,30 +29,15 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 @Nested
 public class Story6IntegrationTests {
 
-
-    private static String defaultClass;
-    private static String classWithPrimtives;
-
-    private static String pathToExampleData ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/";
-
-    private static String pathToJSONFolder = pathToExampleData +"json/";
-
-    private static String pathToBase64Folder = pathToExampleData +"base64Encoded/";
-
     @Autowired
     private MockMvc mvc;
 
     @Autowired
     private PojoRepository pojoRepository;
 
-    public static String loadData(String location) throws IOException {
-        return Files.readString(Paths.get(location));
-    }
-    @BeforeAll()
-    static void loadClassesEncodedInBase64() throws IOException {
-        defaultClass = loadData(pathToBase64Folder + "DefaultClass.txt");
-        classWithPrimtives = loadData( pathToBase64Folder + "ClassWithPrimtives.txt");
-    }
+    @Autowired
+    private TestingUtil testingUtil;
+
 
     @AfterEach()
     void deleteAllSavedClasses(){
@@ -62,14 +49,17 @@ public class Story6IntegrationTests {
         pojoRepository.deleteAll();
     }
 
+    void performGetPojo(String pojo) throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/pojo")
+                .content(pojo)
+                .accept(MediaType.APPLICATION_JSON));
+    }
     @Nested
     @DisplayName("When the developer sends a request for the content of package in the package only one pojo exists")
     class sendRequest {
         @BeforeEach()
         void SetUp() throws Exception {
-            mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
-                    .accept(MediaType.APPLICATION_JSON));
+            performGetPojo(testingUtil.getBase64Value("defaultClass"));
         }
 
         @Test
@@ -79,9 +69,9 @@ public class Story6IntegrationTests {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
-            var objectMapper = new ObjectMapper();
-            assertEquals(objectMapper.readValue(content, new TypeReference<List<Pojo>>() {
-            }), objectMapper.readValue(loadData(pathToJSONFolder + "defaultClass.json"), new TypeReference<List<Pojo>>() {
+
+            assertEquals(testingUtil.createListOrSetFromJSON(content, new TypeReference<List<Pojo>>() {
+            }), testingUtil.createListOrSetFromJSON(testingUtil.getJSONValue("defaultClass"), new TypeReference<List<Pojo>>() {
             }));
         }
         @Test
@@ -91,9 +81,9 @@ public class Story6IntegrationTests {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
-            var objectMapper = new ObjectMapper();
-            assertEquals(objectMapper.readValue(content, new TypeReference<List<Pojo>>() {
-            }), objectMapper.readValue(loadData(pathToJSONFolder + "defaultClass.json"), new TypeReference<List<Pojo>>() {
+
+            assertEquals(testingUtil.createListOrSetFromJSON(content, new TypeReference<Set<Pojo>>() {
+            }), testingUtil.createListOrSetFromJSON(testingUtil.getJSONValue("defaultClass"), new TypeReference<Set<Pojo>>() {
             }));
         }
         @Test
@@ -110,12 +100,8 @@ public class Story6IntegrationTests {
     class sendRequests {
         @BeforeEach()
         void SetUp() throws Exception {
-            mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
-                    .accept(MediaType.APPLICATION_JSON));
-            mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(classWithPrimtives)
-                    .accept(MediaType.APPLICATION_JSON));
+            performGetPojo(testingUtil.getBase64Value("defaultClass"));
+            performGetPojo(testingUtil.getBase64Value("classWithPrimtives"));
         }
 
         @Test
@@ -125,10 +111,9 @@ public class Story6IntegrationTests {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
-            var objectMapper = new ObjectMapper();
-            assertEquals(new HashSet<>(objectMapper.readValue(content, new TypeReference<List<Pojo>>() {
-            })), new HashSet<>(objectMapper.readValue(loadData(pathToJSONFolder + "packagesPojos.json"), new TypeReference<List<Pojo>>() {
-            })));        }
+            assertEquals((testingUtil.createListOrSetFromJSON(content, new TypeReference<Set<Pojo>>() {
+            })), (testingUtil.createListOrSetFromJSON(testingUtil.getJSONValue("packagesPojos"), new TypeReference<Set<Pojo>>() {
+            })));    }
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
         void getAllParentPackage() throws Exception {
@@ -136,9 +121,9 @@ public class Story6IntegrationTests {
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
-            var objectMapper = new ObjectMapper();
-            assertEquals(new HashSet<>(objectMapper.readValue(content, new TypeReference<List<Pojo>>() {
-            })), new HashSet<>(objectMapper.readValue(loadData(pathToJSONFolder + "packagesPojos.json"), new TypeReference<List<Pojo>>() {
+
+            assertEquals(testingUtil.createListOrSetFromJSON(content, new TypeReference<Set<Pojo>>() {
+            }), (testingUtil.createListOrSetFromJSON(testingUtil.getJSONValue("packagesPojos"), new TypeReference<Set<Pojo>>() {
             })));
         }
         @Test

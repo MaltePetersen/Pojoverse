@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
+import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,29 +24,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Nested
 public class Story8IntegrationTests {
 
-    private static String attributeAddDTO;
-    private static String defaultClass;
-
-    private static String pathToExampleData ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/";
-
-    private static String pathToJSONFolder = pathToExampleData +"json/";
-
-    private static String pathToBase64Folder = pathToExampleData +"base64Encoded/";
-
     @Autowired
     private MockMvc mvc;
 
     @Autowired
     private PojoRepository pojoRepository;
+    @Autowired
+    private TestingUtil testingUtil;
 
     public static String loadData(String location) throws IOException {
         return Files.readString(Paths.get(location));
-    }
-
-    @BeforeAll()
-    static void loadClassesEncodedInBase64() throws IOException {
-        attributeAddDTO = loadData(pathToJSONFolder + "AttributeAddDTO.json");
-        defaultClass = loadData(pathToBase64Folder + "DefaultClass.txt");
     }
 
     @AfterEach()
@@ -64,7 +52,7 @@ public class Story8IntegrationTests {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
+                    .content(testingUtil.getBase64Value("defaultClass"))
                     .accept(MediaType.APPLICATION_JSON));
         }
 
@@ -72,7 +60,7 @@ public class Story8IntegrationTests {
         @DisplayName("Then the endpoint should return an 200 ok")
         void attributeChange() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
-                    .content(attributeAddDTO).contentType(MediaType.APPLICATION_JSON)
+                    .content(testingUtil.getJSONValue("attributeAddDTO")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();
                 var att = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().filter((data)-> data.getName().equals("something")).findFirst();
@@ -93,7 +81,7 @@ public class Story8IntegrationTests {
         @DisplayName("Then the endpoint should return an 200 bad request")
         void attributeChange() throws Exception {
              mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
-                    .content(attributeAddDTO).contentType(MediaType.APPLICATION_JSON)
+                    .content(testingUtil.getJSONValue("attributeAddDTO")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isBadRequest())
                     .andReturn();
         }

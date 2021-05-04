@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
+import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import de.fh.kiel.advancedjava.pojomodel.service.PackageService;
@@ -24,30 +25,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Nested
 public class Story1IntegrationTests {
 
-    private static String classWithPrimtives;
-    private static String defaultClass;
-    private static String notBase64EncodedClass;
 
-    private static String pathToBase64Folder ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/base64Encoded/";
     @Autowired
     private MockMvc mvc;
-
+    @Autowired
+    private TestingUtil testingUtil;
     @Autowired
     private PojoRepository pojoRepository;
     @Autowired
     private PackageService packageService;
 
 
-    public static String loadData(String location) throws IOException {
-        return Files.readString(Paths.get(location));
-    }
-
-    @BeforeAll()
-    static void loadClassesEncodedInBase64() throws IOException {
-        classWithPrimtives = loadData( pathToBase64Folder + "ClassWithPrimtives.txt");
-        defaultClass = loadData(pathToBase64Folder + "DefaultClass.txt");
-        notBase64EncodedClass = loadData(pathToBase64Folder + "notBase64EncodedClass.txt");
-    }
 
     @AfterEach()
     void deleteAllSavedClasses(){
@@ -65,7 +53,7 @@ public class Story1IntegrationTests {
         @DisplayName("Then the endpoint should return 200 OK as an answer also with just objects")
         void getPojoDefaultClass() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
+                    .content(testingUtil.getBase64Value("defaultClass"))
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -74,7 +62,7 @@ public class Story1IntegrationTests {
         @DisplayName("Then the endpoint should return 200 OK as an answer also with primitives")
         void getPojoPrimitiveClass() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(classWithPrimtives)
+                    .content(testingUtil.getBase64Value("classWithPrimtives"))
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -91,7 +79,7 @@ public class Story1IntegrationTests {
         @DisplayName("Then the endpoint should return 200 OK as an answer")
         void getPojo() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
+                    .content(testingUtil.getBase64Value("defaultClass"))
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -109,7 +97,7 @@ public class Story1IntegrationTests {
             @DisplayName("Then the endpoint should return an is Bad Request status")
             void createTheSamePojoAgain() throws Exception {
                          mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                                 .content(defaultClass)
+                                 .content(testingUtil.getBase64Value("defaultClass"))
                                  .accept(MediaType.APPLICATION_JSON))
                                  .andExpect(status().isBadRequest())
                                  .andReturn();
@@ -123,7 +111,7 @@ public class Story1IntegrationTests {
             @DisplayName("Then the endpoint should return an 400 Bad Request")
             void getPojo() throws Exception {
                 mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                        .content(notBase64EncodedClass)
+                        .content(testingUtil.getBase64Value("notBase64EncodedClass"))
                         .accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isBadRequest())
                         .andReturn();

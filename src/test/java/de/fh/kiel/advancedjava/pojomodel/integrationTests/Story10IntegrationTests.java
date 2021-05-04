@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
-        import com.fasterxml.jackson.databind.ObjectMapper;
+        import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
         import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
         import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
         import org.junit.jupiter.api.*;
@@ -11,9 +11,6 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
         import org.springframework.test.web.servlet.MockMvc;
         import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-        import java.io.IOException;
-        import java.nio.file.Files;
-        import java.nio.file.Paths;
 
         import static org.junit.jupiter.api.Assertions.assertEquals;
         import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,27 +21,16 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 @Nested
 public class Story10IntegrationTests {
 
-    private static String defaultClass;
-
-    private static String pathToExampleData ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/";
-
-    private static String pathToJSONFolder = pathToExampleData +"json/";
-
-    private static String pathToBase64Folder = pathToExampleData +"base64Encoded/";
 
     @Autowired
     private MockMvc mvc;
 
     @Autowired
     private PojoRepository pojoRepository;
+    @Autowired
+    private TestingUtil testingUtil;
 
-    public static String loadData(String location) throws IOException {
-        return Files.readString(Paths.get(location));
-    }
-    @BeforeAll()
-    static void loadClassesEncodedInBase64() throws IOException {
-        defaultClass = loadData(pathToBase64Folder + "DefaultClass.txt");
-    }
+
 
     @AfterEach()
     void deleteAllSavedClasses(){
@@ -62,7 +48,7 @@ public class Story10IntegrationTests {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(defaultClass)
+                    .content(testingUtil.getBase64Value("defaultClass"))
                     .accept(MediaType.APPLICATION_JSON));
         }
 
@@ -74,8 +60,7 @@ public class Story10IntegrationTests {
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
 
-            var objectMapper = new ObjectMapper();
-            assertEquals(objectMapper.readValue(content, PojoStatistics.class), objectMapper.readValue(loadData(pathToJSONFolder + "defaultClassStats.json"), PojoStatistics.class));
+            assertEquals(testingUtil.createObjectFromJSON(content, PojoStatistics.class), testingUtil.createObjectFromJSON(testingUtil.getJSONValue( "defaultClassStats"), PojoStatistics.class));
         }
     }
 

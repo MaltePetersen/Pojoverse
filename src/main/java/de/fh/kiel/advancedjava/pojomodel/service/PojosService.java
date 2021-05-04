@@ -32,7 +32,6 @@ public class PojosService {
 
 
     PojosService(PojoService pojoService, PojoRepository pojoRepository, AttributeRepository attributeRepository, ASMWrapperService asmWrapperService ) throws IOException {
-        pojoRepository.deleteAll();
         this.pojoService = pojoService;
         this.pojoRepository = pojoRepository;
         this.attributeRepository = attributeRepository;

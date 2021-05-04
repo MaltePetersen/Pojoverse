@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
+import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
@@ -18,8 +19,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Given the Pojo should be saved in the db")
 @Nested
 public class PojoServiceTest {
-    private static byte[] classWithPrimtives;
-    private static byte[] defaultClass;
 
     @Autowired
     PojoService pojoService;
@@ -28,6 +27,8 @@ public class PojoServiceTest {
     PojoRepository pojoRepository;
     @Autowired
     private PackageService packageService;
+    @Autowired
+    private TestingUtil testingUtil;
 
 
     @AfterEach()
@@ -40,24 +41,13 @@ public class PojoServiceTest {
         pojoRepository.deleteAll();
     }
 
-    public static byte[] loadData(String location) throws IOException {
-        return Files.readAllBytes(Paths.get(location));
-    }
-
-    @BeforeAll()
-    static void loadClasses() throws IOException {
-        String pathToCompiledClasses = "/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/class/";
-        classWithPrimtives = loadData( pathToCompiledClasses + "ClassWithPrimtives.class");
-        defaultClass = loadData(pathToCompiledClasses + "DefaultClass.class");
-    }
-
     @Nested
     @DisplayName("When the pojo is new to the system")
     class NewPojo {
         @Test
         @DisplayName("Then it should be saved to the db")
-        void saveToDb() {
-            Pojo pojo = pojoService.readByteCodeAndCreatePojo(classWithPrimtives);
+        void saveToDb() throws IOException {
+            Pojo pojo = pojoService.readByteCodeAndCreatePojo(testingUtil.getClassValue("ClassWithPrimtives"));
             assertNotNull(pojo);
             assertTrue(pojoRepository.existsById(pojo.getCompletePath()));
         }
@@ -74,7 +64,7 @@ public class PojoServiceTest {
         @Test
         @DisplayName("Then the empty hull should be replaced wih the new pojo")
         void replace() throws Exception {
-            Pojo pojo = pojoService.readByteCodeAndCreatePojo(defaultClass);
+            Pojo pojo = pojoService.readByteCodeAndCreatePojo(testingUtil.getClassValue("DefaultClass"));
             assertNotNull(pojo);
             assertTrue(pojoRepository.existsById(pojo.getCompletePath()));
             assertFalse(pojoRepository.findById(pojo.getCompletePath()).get().isEmptyHull());
@@ -90,7 +80,7 @@ public class PojoServiceTest {
         @Test
         @DisplayName("Then null should be returned")
         void pojoAlreadyExist() throws Exception {
-           assertThrows(de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists.class,() -> pojoService.readByteCodeAndCreatePojo(defaultClass));
+           assertThrows(de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists.class,() -> pojoService.readByteCodeAndCreatePojo(testingUtil.getClassValue("DefaultClass")));
         }
     }
 }
