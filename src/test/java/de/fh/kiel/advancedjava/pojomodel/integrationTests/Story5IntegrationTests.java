@@ -45,6 +45,7 @@ public class Story5IntegrationTests {
     @AfterEach()
     void deleteAllSavedClasses(){
         pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
     }
 
     @BeforeEach()

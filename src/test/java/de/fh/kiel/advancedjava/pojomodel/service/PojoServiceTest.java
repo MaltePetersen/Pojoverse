@@ -1,7 +1,9 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class PojoServiceTest {
     PojoService pojoService;
 
     @Autowired
+    AttributeRepository attributeRepository;
+
+    @Autowired
     PojoRepository pojoRepository;
     @Autowired
     private PackageService packageService;
@@ -33,12 +38,15 @@ public class PojoServiceTest {
 
     @AfterEach()
     void deleteAllSavedClasses(){
-        this.pojoRepository.deleteAll();
+        pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
     }
 
     @BeforeEach()
     void SetUp(){
         pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
+
     }
 
     @Nested
@@ -59,6 +67,7 @@ public class PojoServiceTest {
         @BeforeEach()
         void SetUp(){
             pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").aPackage(packageService.createPackage("de.fh.kiel.advancedjava.pojomodel.exampleData")).emptyHull(true).build());
+
         }
 
         @Test

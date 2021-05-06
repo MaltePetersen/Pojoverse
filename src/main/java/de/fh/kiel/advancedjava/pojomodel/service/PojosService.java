@@ -80,7 +80,6 @@ public class PojosService {
     public List<Pojo> importPojos(List<Pojo> pojos){
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
-
         pojoRepository.saveAll(pojos);
         return pojoRepository.findAll();
     }

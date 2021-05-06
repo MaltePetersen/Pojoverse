@@ -51,17 +51,19 @@ public class PojoService {
             return pojo;
     }
     public Pojo createPojoFromPojoInfo(PojoInfo pojoInfo){
-        Set<Attribute> attributes = constructAttributesFromAttributesInfo(pojoInfo.getAttributes(), pojoInfo.getCompletePath());
-
-        var superClass = getSuperClass(pojoInfo.getParentClassCompletePath(),pojoInfo.getParentClassName(), pojoInfo.getParentClassPackageName());
-
-       return Pojo.builder().completePath(pojoInfo.getCompletePath())
+        var pojo = pojoRepository.findById(pojoInfo.getCompletePath()).orElse(Pojo.builder().completePath(pojoInfo.getCompletePath())
                 .className(pojoInfo.getClassName())
                 .aPackage(packageService.createPackage(pojoInfo.getPackageName()))
-                .parentClass(superClass)
-                .interfaces( pojoInfo.getInterfaces())
-                .attributes(attributes)
-                .emptyHull(false).build();
+            .build());
+        var superClass = getSuperClass(pojoInfo.getParentClassCompletePath(),pojoInfo.getParentClassName(), pojoInfo.getParentClassPackageName());
+
+        pojo.setParentClass(superClass);
+        pojo.setInterfaces(pojoInfo.getInterfaces());
+        Set<Attribute> attributes = constructAttributesFromAttributesInfo(pojoInfo.getAttributes(), pojoInfo.getCompletePath());
+        pojo.setAttributes(attributes);
+        pojo.setEmptyHull(false);
+
+       return pojo;
     }
 
     private String buildCompletePath(String packageName, String className){

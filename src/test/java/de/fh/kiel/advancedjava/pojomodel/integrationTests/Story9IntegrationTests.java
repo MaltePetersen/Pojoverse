@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +31,21 @@ public class Story9IntegrationTests {
     private PojoRepository pojoRepository;
 
     @Autowired
+    private AttributeRepository attributeRepository;
+
+    @Autowired
     private TestingUtil testingUtil;
 
     @AfterEach()
     void deleteAllSavedClasses(){
-        this.pojoRepository.deleteAll();
+        pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
     }
 
     @BeforeEach()
     void SetUp(){
         pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
     }
 
     @Nested

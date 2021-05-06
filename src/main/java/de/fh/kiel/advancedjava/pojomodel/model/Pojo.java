@@ -1,9 +1,11 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -23,6 +25,8 @@ public class Pojo {
     private String completePath;
     private String className;
     private Package aPackage;
+    @Version
+    private Long version;
 
     @Relationship(type = "attributes")
     private Set<Attribute> attributes;
