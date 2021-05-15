@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
+import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.AttributeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class AttributeController {
     }
 
     @PostMapping("/{className}")
-    public ResponseEntity<Attribute> addPrimitive(@PathVariable String className, @RequestBody AddAttributeDTO addAttributeDTO) {
+    public ResponseEntity<Pojo> addPrimitive(@PathVariable String className, @RequestBody AddAttributeDTO addAttributeDTO) {
         return ResponseEntity.ok(this.attributeService.addAttribute(className, addAttributeDTO));
     }
 

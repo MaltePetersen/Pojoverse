@@ -5,6 +5,7 @@ import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.AttributeDoesNotExist;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -35,12 +36,6 @@ public class PojoService {
         var pojoInfo = this.asmFacadeService.read(clazz);
 
         return pojoFacadeService.createPojo(pojoInfo);
-
-    }
-
-
-    private String buildCompletePath(String packageName, String className) {
-        return packageName + "." + className;
     }
 
     public Pojo createPojoEmptyHullFromJSON(PojoEmptyHullDTO emptyHull) {
@@ -70,14 +65,17 @@ public class PojoService {
         var attr = pojo.getAttributes().stream().filter(attribute -> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeChangeDTO.getAttributeName(), attributeChangeDTO.getClassName()));
 
         pojo.getAttributes().remove(attr);
-        pojoRepository.save(pojo);
-        return pojo;
+
+        return pojoRepository.save(pojo);
     }
 
     public Pojo getPojo(String completePath) {
         return pojoRepository.findById(completePath).orElseThrow(() -> new PojoDoesNotExist(completePath));
     }
 
+    private String buildCompletePath(String packageName, String className) {
+        return packageName + "." + className;
+    }
 
 }
 

@@ -1,10 +1,12 @@
-package de.fh.kiel.advancedjava.pojomodel.service;
+package de.fh.kiel.advancedjava.pojomodel.facade;
 
+import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import de.fh.kiel.advancedjava.pojomodel.service.PackageService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -12,9 +14,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Das Facade soll die Komplexität der Datenbank Operation, die durch die Nutung von Optimistic Locking
+ * Das Facade soll die Komplexität der Datenbank Operation, die durch die Nutung von Optimistic Locking entstehen,
  * auffangen (@Version...). Der Rest der Services soll nicht die wissen müssen wie die Daten abgefragt werden vor der
- * Nutzung.
+ * Nutzung. Gleichzeitig soll dieser Service keine Buisness Funktionalität kennen.
  * Vorher wurde ein PojoService und ein AttributeService genutzt. Mit diesem Ansatz bräuchten beide Service sich gegenseitg,
  * weil ein Pojo Abhängigkeiten zu Attributes hat und ein Attribute durch den Datentyp ebenfalls Pojo erzeugen muss.
  * Wodurch eine zyklische Dependency entsteht, dies macht klar das dieser Designansatz für dieses Objekt nicht das richtige ist
@@ -23,12 +25,17 @@ import java.util.stream.Collectors;
 @Service
 public class PojoFacadeService {
 
+    private static final String LIST_TYPE = "java.util.List";
+
+
     private final PojoRepository pojoRepository;
     private final AttributeRepository attributeRepository;
     private final PackageService packageService;
+    private final Util util;
 
-    public PojoFacadeService(PojoRepository pojoRepository, AttributeRepository attributeRepository, PackageService packageService) {
+    public PojoFacadeService(PojoRepository pojoRepository, AttributeRepository attributeRepository, PackageService packageService, Util util) {
         this.pojoRepository = pojoRepository;
+        this.util = util;
         this.attributeRepository = attributeRepository;
         this.packageService = packageService;
     }
@@ -81,19 +88,46 @@ public class PojoFacadeService {
         return pojoRepository.save(pojo);
     }
 
-    public Attribute createAttribute(String name, String dataTypeName, String accessModifier, String className, String packageName, String pojoCompletePath) {
+    public Attribute createAttribute(String name, String dataTypeCompletePath, String accessModifier, String className, String packageName, String pojoCompletePath) {
         var id = generateAttributeId(pojoCompletePath, name);
         return attributeRepository.findById(id).orElseGet(() ->
-                Attribute.builder().id(id).name(name).accessModifier(accessModifier).clazz(createPojo(dataTypeName, className, packageName)).build());
+                Attribute.builder().id(id).name(name).accessModifier(accessModifier).clazz(createPojo(dataTypeCompletePath, className, packageName)).build());
 
+    }
+
+
+    public Attribute createAttribute(AttributeInfo attributeInfo, String pojoCompletePath) {
+        return createAttribute(attributeInfo.getName(), attributeInfo.getDataTypeName(), attributeInfo.getAccessModifier(), attributeInfo.getClassName(), attributeInfo.getPackageName(), pojoCompletePath);
+    }
+
+    public Pojo addAttribute(AddAttributeDTO addAttributeDTO, Pojo pojo) {
+
+        var dataType = transformPrimitivesAndFindIfThePojoExists(addAttributeDTO.getType());
+
+        var attribute = createAttribute(addAttributeDTO.getName(), dataType.getCompletePath(), addAttributeDTO.getVisibility(), dataType.getClassName(), dataType.getAPackage().getId(), pojo.getCompletePath());
+
+        addGenericListInformationIfNeeded(dataType, attribute, addAttributeDTO);
+
+        pojo.getAttributes().add(attribute);
+
+        return pojoRepository.save(pojo);
+    }
+
+    private void addGenericListInformationIfNeeded(Pojo dataType, Attribute attribute, AddAttributeDTO addAttributeDTO) {
+        if (dataType.getCompletePath().equals(LIST_TYPE)) {
+
+            var pojoOfGenericType = transformPrimitivesAndFindIfThePojoExists(addAttributeDTO.getGenericType());
+            attribute.setGenericType(pojoOfGenericType);
+        }
+    }
+
+    private Pojo transformPrimitivesAndFindIfThePojoExists(String pojoCompletePath) {
+        String transformedTypes = Primitiv.getWrapperByPrimitive(pojoCompletePath);
+        return createPojo(transformedTypes, util.parseClassName(transformedTypes), util.parsePackageName(transformedTypes));
     }
 
     public String generateAttributeId(String pojoId, String attributeName) {
         return pojoId + attributeName;
-    }
-
-    public Attribute createAttribute(AttributeInfo attributeInfo, String pojoCompletePath) {
-        return createAttribute(attributeInfo.getName(), attributeInfo.getDataTypeName(), attributeInfo.getAccessModifier(), attributeInfo.getClassName(), attributeInfo.getPackageName(), pojoCompletePath);
     }
 
     public Package createPackage(String packageName) {
