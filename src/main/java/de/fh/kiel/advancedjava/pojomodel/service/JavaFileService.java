@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
-import de.fh.kiel.advancedjava.pojomodel.dto.ClassDTO;
+import de.fh.kiel.advancedjava.pojomodel.dto.JavaFileDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.IsEmptyHull;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
@@ -13,12 +13,11 @@ import java.util.HashSet;
 
 
 @Service
-public class TymeLeafTemplateService {
+public class JavaFileService {
 
     private static final String JAVA_TEMPLATE = "javaFileTemplate.txt";
 
     private static final String JAVA_TEMPLATE_OPTIMIZIED = "javaFileTemplateOptimizied.txt";
-
 
     private final String JAVA_LANG_OBJECT = "java.lang.Object";
 
@@ -27,7 +26,7 @@ public class TymeLeafTemplateService {
     private final TemplateEngine textTemplateEngine;
     private final PojoRepository pojoRepository;
 
-    public TymeLeafTemplateService(TemplateEngine textTemplateEngine, PojoRepository pojoRepository) {
+    public JavaFileService(TemplateEngine textTemplateEngine, PojoRepository pojoRepository) {
         this.textTemplateEngine = textTemplateEngine;
         this.pojoRepository = pojoRepository;
     }
@@ -43,14 +42,17 @@ public class TymeLeafTemplateService {
     }
 
     public String createOptimziedJavaFile(String pojoId) {
+
         var pojo = pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExist(pojoId));
+
         if (pojo.isEmptyHull())
             throw new IsEmptyHull(pojoId);
 
-        var classDto = ClassDTO.builder()
+        var classDto = JavaFileDTO.builder()
                 .packageName(createPackage(pojo.getAPackage().getId()))
                 .className(pojo.getClassName())
                 .build();
+
         var imports = new HashSet<String>();
         var attributes = new HashSet<String>();
 
@@ -75,8 +77,6 @@ public class TymeLeafTemplateService {
                 attributes.add(createGenericAttribute(attribute));
             } else
                 attributes.add(createAttribute(attribute));
-
-
         }
 
         classDto.setAttributes(attributes);
@@ -87,6 +87,7 @@ public class TymeLeafTemplateService {
 
         return this.textTemplateEngine.process(JAVA_TEMPLATE_OPTIMIZIED, ctx);
     }
+
 
     private String createAttribute(Attribute attribute) {
         return attribute.getAccessModifier() + " " + attribute.getClazz().getClassName() + " " + attribute.getName() + ";";

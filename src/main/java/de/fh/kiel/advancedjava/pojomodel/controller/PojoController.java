@@ -8,7 +8,7 @@ import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoStatisticsService;
-import de.fh.kiel.advancedjava.pojomodel.service.TymeLeafTemplateService;
+import de.fh.kiel.advancedjava.pojomodel.service.JavaFileService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +22,12 @@ import java.util.Base64;
 @RequestMapping("pojo")
 public class PojoController {
     private final PojoService pojoService;
-    private final TymeLeafTemplateService tymeLeafTemplateService;
+    private final JavaFileService javaFileService;
     private final PojoStatisticsService pojoStatisticsService;
 
-    PojoController(PojoService pojoService, TymeLeafTemplateService tymeLeafTemplateService, PojoStatisticsService pojoStatisticsService) {
+    PojoController(PojoService pojoService, JavaFileService javaFileService, PojoStatisticsService pojoStatisticsService) {
         this.pojoService = pojoService;
-        this.tymeLeafTemplateService = tymeLeafTemplateService;
+        this.javaFileService = javaFileService;
         this.pojoStatisticsService =pojoStatisticsService;
     }
 
@@ -63,7 +63,7 @@ public class PojoController {
 
     @GetMapping("/class/{name}")
     public ResponseEntity<String> javaCode(@PathVariable("name") String pojoName){
-       return ResponseEntity.ok(tymeLeafTemplateService.createOptimziedJavaFile(pojoName));
+       return ResponseEntity.ok(javaFileService.createOptimziedJavaFile(pojoName));
     }
     @GetMapping("/{name}")
     public ResponseEntity<Pojo> getPojo(@PathVariable("name") String pojoName){
