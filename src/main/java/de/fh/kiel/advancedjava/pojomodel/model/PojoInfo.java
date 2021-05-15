@@ -12,11 +12,11 @@ public class PojoInfo {
     private String completePath;
     private String className;
     private String packageName;
-    private String parentClassCompletePath;
-    private String parentClassName;
-    private String parentClassPackageName;
+    private String superClassCompletePath;
+    private String superClassName;
+    private String superClassPackageName;
 
-    private Set<AttributeInfo> attributes;
+    private Set<AttributeInfo> attributeInfos;
 
     private Set<String> interfaces;
 

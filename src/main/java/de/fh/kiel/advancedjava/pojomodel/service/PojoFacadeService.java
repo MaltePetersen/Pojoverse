@@ -7,7 +7,6 @@ import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,9 +37,9 @@ public class PojoFacadeService {
     }
 
     public Pojo createPojo(PojoInfo pojoInfo) {
-        var attributes = pojoInfo.getAttributes().stream().map(a -> createAttribute(a.getName(), a.getDataTypeName(), a.getAccessModifier(), a.getClassName(), a.getPackageName(), pojoInfo.getCompletePath())).collect(Collectors.toSet());
+        var attributes = pojoInfo.getAttributeInfos().stream().map(attributeInfo -> createAttribute(attributeInfo, pojoInfo.getCompletePath())).collect(Collectors.toSet());
 
-        return createPojo(pojoInfo.getCompletePath(), pojoInfo.getClassName(), pojoInfo.getPackageName(), pojoInfo.getParentClassCompletePath(), pojoInfo.getParentClassName(), pojoInfo.getParentClassPackageName(), pojoInfo.getInterfaces(), attributes);
+        return createPojo(pojoInfo.getCompletePath(), pojoInfo.getClassName(), pojoInfo.getPackageName(), pojoInfo.getSuperClassCompletePath(), pojoInfo.getSuperClassName(), pojoInfo.getSuperClassPackageName(), pojoInfo.getInterfaces(), attributes);
     }
 
     public Pojo createPojo(String completePath, String className, String packageName) {
