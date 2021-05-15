@@ -1,1 +1,142 @@
-[{"emptyHull":false,"completePath":"de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass","className":"DefaultClass","attributes":[{"id":"de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassname","name":"name","accessModifier":"private","genericType":null,"clazz":{"emptyHull":true,"completePath":"java.lang.String","className":"String","attributes":[],"parentClass":null,"interfaces":null,"apackage":{"id":"java.lang","name":"lang","subPackage":null}}},{"id":"de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassid","name":"id","accessModifier":"private","genericType":null,"clazz":{"emptyHull":true,"completePath":"java.lang.Long","className":"Long","attributes":[],"parentClass":null,"interfaces":null,"apackage":{"id":"java.lang","name":"lang","subPackage":null}}}],"parentClass":{"emptyHull":true,"completePath":"java.lang.Object","className":"Object","attributes":[],"parentClass":null,"interfaces":null,"apackage":{"id":"java.lang","name":"lang","subPackage":null}},"interfaces":[],"apackage":{"id":"de.fh.kiel.advancedjava.pojomodel.exampleData","name":"exampleData","subPackage":null}},{"emptyHull":false,"completePath":"de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtives","className":"ClassWithPrimtives","attributes":[{"id":"de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtivesis","name":"is","accessModifier":"","genericType":null,"clazz":{"emptyHull":true,"completePath":"java.lang.Boolean","className":"Boolean","attributes":[],"parentClass":null,"interfaces":null,"apackage":{"id":"java.lang","name":"lang","subPackage":null}}},{"id":"de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtivesid","name":"id","accessModifier":"","genericType":null,"clazz":{"emptyHull":true,"completePath":"java.lang.Integer","className":"Integer","attributes":[],"parentClass":null,"interfaces":null,"apackage":{"id":"java.lang","name":"lang","subPackage":null}}}],"parentClass":{"emptyHull":true,"completePath":"java.lang.Object","className":"Object","attributes":[],"parentClass":null,"interfaces":null,"apackage":{"id":"java.lang","name":"lang","subPackage":null}},"interfaces":[],"apackage":{"id":"de.fh.kiel.advancedjava.pojomodel.exampleData","name":"exampleData","subPackage":null}}]
+[
+  {
+    "emptyHull": false,
+    "completePath": "de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass",
+    "className": "DefaultClass",
+    "version": 0,
+    "attributes": [
+      {
+        "id": "de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassname",
+        "version": 0,
+        "name": "name",
+        "accessModifier": "private",
+        "genericType": null,
+        "clazz": {
+          "emptyHull": true,
+          "completePath": "java.lang.String",
+          "className": "String",
+          "version": 1,
+          "attributes": [],
+          "parentClass": null,
+          "interfaces": [],
+          "apackage": {
+            "id": "java.lang",
+            "name": "lang",
+            "subPackage": null
+          }
+        }
+      },
+      {
+        "id": "de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassid",
+        "version": 0,
+        "name": "id",
+        "accessModifier": "private",
+        "genericType": null,
+        "clazz": {
+          "emptyHull": true,
+          "completePath": "java.lang.Long",
+          "className": "Long",
+          "version": 1,
+          "attributes": [],
+          "parentClass": null,
+          "interfaces": [],
+          "apackage": {
+            "id": "java.lang",
+            "name": "lang",
+            "subPackage": null
+          }
+        }
+      }
+    ],
+    "parentClass": {
+      "emptyHull": true,
+      "completePath": "java.lang.Object",
+      "className": "Object",
+      "version": 2,
+      "attributes": [],
+      "parentClass": null,
+      "interfaces": [],
+      "apackage": {
+        "id": "java.lang",
+        "name": "lang",
+        "subPackage": null
+      }
+    },
+    "interfaces": [],
+    "apackage": {
+      "id": "de.fh.kiel.advancedjava.pojomodel.exampleData",
+      "name": "exampleData",
+      "subPackage": null
+    }
+  },
+  {
+    "emptyHull": false,
+    "completePath": "de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtives",
+    "className": "ClassWithPrimtives",
+    "version": 0,
+    "attributes": [
+      {
+        "id": "de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtivesis",
+        "version": 0,
+        "name": "is",
+        "accessModifier": "",
+        "genericType": null,
+        "clazz": {
+          "emptyHull": true,
+          "completePath": "java.lang.Boolean",
+          "className": "Boolean",
+          "version": 1,
+          "attributes": [],
+          "parentClass": null,
+          "interfaces": [],
+          "apackage": {
+            "id": "java.lang",
+            "name": "lang",
+            "subPackage": null
+          }
+        }
+      },
+      {
+        "id": "de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtivesid",
+        "version": 0,
+        "name": "id",
+        "accessModifier": "",
+        "genericType": null,
+        "clazz": {
+          "emptyHull": true,
+          "completePath": "java.lang.Integer",
+          "className": "Integer",
+          "version": 1,
+          "attributes": [],
+          "parentClass": null,
+          "interfaces": [],
+          "apackage": {
+            "id": "java.lang",
+            "name": "lang",
+            "subPackage": null
+          }
+        }
+      }
+    ],
+    "parentClass": {
+      "emptyHull": true,
+      "completePath": "java.lang.Object",
+      "className": "Object",
+      "version": 2,
+      "attributes": [],
+      "parentClass": null,
+      "interfaces": [],
+      "apackage": {
+        "id": "java.lang",
+        "name": "lang",
+        "subPackage": null
+      }
+    },
+    "interfaces": [],
+    "apackage": {
+      "id": "de.fh.kiel.advancedjava.pojomodel.exampleData",
+      "name": "exampleData",
+      "subPackage": null
+    }
+  }
+]

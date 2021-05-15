@@ -90,6 +90,7 @@ public class Story1IntegrationTests {
         class AlreadyExistingClass {
             @BeforeEach()
             public void createPojo() throws Exception {
+                pojoRepository.deleteAll();
                 pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").aPackage(packageService.createPackage("de.fh.kiel.advancedjava.pojomodel.exampleData")).emptyHull(false).build());
             }
 

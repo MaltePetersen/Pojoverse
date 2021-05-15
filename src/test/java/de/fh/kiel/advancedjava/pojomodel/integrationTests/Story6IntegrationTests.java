@@ -4,6 +4,7 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
         import com.fasterxml.jackson.databind.ObjectMapper;
         import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
         import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+        import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
         import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
         import org.junit.jupiter.api.*;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -38,15 +39,19 @@ public class Story6IntegrationTests {
     @Autowired
     private TestingUtil testingUtil;
 
+    @Autowired
+    private AttributeRepository attributeRepository;
 
     @AfterEach()
     void deleteAllSavedClasses(){
         this.pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
     }
 
     @BeforeEach()
     void SetUp(){
         pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
     }
 
     void performGetPojo(String pojo) throws Exception {
@@ -100,6 +105,8 @@ public class Story6IntegrationTests {
     class sendRequests {
         @BeforeEach()
         void SetUp() throws Exception {
+            pojoRepository.deleteAll();
+            attributeRepository.deleteAll();
             performGetPojo(testingUtil.getBase64Value("defaultClass"));
             performGetPojo(testingUtil.getBase64Value("classWithPrimtives"));
         }

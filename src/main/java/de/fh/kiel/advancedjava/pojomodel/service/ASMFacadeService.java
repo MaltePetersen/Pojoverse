@@ -25,11 +25,11 @@ import java.util.Set;
  */
 
 @Service
-public class ASMWrapperService {
+public class ASMFacadeService {
 
     private final PojoRepository pojoRepository;
 
-    public ASMWrapperService(PojoRepository pojoRepository) {
+    public ASMFacadeService(PojoRepository pojoRepository) {
         this.pojoRepository = pojoRepository;
     }
 

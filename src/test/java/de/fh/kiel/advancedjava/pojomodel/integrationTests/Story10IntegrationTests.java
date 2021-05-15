@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
         import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
         import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
+        import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
         import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
         import org.junit.jupiter.api.*;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,11 @@ public class Story10IntegrationTests {
 
     @Autowired
     private PojoRepository pojoRepository;
+
     @Autowired
     private TestingUtil testingUtil;
-
+    @Autowired
+    private AttributeRepository attributeRepository;
 
 
     @AfterEach()

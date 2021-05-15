@@ -3,6 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
+import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,11 @@ public class Story11IntegrationTests {
 
     @Autowired
     private PojoRepository pojoRepository;
+
     @Autowired
     private TestingUtil testingUtil;
-
-    public static String loadData(String location) throws IOException {
-        return Files.readString(Paths.get(location));
-    }
+    @Autowired
+    private AttributeRepository attributeRepository;
 
 
     @AfterEach()
@@ -54,9 +54,11 @@ public class Story11IntegrationTests {
     class loadPojo {
         @BeforeEach()
         void SetUp() throws Exception {
+            attributeRepository.deleteAll();
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(testingUtil.getBase64Value ("defaultClass"))
-                    .accept(MediaType.APPLICATION_JSON));
+                    .content(testingUtil.getBase64Value("defaultClass"))
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andReturn();
         }
 
         @Test

@@ -17,6 +17,7 @@ public class AttributeService {
     private final PojoRepository pojoRepository;
     private final PackageService packageService;
 
+
     AttributeService(PojoRepository pojoRepository, PackageService packageService){
         this.pojoRepository =pojoRepository;
         this.packageService = packageService;
@@ -93,12 +94,12 @@ public class AttributeService {
         return completePath.substring(completePath.lastIndexOf(".")+1);
     return completePath;
     }
-
+    //TODO Enum aus diesen, dass direkt Objekt baut?
     private String transformPrimtives(String desc){
         return switch (desc) {
             case "boolean" -> "java.lang.Boolean";
             case "byte" -> "java.lang.Byte";
-            case "char" -> "java.lang.Character";
+            case "chr" -> "java.lang.Character";
             case "double" -> "java.lang.Double";
             case "float" -> "java.lang.Float";
             case "int" -> "java.lang.Integer";

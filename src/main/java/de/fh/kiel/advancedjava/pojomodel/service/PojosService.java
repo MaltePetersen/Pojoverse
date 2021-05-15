@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
+import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoInfo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
@@ -17,7 +18,6 @@ import java.io.OutputStream;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -27,15 +27,18 @@ public class PojosService {
 
     private final AttributeRepository attributeRepository;
     @Autowired
-    private ASMWrapperService asmWrapperService;
+    private ASMFacadeService asmFacadeService;
     private final PojoService pojoService;
+    private final PojoFacadeService pojoFacadeService;
 
 
-    PojosService(PojoService pojoService, PojoRepository pojoRepository, AttributeRepository attributeRepository, ASMWrapperService asmWrapperService ) throws IOException {
+
+    PojosService(PojoService pojoService, PojoRepository pojoRepository, AttributeRepository attributeRepository, ASMFacadeService asmFacadeService, PojoFacadeService pojoFacadeService) throws IOException {
         this.pojoService = pojoService;
         this.pojoRepository = pojoRepository;
         this.attributeRepository = attributeRepository;
-        this.asmWrapperService = asmWrapperService;
+        this.asmFacadeService = asmFacadeService;
+        this.pojoFacadeService = pojoFacadeService;
     }
     public List<Pojo> uploadJarAsMultipartAndCreatePojos(MultipartFile jarFile) throws IOException {
         var file = new File("temp.jar");
@@ -57,7 +60,7 @@ public class PojosService {
     }
     public List<Pojo> addToDB(File file) throws IOException {
         var t = loadClasses(file);
-        var list = t.stream().map((p)->pojoService.createPojoFromPojoInfo(p)).collect(Collectors.toList());
+        var list = t.stream().map(pojoFacadeService::createPojo).collect(Collectors.toList());
         for (Pojo pojo:list
         ) {
             var exist  = pojoRepository.findById(pojo.getCompletePath());
@@ -80,8 +83,27 @@ public class PojosService {
     public List<Pojo> importPojos(List<Pojo> pojos){
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
-        pojoRepository.saveAll(pojos);
+        pojos.forEach(this::trySave);
+        //pojoRepository.saveAll(pojos);
         return pojoRepository.findAll();
+    }
+    private void trySave(Pojo pojo){
+          var test =pojoRepository.findById(pojo.getCompletePath());
+                  if(test.isPresent()){
+                      test.get().setEmptyHull(pojo.isEmptyHull());
+                      test.get().setAttributes(pojo.getAttributes().stream().map(this::getAttribute).collect(Collectors.toSet()));
+                      test.get().setInterfaces(pojo.getInterfaces());
+                      test.get().setParentClass(pojo.getParentClass());
+                      pojo = test.get();
+                  }
+                  pojo.setAttributes(pojo.getAttributes().stream().map(this::getAttribute).collect(Collectors.toSet()));
+                  pojo.setAttributes(null);
+                  pojoRepository.save(pojo);
+    }
+    private Attribute getAttribute(Attribute attribute){
+      Attribute attr = attributeRepository.findById(attribute.getId()).orElse(attribute);
+     attr.setClazz( pojoRepository.findById( attr.getClazz().getCompletePath()).orElse(attr.getClazz()));
+      return attr;
     }
     List<PojoInfo> loadClasses(File jarFile) throws IOException {
         var classes = new ArrayList<PojoInfo>();
@@ -96,7 +118,7 @@ public class PojosService {
         try (var inputStream = jar.getInputStream(entry)){
             if (name.endsWith(".class")) {
                 byte[] bytes = IOUtils.toByteArray(inputStream);
-                var pojoInfo = asmWrapperService.read(bytes);
+                var pojoInfo = asmFacadeService.read(bytes);
                 classes.add(pojoInfo);
             }
         } catch (IOException e) {
