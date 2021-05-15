@@ -1,6 +1,5 @@
 package de.fh.kiel.advancedjava.pojomodel.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.util.HashSet;

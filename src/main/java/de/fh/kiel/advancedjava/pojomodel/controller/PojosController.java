@@ -17,9 +17,10 @@ import java.util.List;
 public class PojosController {
     private final PojosService pojosService;
 
-    PojosController(PojosService pojosService){
+    PojosController(PojosService pojosService) {
         this.pojosService = pojosService;
     }
+
     @PostMapping
     public ResponseEntity<?> createPojos(@RequestBody() String base64EncodedJar) throws IOException {
         byte[] pojoAsByteCode;
@@ -30,20 +31,23 @@ public class PojosController {
             throw new NoValidBase64();
         }
 
-        return  ResponseEntity.ok(pojosService.uploadJar(pojoAsByteCode));
+        return ResponseEntity.ok(pojosService.uploadJar(pojoAsByteCode));
     }
+
     @GetMapping
-    public List<Pojo> getPojos(){
+    public List<Pojo> getPojos() {
         return pojosService.getAllPojos();
     }
-    @PostMapping("/multiple")
-    public ResponseEntity<List<Pojo>> importPojos(@RequestBody() List<Pojo> pojos ) {
 
-    return ResponseEntity.ok(pojosService.importPojos(pojos));
+    @PostMapping("/multiple")
+    public ResponseEntity<List<Pojo>> importPojos(@RequestBody() List<Pojo> pojos) {
+
+        return ResponseEntity.ok(pojosService.importPojos(pojos));
     }
-    @PostMapping(  path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+    @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<Pojo>> handleUpload(
             @RequestPart("file") MultipartFile file) throws IOException {
-        return  ResponseEntity.ok(pojosService.uploadJar(file.getBytes()));
+        return ResponseEntity.ok(pojosService.uploadJar(file.getBytes()));
     }
 }

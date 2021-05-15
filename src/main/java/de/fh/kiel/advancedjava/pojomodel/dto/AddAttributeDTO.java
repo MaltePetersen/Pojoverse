@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
 /*
 genericType will only be used if the attribute is of type java.util.list
  */

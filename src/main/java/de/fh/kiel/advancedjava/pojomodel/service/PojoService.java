@@ -23,61 +23,60 @@ public class PojoService {
     private final AttributeRepository attributeRepository;
 
     PojoService(PojoRepository pojoRepository, ASMFacadeService asmFacadeService, AttributeRepository attributeRepository, PojoFacadeService pojoFacadeService
-    ){
+    ) {
         this.pojoRepository = pojoRepository;
         this.asmFacadeService = asmFacadeService;
         this.attributeRepository = attributeRepository;
         this.pojoFacadeService = pojoFacadeService;
     }
 
-     public Pojo readByteCodeAndCreatePojo(byte[] clazz){
+    public Pojo readByteCodeAndCreatePojo(byte[] clazz) {
 
-           var pojoInfo = this.asmFacadeService.read(clazz);
+        var pojoInfo = this.asmFacadeService.read(clazz);
 
-           return pojoFacadeService.createPojo(pojoInfo);
+        return pojoFacadeService.createPojo(pojoInfo);
 
     }
 
 
-    private String buildCompletePath(String packageName, String className){
-            return packageName + "." + className;
+    private String buildCompletePath(String packageName, String className) {
+        return packageName + "." + className;
     }
 
-    public Pojo createPojoEmptyHullFromJSON(PojoEmptyHullDTO emptyHull){
+    public Pojo createPojoEmptyHullFromJSON(PojoEmptyHullDTO emptyHull) {
 
         var completePath = buildCompletePath(emptyHull.getPackageName(), emptyHull.getClassName());
 
-        if ( pojoRepository.existsById(completePath) )
+        if (pojoRepository.existsById(completePath))
             throw new PojoAlreadyExists(completePath);
 
-       return pojoRepository.save(pojoFacadeService.createPojo(completePath, emptyHull.getClassName(),emptyHull.getPackageName()));
+        return pojoRepository.save(pojoFacadeService.createPojo(completePath, emptyHull.getClassName(), emptyHull.getPackageName()));
     }
 
-    public void deletePojo(String pojoName){
+    public void deletePojo(String pojoName) {
         var pojo = getPojo(pojoName);
 
-     if( attributeRepository.findAllByClazz_CompletePath(pojoName).isEmpty() ){
-         pojo.setAttributes(Collections.emptySet());
-         pojo.setEmptyHull(true);
-         pojoRepository.save(pojo);
-     } else
-         pojoRepository.deleteById(pojo.getCompletePath());
+        if (attributeRepository.findAllByClazz_CompletePath(pojoName).isEmpty()) {
+            pojo.setAttributes(Collections.emptySet());
+            pojo.setEmptyHull(true);
+            pojoRepository.save(pojo);
+        } else
+            pojoRepository.deleteById(pojo.getCompletePath());
     }
 
-    public Pojo changeAttribute(AttributeChangeDTO attributeChangeDTO){
+    public Pojo changeAttribute(AttributeChangeDTO attributeChangeDTO) {
         var pojo = pojoRepository.findById(attributeChangeDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExist(attributeChangeDTO.getClassName()));
 
-            var attr =  pojo.getAttributes().stream().filter(attribute-> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeChangeDTO.getAttributeName(), attributeChangeDTO.getClassName()));
+        var attr = pojo.getAttributes().stream().filter(attribute -> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeChangeDTO.getAttributeName(), attributeChangeDTO.getClassName()));
 
-                pojo.getAttributes().remove(attr);
-                pojoRepository.save(pojo);
-               return pojo;
+        pojo.getAttributes().remove(attr);
+        pojoRepository.save(pojo);
+        return pojo;
     }
 
-    public Pojo getPojo(String completePath){
+    public Pojo getPojo(String completePath) {
         return pojoRepository.findById(completePath).orElseThrow(() -> new PojoDoesNotExist(completePath));
     }
-
 
 
 }

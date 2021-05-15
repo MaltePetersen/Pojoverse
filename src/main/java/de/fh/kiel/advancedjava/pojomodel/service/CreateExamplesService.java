@@ -12,10 +12,11 @@ import java.util.Base64;
 @Service
 public class CreateExamplesService {
     Logger logger = LoggerFactory.getLogger(CreateExamplesService.class);
+
     public CreateExamplesService() throws IOException {
     }
 
-    public void  createExamplePojoBase64() throws IOException {
+    public void createExamplePojoBase64() throws IOException {
         byte[] data = Files.readAllBytes(Paths.get("/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/exploit/Main.class"));
         var test = Base64.getEncoder().encodeToString(data);
         logger.info(test);

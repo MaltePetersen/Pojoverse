@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,21 +30,24 @@ public class Story8IntegrationTests {
 
     @Autowired
     private PojoRepository pojoRepository;
+
+
     @Autowired
     private TestingUtil testingUtil;
+    @Autowired
+    private AttributeRepository attributeRepository;
 
-    public static String loadData(String location) throws IOException {
-        return Files.readString(Paths.get(location));
-    }
 
     @AfterEach()
     void deleteAllSavedClasses(){
         this.pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
     }
 
     @BeforeEach()
     void SetUp(){
         pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
     }
 
     @Nested
@@ -82,6 +86,29 @@ public class Story8IntegrationTests {
         void attributeChange() throws Exception {
              mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                     .content(testingUtil.getJSONValue("attributeAddDTO")).contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.ALL)).andExpect(status().isBadRequest())
+                    .andReturn();
+        }
+    }
+
+
+    @Nested
+    @DisplayName("When the developer sends a addAttribute request but the attribute which should be changed already exists")
+    class addAttribute {
+        @BeforeEach()
+        void SetUp() throws Exception {
+            pojoRepository.deleteAll();
+            attributeRepository.deleteAll();
+            mvc.perform(MockMvcRequestBuilders.post("/pojo")
+                    .content(testingUtil.getBase64Value("defaultClass"))
+                    .accept(MediaType.APPLICATION_JSON));
+        }
+
+        @Test
+        @DisplayName("Then the endpoint should return a bad request")
+        void attributeChange() throws Exception {
+            mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
+                    .content(testingUtil.getJSONValue("badAttributeAddDto")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isBadRequest())
                     .andReturn();
         }

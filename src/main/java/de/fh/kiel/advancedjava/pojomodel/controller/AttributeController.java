@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class AttributeController {
     private final AttributeService attributeService;
 
-    AttributeController(AttributeService attributeService){
+    AttributeController(AttributeService attributeService) {
         this.attributeService = attributeService;
     }
 

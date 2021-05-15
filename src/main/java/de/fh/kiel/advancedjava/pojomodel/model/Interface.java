@@ -9,6 +9,4 @@ public class Interface {
     private Long id;
 
 
-
-
 }

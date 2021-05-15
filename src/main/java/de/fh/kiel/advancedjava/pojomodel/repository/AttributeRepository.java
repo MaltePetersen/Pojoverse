@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface AttributeRepository extends Neo4jRepository<Attribute, String> {
     List<Attribute> findAllByClazz_CompletePath(String completePath);
+
+    boolean existsByNameAndClazz_CompletePath(String name, String completePath);
 }

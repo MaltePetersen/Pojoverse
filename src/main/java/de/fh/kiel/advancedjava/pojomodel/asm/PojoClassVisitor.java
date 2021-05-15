@@ -14,12 +14,13 @@ import java.util.Set;
 @Getter
 public class PojoClassVisitor extends ClassVisitor {
 
-    private Set<AttributeInfo> attributes;
+    private final Set<AttributeInfo> attributes;
 
     public PojoClassVisitor() {
         super(Opcodes.ASM9);
         attributes = new HashSet<>();
     }
+
     @Override
     public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
         //This needs to be tested because the vistor will read a field with static two times once without acces modifiers and once more with
@@ -28,7 +29,7 @@ public class PojoClassVisitor extends ClassVisitor {
             return attribute;
         }).findAny();
         if (attributeAlreadyExists.isEmpty()) {
-            desc = toJavaURI(transformPrimtives(desc));
+            desc = toJavaURI(Primitiv.getWrapperByPrimitive(desc));
             this.attributes.add(new AttributeInfo(name, desc, Modifier.toString(access), parseClassName(desc), parsePackageName(desc)));
         }
         return super.visitField(access, name, desc, signature, value);
@@ -38,20 +39,6 @@ public class PojoClassVisitor extends ClassVisitor {
         path = path.substring(0, path.lastIndexOf(";"));
         path = path.replace("/", ".");
         return path.substring(1);
-    }
-
-    private String transformPrimtives(String desc) {
-        return switch (desc) {
-            case "Z" -> "Ljava.lang.Boolean;";
-            case "B" -> "Ljava.lang.Byte;";
-            case "C" -> "Ljava.lang.Character;";
-            case "D" -> "Ljava.lang.Double;";
-            case "F" -> "Ljava.lang.Float;";
-            case "I" -> "Ljava.lang.Integer;";
-            case "J" -> "Ljava.lang.Long;";
-            case "S" -> "Ljava.lang.Short;";
-            default -> desc;
-        };
     }
 
     private String parseClassName(String completePath) {

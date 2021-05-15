@@ -3,8 +3,8 @@ package de.fh.kiel.advancedjava.pojomodel.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-
 import java.util.Set;
+
 @Data
 @AllArgsConstructor
 public class PojoInfo {

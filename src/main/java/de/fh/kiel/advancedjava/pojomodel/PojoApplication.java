@@ -7,9 +7,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PojoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PojoApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(PojoApplication.class, args);
+    }
 
 
 }

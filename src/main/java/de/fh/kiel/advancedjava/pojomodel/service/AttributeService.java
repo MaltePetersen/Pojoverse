@@ -3,7 +3,10 @@ package de.fh.kiel.advancedjava.pojomodel.service;
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.AttributeAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
-import de.fh.kiel.advancedjava.pojomodel.model.*;
+import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
+import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.model.Primitiv;
+import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,62 +20,66 @@ public class AttributeService {
     private final PojoRepository pojoRepository;
     private final PackageService packageService;
     private final PojoFacadeService pojoFacadeService;
+    private final AttributeRepository attributeRepository;
 
 
-    AttributeService(PojoRepository pojoRepository, PackageService packageService, PojoFacadeService pojoFacadeService){
+    AttributeService(PojoRepository pojoRepository, PackageService packageService, PojoFacadeService pojoFacadeService, AttributeRepository attributeRepository) {
         this.pojoRepository = pojoRepository;
         this.packageService = packageService;
         this.pojoFacadeService = pojoFacadeService;
+        this.attributeRepository = attributeRepository;
     }
 
 
-    public Attribute addAttribute(String pojoId , AddAttributeDTO addAttributeDTO){
-            var pojo =  pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExist(pojoId));
-            boolean attributeAlreadyExistsInPojo  = pojo.getAttributes() != null && pojo.getAttributes().stream().anyMatch(attr -> attr.getName().equals(addAttributeDTO.getName()));
-           if( attributeAlreadyExistsInPojo)
-               throw new AttributeAlreadyExists(addAttributeDTO.getName(), pojoId);
+    public Attribute addAttribute(String pojoId, AddAttributeDTO addAttributeDTO) {
+        var pojo = pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExist(pojoId));
 
+        var attributeId = pojoFacadeService.generateAttributeId(pojoId, addAttributeDTO.getName());
 
-           var pojoOfAttributeType = transformPrimitivesAndFindIfThePojoExists(addAttributeDTO.getType());
+        if (attributeRepository.existsById(attributeId))
+            throw new AttributeAlreadyExists(addAttributeDTO.getName(), pojoId);
+
+        var pojoOfAttributeType = transformPrimitivesAndFindIfThePojoExists(addAttributeDTO.getType());
 
         var attribute = Attribute.builder()
-                .id(pojoId+addAttributeDTO.getName())
+                .id(pojoId + addAttributeDTO.getName())
                 .name(addAttributeDTO.getName())
                 .accessModifier(addAttributeDTO.getVisibility())
                 .clazz(pojoOfAttributeType).build();
 
-           if( pojoOfAttributeType.getCompletePath().equals(LIST_TYPE) ){
 
-               var pojoOfGenericType = transformPrimitivesAndFindIfThePojoExists(addAttributeDTO.getGenericType());
-                attribute.setGenericType(pojoOfGenericType);
-           }
+        if (pojoOfAttributeType.getCompletePath().equals(LIST_TYPE)) {
 
-           if( pojo.getAttributes() == null )
-               pojo.setAttributes(Collections.singleton(attribute));
-           else
-               pojo.getAttributes().add(attribute);
+            var pojoOfGenericType = transformPrimitivesAndFindIfThePojoExists(addAttributeDTO.getGenericType());
+            attribute.setGenericType(pojoOfGenericType);
+        }
 
-           pojoRepository.save(pojo);
+        if (pojo.getAttributes() == null)
+            pojo.setAttributes(Collections.singleton(attribute));
+        else
+            pojo.getAttributes().add(attribute);
 
-           return attribute;
+        pojoRepository.save(pojo);
+
+        return attribute;
     }
 
-    private Pojo transformPrimitivesAndFindIfThePojoExists(String pojoCompletePath){
+
+    private Pojo transformPrimitivesAndFindIfThePojoExists(String pojoCompletePath) {
         String transformedTypes = Primitiv.getWrapperByPrimitive(pojoCompletePath);
         return pojoFacadeService.createPojo(transformedTypes, parseClassName(transformedTypes), parsePackageName(transformedTypes));
     }
 
-
-    private String parsePackageName(String completePath){
-        if(completePath.lastIndexOf(".") != -1)
-              return completePath.substring(0, completePath.lastIndexOf("."));
+    private String parsePackageName(String completePath) {
+        if (completePath.lastIndexOf(".") != -1)
+            return completePath.substring(0, completePath.lastIndexOf("."));
         return completePath;
     }
 
     private String parseClassName(String completePath) {
-    if(completePath.lastIndexOf(".") != -1)
-        return completePath.substring(completePath.lastIndexOf(".")+1);
-    return completePath;
+        if (completePath.lastIndexOf(".") != -1)
+            return completePath.substring(completePath.lastIndexOf(".") + 1);
+        return completePath;
     }
 
 }

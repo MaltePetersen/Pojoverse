@@ -15,13 +15,13 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- This Wrapper Class wraps all ASM funcionality used.
- That is because the ClassVisitor needs to store variables as member variables to make them accessible.
- This causes side effects if we implement the visitor as a singleton Service.
- A prototype service could have solved this issue but the pojoService would have needed to be a prototype service aswell only
- because of asm.
- Therefore I decided to wrap the logik of the classreader and the visitor in a wrapper which handles all interaction with asm
- instead of letting asm dictate the architecture of the application.
+ * This Wrapper Class wraps all ASM funcionality used.
+ * That is because the ClassVisitor needs to store variables as member variables to make them accessible.
+ * This causes side effects if we implement the visitor as a singleton Service.
+ * A prototype service could have solved this issue but the pojoService would have needed to be a prototype service aswell only
+ * because of asm.
+ * Therefore I decided to wrap the logik of the classreader and the visitor in a wrapper which handles all interaction with asm
+ * instead of letting asm dictate the architecture of the application.
  */
 
 @Service
@@ -33,21 +33,21 @@ public class ASMFacadeService {
         this.pojoRepository = pojoRepository;
     }
 
-    public PojoInfo read(byte[] clazz){
+    public PojoInfo read(byte[] clazz) {
         var classReader = new PojoClassReader(clazz);
 
-        if(pojoDoesNotAlreadyExist(classReader.getCompletePath())) {
+        if (pojoDoesNotAlreadyExist(classReader.getCompletePath())) {
 
             var pojoClassVisitor = new PojoClassVisitor();
             classReader.accept(pojoClassVisitor, PojoClassReader.SKIP_DEBUG | PojoClassReader.SKIP_FRAMES);
             Set<AttributeInfo> attributesInfos = pojoClassVisitor.getAttributes();
-           return new PojoInfo(classReader.getCompletePath(), classReader.getClassName(), classReader.getPackageName(), classReader.getSuperCompletePath(), classReader.getSuperName(), classReader.getSuperPackageName(),attributesInfos,new HashSet<>( Arrays.asList(classReader.getInterfaces())));
+            return new PojoInfo(classReader.getCompletePath(), classReader.getClassName(), classReader.getPackageName(), classReader.getSuperCompletePath(), classReader.getSuperName(), classReader.getSuperPackageName(), attributesInfos, new HashSet<>(Arrays.asList(classReader.getInterfaces())));
 
         }
         throw new PojoAlreadyExists(classReader.getCompletePath());
     }
 
-    private boolean pojoDoesNotAlreadyExist(String completePath){
+    private boolean pojoDoesNotAlreadyExist(String completePath) {
         Optional<Pojo> pojo = pojoRepository.findById(completePath);
         return pojo.isEmpty() || pojo.get().isEmptyHull();
     }

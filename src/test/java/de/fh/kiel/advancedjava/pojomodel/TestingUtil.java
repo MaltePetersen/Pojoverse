@@ -74,6 +74,7 @@ public class TestingUtil {
         jsonValues.put("attributeChangeDTO", createJSONPath( "AttributeChangeDTO.json"));
         jsonValues.put("attributeAddDTO", createJSONPath( "AttributeAddDTO.json"));
         jsonValues.put("attributeAddListDTO", createJSONPath( "AttributeAddListDTO.json"));
+        jsonValues.put("badAttributeAddDto", createJSONPath( "BadAttributeAddDto.json"));
         jsonValues.put("pojos", createJSONPath( "pojos.json"));
         jsonValues.put("defaultClass", createJSONPath( "defaultClass.json"));
         jsonValues.put("packagesPojos", createJSONPath( "packagesPojos.json"));

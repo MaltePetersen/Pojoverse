@@ -5,7 +5,6 @@ import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
-import org.apache.tomcat.jni.Error;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -53,17 +52,20 @@ public class PojoFacadeService {
                 .attributes(Collections.emptySet())
                 .emptyHull(true).build()));
     }
-    private void pojoExistsAndIsNotEmptyHull(String completePath){
-        pojoRepository.findById(completePath).ifPresent(pojo-> { if(! pojo.isEmptyHull()){
-            throw new PojoAlreadyExists(pojo.getCompletePath());
-        } } );
+
+    private void pojoExistsAndIsNotEmptyHull(String completePath) {
+        pojoRepository.findById(completePath).ifPresent(pojo -> {
+            if (!pojo.isEmptyHull()) {
+                throw new PojoAlreadyExists(pojo.getCompletePath());
+            }
+        });
     }
 
     public Pojo createPojo(String completePath, String className, String packageName, String superCompletePath, String superClassName, String superPackageName, Set<String> interfaces, Set<Attribute> attributes) {
 
         pojoExistsAndIsNotEmptyHull(completePath);
 
-        var pojo = pojoRepository.findById(completePath).orElseGet( () ->Pojo.builder().completePath(completePath)
+        var pojo = pojoRepository.findById(completePath).orElseGet(() -> Pojo.builder().completePath(completePath)
                 .className(className)
                 .aPackage(packageService.createPackage(packageName))
                 .interfaces(Collections.emptySet())
@@ -80,10 +82,14 @@ public class PojoFacadeService {
     }
 
     public Attribute createAttribute(String name, String dataTypeName, String accessModifier, String className, String packageName, String pojoCompletePath) {
-        var id = pojoCompletePath + "" + name;
+        var id = generateAttributeId(pojoCompletePath, name);
         return attributeRepository.findById(id).orElseGet(() ->
-                Attribute.builder().id(id).name(name).accessModifier(accessModifier).clazz(createPojo(dataTypeName ,className, packageName)).build());
+                Attribute.builder().id(id).name(name).accessModifier(accessModifier).clazz(createPojo(dataTypeName, className, packageName)).build());
 
+    }
+
+    public String generateAttributeId(String pojoId, String attributeName) {
+        return pojoId + attributeName;
     }
 
     public Attribute createAttribute(AttributeInfo attributeInfo, String pojoCompletePath) {
