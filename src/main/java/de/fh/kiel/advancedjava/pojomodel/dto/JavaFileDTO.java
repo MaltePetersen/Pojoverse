@@ -3,10 +3,10 @@ package de.fh.kiel.advancedjava.pojomodel.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Builder
 public class JavaFileDTO {
 
     private String className;
@@ -19,5 +19,7 @@ public class JavaFileDTO {
     public JavaFileDTO(String className, String packageName) {
         this.className = className;
         this.packageName = packageName;
+        this.attributes = new HashSet<>();
+        this.imports = new HashSet<>();
     }
 }
