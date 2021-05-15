@@ -20,21 +20,15 @@ public class PojoService {
     private final PojoRepository pojoRepository;
     private final PojoFacadeService pojoFacadeService;
     private final ASMFacadeService asmFacadeService;
-    private final AttributeService attributeService;
-    private final PackageService packageService;
     private final AttributeRepository attributeRepository;
 
-    PojoService(PackageService packageService, PojoRepository pojoRepository, ASMFacadeService asmFacadeService, AttributeService attributeService, AttributeRepository attributeRepository, PojoFacadeService pojoFacadeService
+    PojoService(PojoRepository pojoRepository, ASMFacadeService asmFacadeService, AttributeRepository attributeRepository, PojoFacadeService pojoFacadeService
     ){
-        this.packageService =packageService;
         this.pojoRepository = pojoRepository;
         this.asmFacadeService = asmFacadeService;
-        this.attributeService = attributeService;
         this.attributeRepository = attributeRepository;
         this.pojoFacadeService = pojoFacadeService;
     }
-
-
 
      public Pojo readByteCodeAndCreatePojo(byte[] clazz){
 
@@ -60,11 +54,11 @@ public class PojoService {
     }
 
     public void deletePojo(String pojoName){
-        var pojo = pojoRepository.findById(pojoName).orElseThrow(() -> new PojoDoesNotExist(pojoName));
+        var pojo = getPojo(pojoName);
+
      if( attributeRepository.findAllByClazz_CompletePath(pojoName).isEmpty() ){
          pojo.setAttributes(Collections.emptySet());
          pojo.setEmptyHull(true);
-         pojoRepository.deleteById(pojo.getCompletePath());
          pojoRepository.save(pojo);
      } else
          pojoRepository.deleteById(pojo.getCompletePath());
@@ -76,7 +70,6 @@ public class PojoService {
             var attr =  pojo.getAttributes().stream().filter(attribute-> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeChangeDTO.getAttributeName(), attributeChangeDTO.getClassName()));
 
                 pojo.getAttributes().remove(attr);
-                pojoRepository.deleteById(pojo.getCompletePath());
                 pojoRepository.save(pojo);
                return pojo;
     }

@@ -1,6 +1,5 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -51,7 +50,7 @@ public class Pojo {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Pojo pojo = (Pojo) o;
+        var pojo = (Pojo) o;
         return emptyHull == pojo.emptyHull &&
                 Objects.equals(completePath, pojo.completePath) &&
                 Objects.equals(className, pojo.className) &&

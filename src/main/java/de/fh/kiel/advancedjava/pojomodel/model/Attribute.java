@@ -1,6 +1,5 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,7 +33,7 @@ public class Attribute {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Attribute attribute = (Attribute) o;
+        var attribute = (Attribute) o;
         return Objects.equals(id, attribute.id) &&
                 Objects.equals(name, attribute.name) &&
                 Objects.equals(accessModifier, attribute.accessModifier) &&

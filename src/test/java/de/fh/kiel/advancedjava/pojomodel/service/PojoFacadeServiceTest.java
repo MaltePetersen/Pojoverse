@@ -4,6 +4,7 @@ import de.fh.kiel.advancedjava.pojomodel.AttributeName;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowed;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
@@ -68,8 +69,7 @@ public class PojoFacadeServiceTest {
     void createPojoAlreadyExists()  {
         var pojo = testingUtil.getPojo(Class.DEFAULT_CLASS.name);
         pojoFacadeService.createPojo(pojo.getCompletePath(), pojo.getClassName(), pojo.getAPackage().getId(), pojo.getParentClass().getCompletePath(), pojo.getParentClass().getClassName(), pojo.getParentClass().getAPackage().getId(),pojo.getInterfaces(), pojo.getAttributes());
-        var savedPojo = pojoFacadeService.createPojo(pojo.getCompletePath(), pojo.getClassName(), pojo.getAPackage().getId(), pojo.getParentClass().getCompletePath(), pojo.getParentClass().getClassName(), pojo.getParentClass().getAPackage().getId(),pojo.getInterfaces(), pojo.getAttributes());
-        assertEquals(1,savedPojo.getVersion() );
+     assertThrows(PojoAlreadyExists.class , () -> pojoFacadeService.createPojo(pojo.getCompletePath(), pojo.getClassName(), pojo.getAPackage().getId(), pojo.getParentClass().getCompletePath(), pojo.getParentClass().getClassName(), pojo.getParentClass().getAPackage().getId(),pojo.getInterfaces(), pojo.getAttributes()));
     }    @Test
     @DisplayName("Create multiplePojos")
     void createPojos()  {

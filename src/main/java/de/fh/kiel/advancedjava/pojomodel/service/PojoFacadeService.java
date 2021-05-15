@@ -1,9 +1,11 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import org.apache.tomcat.jni.Error;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -51,8 +53,16 @@ public class PojoFacadeService {
                 .attributes(Collections.emptySet())
                 .emptyHull(true).build()));
     }
+    private void pojoExistsAndIsNotEmptyHull(String completePath){
+        pojoRepository.findById(completePath).ifPresent(pojo-> { if(! pojo.isEmptyHull()){
+            throw new PojoAlreadyExists(pojo.getCompletePath());
+        } } );
+    }
 
     public Pojo createPojo(String completePath, String className, String packageName, String superCompletePath, String superClassName, String superPackageName, Set<String> interfaces, Set<Attribute> attributes) {
+
+        pojoExistsAndIsNotEmptyHull(completePath);
+
         var pojo = pojoRepository.findById(completePath).orElseGet( () ->Pojo.builder().completePath(completePath)
                 .className(className)
                 .aPackage(packageService.createPackage(packageName))

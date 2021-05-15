@@ -3,7 +3,6 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.PojosService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +29,8 @@ public class PojosController {
         } catch (IllegalArgumentException i) {
             throw new NoValidBase64();
         }
-        ;
 
-        return  ResponseEntity.ok(pojosService.uploadJarAsBase64AndCreatePojos(pojoAsByteCode));
+        return  ResponseEntity.ok(pojosService.uploadJar(pojoAsByteCode));
     }
     @GetMapping
     public List<Pojo> getPojos(){
@@ -46,6 +44,6 @@ public class PojosController {
     @PostMapping(  path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<Pojo>> handleUpload(
             @RequestPart("file") MultipartFile file) throws IOException {
-        return  ResponseEntity.ok(pojosService.uploadJarAsMultipartAndCreatePojos(file));
+        return  ResponseEntity.ok(pojosService.uploadJar(file.getBytes()));
     }
 }

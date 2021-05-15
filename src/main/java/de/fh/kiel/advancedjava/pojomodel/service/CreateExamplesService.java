@@ -13,7 +13,6 @@ import java.util.Base64;
 public class CreateExamplesService {
     Logger logger = LoggerFactory.getLogger(CreateExamplesService.class);
     public CreateExamplesService() throws IOException {
-        createExamplePojoBase64();
     }
 
     public void  createExamplePojoBase64() throws IOException {
