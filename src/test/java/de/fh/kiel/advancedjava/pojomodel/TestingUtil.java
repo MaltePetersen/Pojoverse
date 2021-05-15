@@ -66,6 +66,8 @@ public class TestingUtil {
         base64Values.put("classWithPrimtives", createBase64Path(  "ClassWithPrimtives.txt"));
         base64Values.put("notBase64EncodedClass", createBase64Path( "notBase64EncodedClass.txt"));
         base64Values.put("jar", createBase64Path( "Jar.txt"));
+        base64Values.put("exploit", createBase64Path( "exploit.txt"));
+
     }
     private void loadClassesEncodedInJSON() throws IOException {
         jsonValues.put("badAttributeChangeDTO",createJSONPath( "BadAttributeChangeDTO.json"));
