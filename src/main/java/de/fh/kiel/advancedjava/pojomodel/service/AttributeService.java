@@ -66,22 +66,11 @@ public class AttributeService {
     }
 
     private Pojo transformPrimitivesAndFindIfThePojoExists(String pojoCompletePath){
-        String transformedTypes = transformPrimtives(pojoCompletePath);
+        String transformedTypes = Primitiv.getWrapperByPrimitive(pojoCompletePath);
         return findPojoOrElseCreateNew(transformedTypes);
 
     }
 
-    public Attribute createAttribute(String name, String dataTypeName, String access, String className, String packageName){
-        Pojo dataType = pojoRepository.findById(dataTypeName).orElse(
-                Pojo.builder()
-                        .completePath(dataTypeName)
-                        .className(className)
-                        .aPackage(packageService.createPackage(packageName))
-                        .emptyHull(true)
-                        .build()
-        );
-        return Attribute.builder().name(name).accessModifier(access).clazz(dataType).build();
-    }
 
     private String parsePackageName(String completePath){
         if(completePath.lastIndexOf(".") != -1)
@@ -94,21 +83,5 @@ public class AttributeService {
         return completePath.substring(completePath.lastIndexOf(".")+1);
     return completePath;
     }
-    //TODO Enum aus diesen, dass direkt Objekt baut?
-    private String transformPrimtives(String desc){
-        return switch (desc) {
-            case "boolean" -> "java.lang.Boolean";
-            case "byte" -> "java.lang.Byte";
-            case "chr" -> "java.lang.Character";
-            case "double" -> "java.lang.Double";
-            case "float" -> "java.lang.Float";
-            case "int" -> "java.lang.Integer";
-            case "long" -> "java.lang.Long";
-            case "short" -> "java.lang.Short";
-            default -> desc;
-        };
-    }
-
-
 
 }
