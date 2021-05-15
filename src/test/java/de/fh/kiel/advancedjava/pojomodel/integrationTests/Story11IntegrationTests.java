@@ -69,9 +69,7 @@ public class Story11IntegrationTests {
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
                     assertTrue(content.contains("package de.fh.kiel.advancedjava.pojomodel.exampleData;"));
-                    assertTrue( content.contains("import   java.lang.Long;"));
-                    assertTrue( content.contains("import   java.lang.String;"));
-                    assertTrue( content.contains("public class DefaultClass{"));
+                    assertTrue( content.contains("public class DefaultClass {"));
                     assertTrue(  content.contains("private Long id;"));
                     assertTrue(  content.contains("private String name;"));
                     assertTrue(  content.contains("}"));

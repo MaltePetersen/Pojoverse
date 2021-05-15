@@ -16,11 +16,13 @@ public class AttributeService {
 
     private final PojoRepository pojoRepository;
     private final PackageService packageService;
+    private final PojoFacadeService pojoFacadeService;
 
 
-    AttributeService(PojoRepository pojoRepository, PackageService packageService){
-        this.pojoRepository =pojoRepository;
+    AttributeService(PojoRepository pojoRepository, PackageService packageService, PojoFacadeService pojoFacadeService){
+        this.pojoRepository = pojoRepository;
         this.packageService = packageService;
+        this.pojoFacadeService = pojoFacadeService;
     }
 
 
@@ -55,20 +57,9 @@ public class AttributeService {
            return attribute;
     }
 
-    private Pojo findPojoOrElseCreateNew(String pojoCompletePath){
-        return pojoRepository.findById(pojoCompletePath)
-                .orElse(Pojo.builder()
-                        .completePath(pojoCompletePath)
-                        .className(parseClassName(pojoCompletePath))
-                        .aPackage(packageService.createPackage(parsePackageName(pojoCompletePath)))
-                        .emptyHull(true)
-                        .build());
-    }
-
     private Pojo transformPrimitivesAndFindIfThePojoExists(String pojoCompletePath){
         String transformedTypes = Primitiv.getWrapperByPrimitive(pojoCompletePath);
-        return findPojoOrElseCreateNew(transformedTypes);
-
+        return pojoFacadeService.createPojo(transformedTypes, parseClassName(transformedTypes), parsePackageName(transformedTypes));
     }
 
 

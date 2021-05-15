@@ -63,7 +63,7 @@ public class PojoController {
 
     @GetMapping("/class/{name}")
     public ResponseEntity<String> javaCode(@PathVariable("name") String pojoName){
-       return ResponseEntity.ok(tymeLeafTemplateService.createJavaFile(pojoName));
+       return ResponseEntity.ok(tymeLeafTemplateService.createOptimziedJavaFile(pojoName));
     }
     @GetMapping("/{name}")
     public ResponseEntity<Pojo> getPojo(@PathVariable("name") String pojoName){

@@ -1,0 +1,11 @@
+package [( ${pojo.packageName} )]
+[# th:each="import : ${pojo.imports}"]
+[( ${import} )][/]
+
+public class [( ${pojo.className} )][# th:if="${pojo.superClassName}"] extends [( ${pojo.superClassName} )][/][# th:if="${pojo.interfaces}"] implements [( ${pojo.interfaces} )][/] {
+
+    [# th:each="attribute : ${pojo.attributes}"]
+    [( ${attribute} )][/]
+
+
+}
