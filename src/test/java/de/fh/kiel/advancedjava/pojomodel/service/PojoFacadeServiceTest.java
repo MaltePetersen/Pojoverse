@@ -3,6 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel.service;
 import de.fh.kiel.advancedjava.pojomodel.AttributeName;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowed;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
@@ -62,7 +63,7 @@ public class PojoFacadeServiceTest {
     @DisplayName("Create a new Pojo as an empty hull")
     void createPojoEmptyHulll()  {
         var pojo = testingUtil.getEmptyHull(Class.DEFAULT_CLASS.name);
-        pojoFacadeService.createPojo(pojo.getCompletePath(), pojo.getClassName(), pojo.getAPackage().getId());
+        pojoFacadeService.createEmptyHull(pojo.getCompletePath(), pojo.getClassName(), pojo.getAPackage().getId());
         var savedPojo = pojoRepository.findById(pojo.getCompletePath()).get();
         assertEquals(pojo, savedPojo);
     }    @Test
@@ -123,7 +124,24 @@ public class PojoFacadeServiceTest {
     @DisplayName("Create a new Package but it already exists")
     void createPackageAlreadyExists()  {
         assertThrows(PackageNameNotAllowed.class,() -> pojoFacadeService.createPackage("de..fh"));
+    }
+    @Test
+    @DisplayName("Add a new Attribute to a Pojo with a generic")
+    void addAttributeWithGeneric() {
+        var pojo = testingUtil.getPojo(Class.CLASS_WITH_PRIMTIVES.name);
+        pojoFacadeService.addAttribute(new AddAttributeDTO("test", "java.util.List", "public", "int"), pojo);
+        var attr =pojoRepository.findById(pojo.getCompletePath()).get().getAttributes().stream().filter(attribute -> attribute.getName().equals("test")).findFirst().get();
+        assertEquals("java.util.List", attr.getClazz().getCompletePath());
+        assertEquals("public", attr.getAccessModifier());
+        assertEquals("java.lang.Integer", attr.getGenericType().getCompletePath());
 
+    }
+        @Test
+    @DisplayName("Add a new Attribute to a Pojo")
+    void addAttribute()  {
+        var pojo = testingUtil.getPojo(Class.DEFAULT_CLASS.name);
+       pojoFacadeService.addAttribute(new AddAttributeDTO("test", "int", "public", null),pojo);
+       assertTrue(pojoRepository.findById(pojo.getCompletePath()).get().getAttributes().stream().anyMatch(attribute -> attribute.getName().equals("test")));
     }
 
 }

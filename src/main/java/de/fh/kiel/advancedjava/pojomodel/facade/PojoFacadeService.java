@@ -50,14 +50,17 @@ public class PojoFacadeService {
         return createPojo(pojoInfo.getCompletePath(), pojoInfo.getClassName(), pojoInfo.getPackageName(), pojoInfo.getSuperClassCompletePath(), pojoInfo.getSuperClassName(), pojoInfo.getSuperClassPackageName(), pojoInfo.getInterfaces(), attributes);
     }
 
-    public Pojo createPojo(String completePath, String className, String packageName) {
-        return pojoRepository.findById(completePath).orElseGet(() -> pojoRepository.save(Pojo.builder()
+    private Pojo createPojo(String completePath, String className, String packageName) {
+        return pojoRepository.findById(completePath).orElseGet(() -> Pojo.builder()
                 .completePath(completePath)
                 .className(className)
                 .aPackage(this.packageService.createPackage(packageName))
                 .interfaces(Collections.emptySet())
                 .attributes(Collections.emptySet())
-                .emptyHull(true).build()));
+                .emptyHull(true).build());
+    }
+    public Pojo createEmptyHull(String completePath, String className, String packageName){
+      return pojoRepository.save(createPojo(completePath, className, packageName));
     }
 
     private void pojoExistsAndIsNotEmptyHull(String completePath) {

@@ -45,7 +45,7 @@ public class PojoService {
         if (pojoRepository.existsById(completePath))
             throw new PojoAlreadyExists(completePath);
 
-        return pojoRepository.save(pojoFacadeService.createPojo(completePath, emptyHull.getClassName(), emptyHull.getPackageName()));
+        return pojoFacadeService.createEmptyHull(completePath, emptyHull.getClassName(), emptyHull.getPackageName());
     }
 
     public void deletePojo(String pojoName) {
