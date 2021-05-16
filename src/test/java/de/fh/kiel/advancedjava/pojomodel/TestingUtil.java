@@ -87,7 +87,13 @@ public class TestingUtil {
 
         pojos.put(Class.ANOTHER_CLASS_WITH_PRIMITIVES.name, new Pojo());
         pojos.put(Class.CLASS_WITH_CLASSES.name, new Pojo());
-        pojos.put(Class.CLASS_WITH_PARENT.name, new Pojo());
+        pojos.put(Class.CLASS_WITH_PARENT.name, Pojo.builder()
+                .completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithParents")
+                .className("ClassWithParents")
+                .aPackage(aPackage)
+                .interfaces(Collections.emptySet())
+                .parentClass(new Pojo("de.fh.Test", "Test", new Package("de.fh", "fh", null)))
+                .emptyHull(false).build());
         pojos.put(Class.CLASS_WITH_PRIMTIVES.name,  Pojo.builder()
                 .completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtives")
                 .className("ClassWithPrimtives")
@@ -126,7 +132,13 @@ public class TestingUtil {
                                 .build()).collect(Collectors.toCollection(HashSet::new)))
                 .interfaces(Collections.emptySet())
                 .build());
-        pojos.put(Class.INTERFACES.name, new Pojo());
+        pojos.put(Class.INTERFACES.name, Pojo.builder()
+                .completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.Interfaces")
+                .className("Interfaces")
+                .aPackage(aPackage)
+                .interfaces(Stream.of("Here", "There").collect(Collectors.toSet()))
+                .parentClass(new Pojo("java.lang.Object", "Object", new Package("java.lang", "lang", null)))
+                .emptyHull(false).build());
 
     }
     public void loadEmptyHulls(){

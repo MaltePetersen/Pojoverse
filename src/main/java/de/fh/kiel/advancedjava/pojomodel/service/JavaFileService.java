@@ -121,7 +121,7 @@ public class JavaFileService {
      * the templates. If you have a look at the JAVA_TEMPLATE
      * It is easy to see how hard to maintain such a template would be
      * in the long run.
-     */
+
     @Deprecated
     public String createJavaFile(String pojoId) {
         var pojo = pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExist(pojoId));
@@ -132,4 +132,5 @@ public class JavaFileService {
 
         return this.textTemplateEngine.process(JAVA_TEMPLATE, ctx);
     }
+     */
 }

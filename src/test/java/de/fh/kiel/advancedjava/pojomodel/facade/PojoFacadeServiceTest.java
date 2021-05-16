@@ -1,5 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.facade;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fh.kiel.advancedjava.pojomodel.AttributeName;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
@@ -7,6 +9,7 @@ import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowed;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
+import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -139,8 +142,8 @@ public class PojoFacadeServiceTest {
     }
     @Test
     @DisplayName("Add a new Attribute to a Pojo with a generic")
-    void addAttributeWithGeneric() {
-        var pojo = testingUtil.getPojo(Class.CLASS_WITH_PRIMTIVES.name);
+    void addAttributeWithGeneric() throws JsonProcessingException {
+        var pojo = deepCopy(testingUtil.getPojo(Class.CLASS_WITH_PRIMTIVES.name));
         pojoFacadeService.addAttribute(new AddAttributeDTO("test", "java.util.List", "public", "int"), pojo);
         var attr =pojoRepository.findById(pojo.getCompletePath()).get().getAttributes().stream().filter(attribute -> attribute.getName().equals("test")).findFirst().get();
         assertEquals("java.util.List", attr.getClazz().getCompletePath());
@@ -150,10 +153,16 @@ public class PojoFacadeServiceTest {
     }
         @Test
     @DisplayName("Add a new Attribute to a Pojo")
-    void addAttribute()  {
-        var pojo = testingUtil.getPojo(Class.DEFAULT_CLASS.name);
+    void addAttribute() throws JsonProcessingException {
+        var pojo = deepCopy(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
        pojoFacadeService.addAttribute(new AddAttributeDTO("test", "int", "public", null),pojo);
        assertTrue(pojoRepository.findById(pojo.getCompletePath()).get().getAttributes().stream().anyMatch(attribute -> attribute.getName().equals("test")));
+    }
+    Pojo deepCopy(Pojo pojo) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        return  objectMapper.readValue(objectMapper.writeValueAsString(pojo), Pojo.class);
+
     }
 
 }

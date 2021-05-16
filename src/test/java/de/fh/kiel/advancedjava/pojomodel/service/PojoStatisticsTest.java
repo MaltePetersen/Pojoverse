@@ -1,0 +1,47 @@
+package de.fh.kiel.advancedjava.pojomodel.service;
+
+import de.fh.kiel.advancedjava.pojomodel.Class;
+import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
+import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
+import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Collections;
+import static org.junit.jupiter.api.Assertions.*;
+
+@SpringBootTest
+public class PojoStatisticsTest {
+
+    @Autowired
+    PojoStatisticsService pojoStatisticsService;
+
+    @Autowired
+    PojoRepository pojoRepository;
+
+    @Autowired
+    AttributeRepository attributeRepository;
+
+    @Autowired
+    TestingUtil testingUtil;
+
+    @BeforeEach
+    void setUp(){
+        pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
+        pojoRepository.save(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
+    }
+    @Test
+    void createStats(){
+      var expected = new PojoStatistics("DefaultClass", "exampleData", 2, "Object", Collections.emptySet(), 0, 0,1,1);
+      var actual = pojoStatisticsService.getStatistics("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
+      assertEquals(expected, actual);
+    }
+
+}

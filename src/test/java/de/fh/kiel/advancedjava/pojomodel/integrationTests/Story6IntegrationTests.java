@@ -5,6 +5,7 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
         import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
         import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
         import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
+        import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
         import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
         import org.junit.jupiter.api.*;
         import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +43,14 @@ public class Story6IntegrationTests {
     @Autowired
     private AttributeRepository attributeRepository;
 
+    @Autowired
+    PackageRepository packageRepository;
+
     @AfterEach()
     void deleteAllSavedClasses(){
         this.pojoRepository.deleteAll();
         attributeRepository.deleteAll();
+        packageRepository.deleteAll();
     }
 
     @BeforeEach()
