@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 public class ASMFacadeServiceTest {
 

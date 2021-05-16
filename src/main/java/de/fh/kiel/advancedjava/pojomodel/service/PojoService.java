@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
-import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
+import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.AttributeDoesNotExist;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
@@ -59,10 +59,10 @@ public class PojoService {
             pojoRepository.deleteById(pojo.getCompletePath());
     }
 
-    public Pojo changeAttribute(AttributeChangeDTO attributeChangeDTO) {
-        var pojo = pojoRepository.findById(attributeChangeDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExist(attributeChangeDTO.getClassName()));
+    public Pojo deleteAttribute(AttributeDeleteDTO attributeDeleteDTO) {
+        var pojo = pojoRepository.findById(attributeDeleteDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExist(attributeDeleteDTO.getClassName()));
 
-        var attr = pojo.getAttributes().stream().filter(attribute -> attribute.getName().equals(attributeChangeDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeChangeDTO.getAttributeName(), attributeChangeDTO.getClassName()));
+        var attr = pojo.getAttributes().stream().filter(attribute -> attribute.getName().equals(attributeDeleteDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeDeleteDTO.getAttributeName(), attributeDeleteDTO.getClassName()));
 
         pojo.getAttributes().remove(attr);
 

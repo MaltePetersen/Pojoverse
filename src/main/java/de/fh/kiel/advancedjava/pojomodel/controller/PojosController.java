@@ -34,20 +34,22 @@ public class PojosController {
         return ResponseEntity.ok(pojosService.extractJar(pojoAsByteCode));
     }
 
-    @GetMapping
-    public List<Pojo> getPojos() {
-        return pojosService.getAllPojos();
-    }
-
     @PostMapping("/multiple")
-    public ResponseEntity<List<Pojo>> importPojos(@RequestBody() List<Pojo> pojos) {
+    public ResponseEntity<List<Pojo>> createPojos(@RequestBody() List<Pojo> pojos) {
 
         return ResponseEntity.ok(pojosService.importPojos(pojos));
     }
 
     @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<List<Pojo>> handleUpload(
+    public ResponseEntity<List<Pojo>> createPojos(
             @RequestPart("file") MultipartFile file) throws IOException {
         return ResponseEntity.ok(pojosService.extractJar(file.getBytes()));
     }
+
+    @GetMapping
+    public List<Pojo> getPojos() {
+        return pojosService.getAllPojos();
+    }
+
+
 }

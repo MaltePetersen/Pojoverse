@@ -1,10 +1,12 @@
 package de.fh.kiel.advancedjava.pojomodel.asm;
 
 
+import org.springframework.asm.ClassReader;
+
 import java.util.Arrays;
 
 
-public class PojoClassReader extends org.objectweb.asm.ClassReader {
+public class PojoClassReader extends ClassReader {
 
     public PojoClassReader(byte[] classFile) {
         super(classFile);

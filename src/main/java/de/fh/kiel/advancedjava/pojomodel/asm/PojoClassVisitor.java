@@ -2,9 +2,10 @@ package de.fh.kiel.advancedjava.pojomodel.asm;
 
 import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
 import lombok.Getter;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Opcodes;
+import org.springframework.asm.ClassVisitor;
+import org.springframework.asm.FieldVisitor;
+import org.springframework.asm.Opcodes;
+
 
 import java.lang.reflect.Modifier;
 import java.util.HashSet;

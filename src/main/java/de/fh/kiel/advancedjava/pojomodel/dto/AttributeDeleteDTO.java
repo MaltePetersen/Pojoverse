@@ -1,11 +1,11 @@
 package de.fh.kiel.advancedjava.pojomodel.dto;
 
-public class AttributeChangeDTO {
+public class AttributeDeleteDTO {
     private String className;
     private String packageName;
     private String attributeName;
 
-    public AttributeChangeDTO(String className, String packageName, String attributeName) {
+    public AttributeDeleteDTO(String className, String packageName, String attributeName) {
         this.className = className;
         this.packageName = packageName;
         this.attributeName = attributeName;

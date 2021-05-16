@@ -17,7 +17,7 @@ public class AttributeController {
     }
 
     @PostMapping("/{className}")
-    public ResponseEntity<Pojo> addPrimitive(@PathVariable String className, @RequestBody AddAttributeDTO addAttributeDTO) {
+    public ResponseEntity<Pojo> addAttribute(@PathVariable String className, @RequestBody AddAttributeDTO addAttributeDTO) {
         return ResponseEntity.ok(this.attributeService.addAttribute(className, addAttributeDTO));
     }
 

@@ -1,7 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.controller;
 
 
-import de.fh.kiel.advancedjava.pojomodel.dto.AttributeChangeDTO;
+import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
@@ -33,7 +33,7 @@ public class PojoController {
 
 
     @PostMapping
-    public ResponseEntity<Pojo> createPojoFromByteCode(@RequestBody() String base64EncodedByteCodePojo) {
+    public ResponseEntity<Pojo> createPojo(@RequestBody() String base64EncodedByteCodePojo) {
         byte[] pojoAsByteCode;
 
         try {
@@ -46,16 +46,22 @@ public class PojoController {
         return ResponseEntity.ok(pojo);
     }
 
+    @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Pojo> createPojo(
+            @RequestPart("file") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(pojoService.readByteCodeAndCreatePojo(file.getBytes()));
+    }
+
     @PostMapping("emptyHull")
-    public ResponseEntity<Pojo> createPojoFromJSON(@RequestBody() PojoEmptyHullDTO pojoEmptyHullDTO) {
+    public ResponseEntity<Pojo> createPojo(@RequestBody() PojoEmptyHullDTO pojoEmptyHullDTO) {
         var pojo = pojoService.createPojoEmptyHullFromJSON(pojoEmptyHullDTO);
 
         return ResponseEntity.ok(pojo);
     }
 
     @PutMapping
-    public ResponseEntity<Pojo> deleteAttribute(@RequestBody() AttributeChangeDTO attributeChangeDTO) {
-        return ResponseEntity.ok(pojoService.changeAttribute(attributeChangeDTO));
+    public ResponseEntity<Pojo> deleteAttribute(@RequestBody() AttributeDeleteDTO attributeDeleteDTO) {
+        return ResponseEntity.ok(pojoService.deleteAttribute(attributeDeleteDTO));
     }
 
     @DeleteMapping("/{name}")
@@ -65,7 +71,7 @@ public class PojoController {
     }
 
     @GetMapping("/class/{name}")
-    public ResponseEntity<String> javaCode(@PathVariable("name") String pojoName) {
+    public ResponseEntity<String> generateJavaCode(@PathVariable("name") String pojoName) {
         return ResponseEntity.ok(javaFileService.createOptimziedJavaFile(pojoName));
     }
 
@@ -79,9 +85,5 @@ public class PojoController {
         return ResponseEntity.ok(pojoStatisticsService.getStatistics(pojoName));
     }
 
-    @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Pojo> handleUpload(
-            @RequestPart("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(pojoService.readByteCodeAndCreatePojo(file.getBytes()));
-    }
+
 }

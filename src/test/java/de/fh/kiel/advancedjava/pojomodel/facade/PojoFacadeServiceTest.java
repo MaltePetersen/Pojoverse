@@ -1,4 +1,4 @@
-package de.fh.kiel.advancedjava.pojomodel.service;
+package de.fh.kiel.advancedjava.pojomodel.facade;
 
 import de.fh.kiel.advancedjava.pojomodel.AttributeName;
 import de.fh.kiel.advancedjava.pojomodel.Class;
@@ -6,11 +6,11 @@ import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowed;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
-import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PojoFacadeServiceTest {
 
     @Autowired
-    private PojoFacadeService pojoFacadeService;
+    PojoFacadeService pojoFacadeService;
     @Autowired
     PojoRepository pojoRepository;
     @Autowired
@@ -34,14 +34,21 @@ public class PojoFacadeServiceTest {
     @Autowired
     PackageRepository packageRepository;
     @Autowired
-    private TestingUtil testingUtil;
+    TestingUtil testingUtil;
 
-    @BeforeEach
-    void deletePojos(){
+    @BeforeEach()
+    void SetUp(){
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
         packageRepository.deleteAll();
     }
+    @AfterEach()
+    void deleteAllSavedClasses(){
+        pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
+        packageRepository.deleteAll();
+    }
+
     @Test
     @DisplayName("Create a new Pojo")
     void createPojo()  {
@@ -72,7 +79,9 @@ public class PojoFacadeServiceTest {
         var pojo = testingUtil.getPojo(Class.DEFAULT_CLASS.name);
         pojoFacadeService.createPojo(pojo.getCompletePath(), pojo.getClassName(), pojo.getAPackage().getId(), pojo.getParentClass().getCompletePath(), pojo.getParentClass().getClassName(), pojo.getParentClass().getAPackage().getId(),pojo.getInterfaces(), pojo.getAttributes());
         assertThrows(PojoAlreadyExists.class , () -> pojoFacadeService.createPojo(pojo.getCompletePath(), pojo.getClassName(), pojo.getAPackage().getId(), pojo.getParentClass().getCompletePath(), pojo.getParentClass().getClassName(), pojo.getParentClass().getAPackage().getId(),pojo.getInterfaces(), pojo.getAttributes()));
-    }    @Test
+    }
+
+    @Test
     @DisplayName("Create multiplePojos")
     void createPojos()  {
         var pojo1 = testingUtil.getPojo(Class.DEFAULT_CLASS.name);
@@ -83,13 +92,16 @@ public class PojoFacadeServiceTest {
         assertEquals(pojo1, savedPojo1);
         assertEquals(pojo2, savedPojo2);
 
-    }    @Test
+    }
+
+    @Test
     @DisplayName("Create a new Pojo from JSON")
     void createPojoFromJSON()  {
         var pojo = testingUtil.getPojo(Class.DEFAULT_CLASS.name);
         var savedPojo = pojoFacadeService.createPojo(pojo);
         assertEquals(pojo, savedPojo);
-    }    @Test
+    }
+       @Test
     @DisplayName("Create a new Pojo from a PojoInfo")
     void createPojoFromPojoInfo()  {
        var pojoInfo = testingUtil.getPojoInfo(Class.DEFAULT_CLASS.name);

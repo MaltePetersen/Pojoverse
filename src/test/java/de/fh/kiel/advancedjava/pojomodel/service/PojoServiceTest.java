@@ -17,7 +17,6 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @DisplayName("Given the Pojo should be saved in the db")
 @Nested
 public class PojoServiceTest {
