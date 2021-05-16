@@ -56,8 +56,8 @@ public class PackageService {
             var complete = new ArrayList<String>();
             Collections.addAll(current, aPackage);
             Collections.addAll(complete, aPackage);
-            var test = generatePackage(current, complete);
-            packageRepository.save(test);
+            var generatePackage = generatePackage(current, complete);
+            packageRepository.save(generatePackage);
             return packageRepository.findById(packageName).orElseThrow(() -> new PackageCreationFailed(packageName));
         }
         throw new PackageNameNotAllowed(packageName);

@@ -73,28 +73,8 @@ public class PojosService {
     public List<Pojo> importPojos(List<Pojo> pojos) {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
-        pojos.forEach(this::trySave);
+        pojoRepository.saveAll(pojos);
         return pojoRepository.findAll();
-    }
-
-    private void trySave(Pojo pojo) {
-        var test = pojoRepository.findById(pojo.getCompletePath());
-        if (test.isPresent()) {
-            test.get().setEmptyHull(pojo.isEmptyHull());
-            test.get().setAttributes(pojo.getAttributes().stream().map(this::getAttribute).collect(Collectors.toSet()));
-            test.get().setInterfaces(pojo.getInterfaces());
-            test.get().setParentClass(pojo.getParentClass());
-            pojo = test.get();
-        }
-        pojo.setAttributes(pojo.getAttributes().stream().map(this::getAttribute).collect(Collectors.toSet()));
-        pojo.setAttributes(Collections.emptySet());
-        pojoRepository.save(pojo);
-    }
-
-    private Attribute getAttribute(Attribute attribute) {
-        Attribute attr = attributeRepository.findById(attribute.getId()).orElse(attribute);
-        attr.setClazz(pojoRepository.findById(attr.getClazz().getCompletePath()).orElse(attr.getClazz()));
-        return attr;
     }
 
     List<PojoInfo> loadClasses(File jarFile) throws IOException {
