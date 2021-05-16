@@ -31,7 +31,7 @@ public class PojosController {
             throw new NoValidBase64();
         }
 
-        return ResponseEntity.ok(pojosService.uploadJar(pojoAsByteCode));
+        return ResponseEntity.ok(pojosService.extractJar(pojoAsByteCode));
     }
 
     @GetMapping
@@ -48,6 +48,6 @@ public class PojosController {
     @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<Pojo>> handleUpload(
             @RequestPart("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(pojosService.uploadJar(file.getBytes()));
+        return ResponseEntity.ok(pojosService.extractJar(file.getBytes()));
     }
 }
