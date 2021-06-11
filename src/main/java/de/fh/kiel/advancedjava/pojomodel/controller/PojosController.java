@@ -31,7 +31,7 @@ public class PojosController {
             throw new NoValidBase64Exception();
         }
 
-        return ResponseEntity.ok(pojosService.extractJar(pojoAsByteCode));
+        return ResponseEntity.ok(pojosService.savePojos(pojoAsByteCode));
     }
 
     @PostMapping("/multiple")
@@ -43,7 +43,7 @@ public class PojosController {
     @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<Pojo>> createPojos(
             @RequestPart("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(pojosService.extractJar(file.getBytes()));
+        return ResponseEntity.ok(pojosService.savePojos(file.getBytes()));
     }
 
     @GetMapping

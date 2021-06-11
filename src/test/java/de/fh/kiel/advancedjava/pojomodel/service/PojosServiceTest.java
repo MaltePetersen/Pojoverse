@@ -74,7 +74,7 @@ public class PojosServiceTest {
         } catch (IllegalArgumentException | IOException i) {
             throw new NoValidBase64Exception();
         }
-        var actual = pojosService.extractJar(pojosAsByteCode);
+        var actual = pojosService.savePojos(pojosAsByteCode);
         var expected = pojosService.getAllPojos();
         assertEquals(10, actual.size());
         assertEquals(expected, actual);
