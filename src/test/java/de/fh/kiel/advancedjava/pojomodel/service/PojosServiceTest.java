@@ -33,7 +33,7 @@ public class PojosServiceTest {
     AttributeRepository attributeRepository;
 
     @Autowired
-    PojosService pojosService;
+    PojoService pojoService;
 
     @BeforeEach
     void setUp() {
@@ -51,7 +51,7 @@ public class PojosServiceTest {
         expected.add(pojos.get(0));
         expected.add(pojos.get(0).getParentClass());
         pojos.get(0).getAttributes().forEach((attribute -> expected.add(attribute.getClazz())));
-        var actual = pojosService.importPojos(pojos);
+        var actual = pojoService.importPojos(pojos);
         assertEquals(expected.size(), actual.size());
         assertTrue(expected.containsAll(actual));
         assertTrue(actual.containsAll(expected));
@@ -61,7 +61,7 @@ public class PojosServiceTest {
     void getAllPojos() {
         pojoRepository.save(testingUtil.getPojo(Class.CLASS_WITH_PRIMTIVES.name));
         var expected = pojoRepository.findAll();
-        var actual = pojosService.getAllPojos();
+        var actual = pojoService.getAllPojos();
         assertEquals(expected, actual);
     }
 
@@ -74,8 +74,8 @@ public class PojosServiceTest {
         } catch (IllegalArgumentException | IOException i) {
             throw new NoValidBase64Exception();
         }
-        var actual = pojosService.savePojos(pojosAsByteCode);
-        var expected = pojosService.getAllPojos();
+        var actual = pojoService.savePojos(pojosAsByteCode);
+        var expected = pojoService.getAllPojos();
         assertEquals(10, actual.size());
         assertEquals(expected, actual);
     }

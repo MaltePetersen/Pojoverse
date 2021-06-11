@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Stream;
 
 @Service
 public class JarReaderService {
@@ -24,23 +23,26 @@ public class JarReaderService {
         this.asmFacadeService = asmFacadeService;
     }
 
-    public List<PojoInfo> read(byte[] input) throws IOException {
-        var file = new File("temp.jar");
-        try (OutputStream os = new FileOutputStream(file)) {
-            os.write(input);
+    public List<PojoInfo> read(byte[] input) {
+        try {
+            var file = new File("temp.jar");
+            try (OutputStream os = new FileOutputStream(file)) {
+                os.write(input);
+            }
+            return createPojoInfos(file);
         } catch (IOException e) {
             throw new CouldNotReadJarException();
         }
-        return createPojoInfos(file);
     }
 
-    private List<PojoInfo> createPojoInfos(File jarFile) throws IOException {
+    private List<PojoInfo> createPojoInfos(File jarFile) {
         var classes = new ArrayList<PojoInfo>();
-        var jar = new JarFile(jarFile);
-        Stream<JarEntry> str = jar.stream();
-        str.forEach(entry -> readEntry(jar, entry, classes));
-        jar.close();
-        return classes;
+        try(var jar = new JarFile(jarFile)) {
+            jar.stream().forEach(entry -> readEntry(jar, entry, classes));
+            return classes;
+        } catch (IOException e) {
+            throw new CouldNotReadJarException();
+        }
     }
 
     private void readEntry(JarFile jar, JarEntry entry, List<PojoInfo> pojoInfos) {
