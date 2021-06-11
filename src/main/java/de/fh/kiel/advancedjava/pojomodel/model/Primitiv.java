@@ -5,7 +5,7 @@ import java.util.Arrays;
 public enum Primitiv {
     BOOLEAN("boolean", "java.lang.Boolean"),
     BYTE("byte", "java.lang.Byte"),
-    CHAR("chr", "java.lang.Character"),
+    CHAR("char", "java.lang.Character"),
     DOUBLE("double", "java.lang.Double"),
     FLOAT("float", "java.lang.Float"),
     INT("int", "java.lang.Integer"),
