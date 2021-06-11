@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface PojoRepository extends Neo4jRepository<Pojo, String> {
 
-    public List<Pojo> findAllByClassName(String className);
+    List<Pojo> findAllByClassName(String className);
 
-    public List<Pojo> findAllByaPackage_Id(String id);
+    List<Pojo> findAllByaPackage_Id(String id);
 
-    public List<Pojo> findAllByParentClass_CompletePath(String completePath);
+    List<Pojo> findAllByParentClass_CompletePath(String completePath);
 }

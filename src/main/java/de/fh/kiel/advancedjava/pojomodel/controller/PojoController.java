@@ -72,7 +72,7 @@ public class PojoController {
 
     @GetMapping("/class/{name}")
     public ResponseEntity<String> generateJavaCode(@PathVariable("name") String pojoName) {
-        return ResponseEntity.ok(javaFileService.createOptimziedJavaFile(pojoName));
+        return ResponseEntity.ok(javaFileService.createJavaFile(pojoName));
     }
 
     @GetMapping("/{name}")

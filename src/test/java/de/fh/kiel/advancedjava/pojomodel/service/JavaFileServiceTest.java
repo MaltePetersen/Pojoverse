@@ -44,7 +44,7 @@ public class JavaFileServiceTest {
     @Test
     void createDefaultJavaFile() {
         pojoRepository.save(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
-        var actual = javaFileService.createOptimziedJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
+        var actual = javaFileService.createJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
         assertTrue(actual.contains("package de.fh.kiel.advancedjava.pojomodel.exampleData;"));
         assertFalse(actual.contains("java.lang"));
         assertTrue(actual.contains("public class DefaultClass {"));
@@ -56,7 +56,7 @@ public class JavaFileServiceTest {
     @Test
     void createInterfaceJavaFile() {
         pojoRepository.save(testingUtil.getPojo(Class.INTERFACES.name));
-        var actual = javaFileService.createOptimziedJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.Interfaces");
+        var actual = javaFileService.createJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.Interfaces");
         assertTrue(actual.contains("package de.fh.kiel.advancedjava.pojomodel.exampleData;"));
         assertTrue(actual.contains("public class Interfaces implements Here,There {"));
 
@@ -65,7 +65,7 @@ public class JavaFileServiceTest {
     @Test
     void createParentJavaFile() {
         pojoRepository.save(testingUtil.getPojo(Class.CLASS_WITH_PARENT.name));
-        var actual = javaFileService.createOptimziedJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithParents");
+        var actual = javaFileService.createJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithParents");
         assertTrue(actual.contains("import de.fh.Test;"));
         assertTrue(actual.contains("public class ClassWithParents extends Test {"));
 
@@ -76,7 +76,7 @@ public class JavaFileServiceTest {
         var pojo = deepCopy(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
         pojoFacadeService.addAttribute(new AddAttributeDTO("test", "java.util.List", "public", "fh.test.Example"), pojo);
 
-        var actual = javaFileService.createOptimziedJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
+        var actual = javaFileService.createJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
         System.out.println(actual);
         assertTrue(actual.contains("import java.util.List;"));
         assertTrue(actual.contains("import fh.test.Example;"));

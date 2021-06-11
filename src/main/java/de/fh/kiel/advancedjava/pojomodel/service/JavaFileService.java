@@ -10,13 +10,22 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-
+/**
+ *  The general design idea behind this service is to deliberately not use a lot the templateing features tyhmeleaf offers
+ *  The reason for that is because because templating a txt in thymeleaf is badly documented and the syntax is bad to read.
+ *  This is in stark contrast to the html templating in thymeleaf which is greatly documented.
+ *  In a real world project with a lot of template which might change a lot or which might even be written by the customer
+ *  I would use for example velocity for creating txt files. In this example it is just one file we need which structure will not change a lot
+ *  therefore a solution where the String generation is more focused in java is accptable to me and it has the benefit that we do not need to add
+ *  another lib to the project.
+ *  Note: Interfaces is just a one string because interfaces are only used at one place in the template therefore we can autogenearate the whole string
+ *  which will be inserted there instead of using thymeleaf
+ */
 @Service
 public class JavaFileService {
 
-    private static final String JAVA_TEMPLATE = "javaFileTemplate.txt";
 
-    private static final String JAVA_TEMPLATE_OPTIMIZIED = "javaFileTemplateOptimizied.txt";
+    private static final String JAVA_TEMPLATE = "javaFileTemplate.txt";
 
     private static final String JAVA_LANG_OBJECT = "java.lang.Object";
 
@@ -30,7 +39,7 @@ public class JavaFileService {
         this.pojoRepository = pojoRepository;
     }
 
-    public String createOptimziedJavaFile(String pojoId) {
+    public String createJavaFile(String pojoId) {
 
         var pojo = pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExistException(pojoId));
 
@@ -48,7 +57,7 @@ public class JavaFileService {
         final var ctx = new Context();
         ctx.setVariable("pojo", javaFile);
 
-        return this.textTemplateEngine.process(JAVA_TEMPLATE_OPTIMIZIED, ctx);
+        return this.textTemplateEngine.process(JAVA_TEMPLATE, ctx);
     }
 
     private void addInterfaces(Pojo pojo, JavaFileDTO javaFile) {
@@ -109,28 +118,5 @@ public class JavaFileService {
         return "package " + packageName + ";";
     }
 
-    /**
-     * Method to generate a JavaFile from a pojo
-     *
-     * @deprecated This method is no longer used because the direct use
-     * of a template leads to messy code.
-     * This method would normally be deleted but
-     * is still here to show the reviewers,
-     * why the optimisied version uses mostly java
-     * instead of tymeleaf to generate the content of
-     * the templates. If you have a look at the JAVA_TEMPLATE
-     * It is easy to see how hard to maintain such a template would be
-     * in the long run.
 
-    @Deprecated
-    public String createJavaFile(String pojoId) {
-        var pojo = pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExist(pojoId));
-        if (pojo.isEmptyHull())
-            throw new IsEmptyHull(pojoId);
-        final var ctx = new Context();
-        ctx.setVariable("pojo", pojo);
-
-        return this.textTemplateEngine.process(JAVA_TEMPLATE, ctx);
-    }
-     */
 }
