@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
+import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.AttributeService;
@@ -21,5 +22,9 @@ public class AttributeController {
         return ResponseEntity.ok(this.attributeService.addAttribute(className, addAttributeDTO));
     }
 
+    @PutMapping
+    public ResponseEntity<Pojo> deleteAttribute(@RequestBody() AttributeDeleteDTO attributeDeleteDTO) {
+        return ResponseEntity.ok(attributeService.deleteAttribute(attributeDeleteDTO));
+    }
 }
 

@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
@@ -27,21 +28,19 @@ public class Story9IntegrationTests {
     private PojoRepository pojoRepository;
 
     @Autowired
-    private AttributeRepository attributeRepository;
+    private PojoFacadeService pojoFacadeService;
 
     @Autowired
     private TestingUtil testingUtil;
 
     @AfterEach()
     void deleteAllSavedClasses() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
+     pojoFacadeService.deleteAllRessources();
     }
 
     @BeforeEach()
     void SetUp() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
+     pojoFacadeService.deleteAllRessources();
     }
 
     @Nested
@@ -58,7 +57,7 @@ public class Story9IntegrationTests {
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
         void attributeChange() throws Exception {
-            mvc.perform(MockMvcRequestBuilders.put("/pojo")
+            mvc.perform(MockMvcRequestBuilders.put("/attribute")
                     .content(testingUtil.getJSONValue("attributeChangeDTO")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();

@@ -39,16 +39,12 @@ public class PojoFacadeServiceTest {
 
     @BeforeEach()
     void SetUp() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
-        packageRepository.deleteAll();
+       pojoFacadeService.deleteAllRessources();
     }
 
     @AfterEach()
     void deleteAllSavedClasses() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
-        packageRepository.deleteAll();
+        pojoFacadeService.deleteAllRessources();
     }
 
     @Test

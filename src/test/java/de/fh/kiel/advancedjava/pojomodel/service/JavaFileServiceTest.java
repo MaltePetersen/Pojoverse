@@ -37,8 +37,7 @@ public class JavaFileServiceTest {
 
     @BeforeEach
     void setUp() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
+        pojoFacadeService.deleteAllRessources();
     }
 
     @Test

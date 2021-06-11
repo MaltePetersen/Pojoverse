@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import de.fh.kiel.advancedjava.pojomodel.service.PackageService;
@@ -29,16 +30,18 @@ public class Story1IntegrationTests {
     private PojoRepository pojoRepository;
     @Autowired
     private PackageService packageService;
+    @Autowired
+    private PojoFacadeService pojoFacadeService;
 
 
     @AfterEach()
     void deleteAllSavedClasses() {
-        this.pojoRepository.deleteAll();
+        pojoFacadeService.deleteAllRessources();
     }
 
     @BeforeEach()
     void SetUp() {
-        pojoRepository.deleteAll();
+        pojoFacadeService.deleteAllRessources();
     }
 
     @Nested

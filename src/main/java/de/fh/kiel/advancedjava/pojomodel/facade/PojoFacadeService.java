@@ -5,6 +5,7 @@ import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExistsException;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
+import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import de.fh.kiel.advancedjava.pojomodel.service.PackageService;
 import de.fh.kiel.advancedjava.pojomodel.util.ParseUtil;
@@ -41,15 +42,16 @@ public class PojoFacadeService {
 
     private static final String LIST_TYPE = "java.util.List";
 
-
+    private final PackageRepository packageRepository;
     private final PojoRepository pojoRepository;
     private final AttributeRepository attributeRepository;
     private final PackageService packageService;
 
-    public PojoFacadeService(PojoRepository pojoRepository, AttributeRepository attributeRepository, PackageService packageService) {
+    public PojoFacadeService(PackageRepository packageRepository, PojoRepository pojoRepository, AttributeRepository attributeRepository, PackageService packageService) {
         this.pojoRepository = pojoRepository;
         this.attributeRepository = attributeRepository;
         this.packageService = packageService;
+        this.packageRepository = packageRepository;
     }
 
     public Pojo createPojo(Pojo pojo) {
@@ -174,6 +176,12 @@ public class PojoFacadeService {
         attributeRepository.delete(attribute);
 
         return save(pojo);
+    }
+
+    public void deleteAllRessources(){
+        pojoRepository.deleteAll();
+        attributeRepository.deleteAll();
+        packageRepository.deleteAll();
     }
 
 }

@@ -59,10 +59,7 @@ public class PojoController {
         return ResponseEntity.ok(pojo);
     }
 
-    @PutMapping
-    public ResponseEntity<Pojo> deleteAttribute(@RequestBody() AttributeDeleteDTO attributeDeleteDTO) {
-        return ResponseEntity.ok(pojoService.deleteAttribute(attributeDeleteDTO));
-    }
+
 
     @DeleteMapping("/{name}")
     public ResponseEntity<?> deletePojo(@PathVariable("name") String pojoName) {

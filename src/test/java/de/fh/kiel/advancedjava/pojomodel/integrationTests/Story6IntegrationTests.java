@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
@@ -36,18 +37,17 @@ public class Story6IntegrationTests {
     private TestingUtil testingUtil;
     @Autowired
     private AttributeRepository attributeRepository;
+    @Autowired
+    private PojoFacadeService pojoFacadeService;
 
     @AfterEach()
     void deleteAllSavedClasses() {
-        this.pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
-        packageRepository.deleteAll();
+       pojoFacadeService.deleteAllRessources();
     }
 
     @BeforeEach()
     void SetUp() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
+        pojoFacadeService.deleteAllRessources();
     }
 
     void performGetPojo(String pojo) throws Exception {

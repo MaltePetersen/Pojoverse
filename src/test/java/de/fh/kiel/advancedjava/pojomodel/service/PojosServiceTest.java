@@ -4,6 +4,7 @@ import de.fh.kiel.advancedjava.pojomodel.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64Exception;
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -34,12 +35,12 @@ public class PojosServiceTest {
 
     @Autowired
     PojoService pojoService;
+    @Autowired
+    private PojoFacadeService pojoFacadeService;
 
     @BeforeEach
     void setUp() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
-
+        pojoFacadeService.deleteAllRessources();
     }
 
     @Test

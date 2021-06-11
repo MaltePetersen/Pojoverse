@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import de.fh.kiel.advancedjava.pojomodel.service.PackageService;
@@ -37,7 +38,8 @@ public class Story2IntegrationTests {
     private PojoRepository pojoRepository;
     @Autowired
     private PackageService packageService;
-
+    @Autowired
+    private PojoFacadeService pojoFacadeService;
 
     public static String loadData(String location) throws IOException {
         return Files.readString(Paths.get(location));
@@ -50,12 +52,12 @@ public class Story2IntegrationTests {
 
     @AfterEach()
     void deleteAllSavedClasses() {
-        this.pojoRepository.deleteAll();
+        this.pojoFacadeService.deleteAllRessources();
     }
 
     @BeforeEach()
     void SetUp() {
-        pojoRepository.deleteAll();
+        pojoFacadeService.deleteAllRessources();
     }
 
     @Nested

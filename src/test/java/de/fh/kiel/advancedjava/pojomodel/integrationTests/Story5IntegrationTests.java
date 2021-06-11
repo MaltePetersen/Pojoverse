@@ -3,6 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -37,17 +38,17 @@ public class Story5IntegrationTests {
     @Autowired
     private TestingUtil testingUtil;
 
+    @Autowired
+    private PojoFacadeService pojoFacadeService;
 
     @AfterEach()
     void deleteAllSavedClasses() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
+      pojoFacadeService.deleteAllRessources();
     }
 
     @BeforeEach()
     void SetUp() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
+      pojoFacadeService.deleteAllRessources();
     }
 
 

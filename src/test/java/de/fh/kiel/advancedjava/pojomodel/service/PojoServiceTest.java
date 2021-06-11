@@ -5,6 +5,7 @@ import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExistsException;
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -26,29 +27,27 @@ public class PojoServiceTest {
 
     @Autowired
     PojoService pojoService;
-
     @Autowired
     AttributeRepository attributeRepository;
-
     @Autowired
     PojoRepository pojoRepository;
     @Autowired
     private PackageService packageService;
     @Autowired
     private TestingUtil testingUtil;
-
+    @Autowired
+    private AttributeService attributeService;
+    @Autowired
+    private PojoFacadeService pojoFacadeService;
 
     @AfterEach()
     void deleteAllSavedClasses() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
+       pojoFacadeService.deleteAllRessources();
     }
 
     @BeforeEach()
     void SetUp() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
-
+        pojoFacadeService.deleteAllRessources();
     }
 
     @Test
@@ -78,7 +77,6 @@ public class PojoServiceTest {
         assertThrows(PojoAlreadyExistsException.class, () -> pojoService.readByteCodeAndCreatePojo(testingUtil.getClassValue("DefaultClass")));
     }
 
-    //TODO test könnte fehlerhaft sein!
     @Test
     void deletePojoToEmptyHull() {
         pojoRepository.deleteAll();
@@ -88,6 +86,7 @@ public class PojoServiceTest {
         var actual = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get();
         assertEquals(Collections.emptySet(), actual.getAttributes());
         assertTrue(actual.isEmptyHull());
+        assertEquals(Collections.emptyList(), attributeRepository.findAll());
     }
 
     @Test
@@ -111,7 +110,7 @@ public class PojoServiceTest {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
         pojoRepository.save(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
-        assertNotNull(pojoService.deleteAttribute(new AttributeDeleteDTO("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData", "id")));
+        assertNotNull(attributeService.deleteAttribute(new AttributeDeleteDTO("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData", "id")));
         var actual = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get();
         assertFalse(actual.getAttributes().stream().anyMatch(attribute -> attribute.getName().equals("id")));
     }

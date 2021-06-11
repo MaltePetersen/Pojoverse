@@ -3,6 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel.service;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatisticsDTO;
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,8 @@ public class PojoStatisticsDTOTest {
 
     @Autowired
     PojoRepository pojoRepository;
-
+    @Autowired
+    private PojoFacadeService pojoFacadeService;
     @Autowired
     AttributeRepository attributeRepository;
 
@@ -31,8 +33,7 @@ public class PojoStatisticsDTOTest {
 
     @BeforeEach
     void setUp() {
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
+        pojoFacadeService.deleteAllRessources();
         pojoRepository.save(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
     }
 

@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,8 @@ public class Story3IntegrationTests {
     private MockMvc mvc;
 
     @Autowired
-    private PojoRepository pojoRepository;
+    private PojoFacadeService pojoFacadeService;
+
 
     public static String loadData(String location) throws IOException {
         return Files.readString(Paths.get(location));
@@ -42,12 +44,12 @@ public class Story3IntegrationTests {
 
     @AfterEach()
     void deleteAllSavedClasses() {
-        this.pojoRepository.deleteAll();
+        this.pojoFacadeService.deleteAllRessources();
     }
 
     @BeforeEach()
     void SetUp() {
-        pojoRepository.deleteAll();
+        pojoFacadeService.deleteAllRessources();
     }
 
     @Nested

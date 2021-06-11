@@ -1,7 +1,9 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
+import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.AttributeAlreadyExistsException;
+import de.fh.kiel.advancedjava.pojomodel.exception.AttributeDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
@@ -36,5 +38,12 @@ public class AttributeService {
 
     }
 
+    public Pojo deleteAttribute(AttributeDeleteDTO attributeDeleteDTO) {
+        var pojo = pojoRepository.findById(attributeDeleteDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExistException(attributeDeleteDTO.getClassName()));
+
+        var attr = pojo.getAttributes().stream().filter(attribute -> attribute.getName().equals(attributeDeleteDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExistException(attributeDeleteDTO.getAttributeName(), attributeDeleteDTO.getClassName()));
+
+        return pojoFacadeService.deleteAttributeFromPojo(pojo, attr);
+    }
 
 }

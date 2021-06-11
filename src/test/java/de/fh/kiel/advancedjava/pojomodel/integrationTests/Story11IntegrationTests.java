@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
@@ -23,25 +24,21 @@ public class Story11IntegrationTests {
 
     @Autowired
     private MockMvc mvc;
-
-    @Autowired
-    private PojoRepository pojoRepository;
-
     @Autowired
     private TestingUtil testingUtil;
     @Autowired
     private AttributeRepository attributeRepository;
-
+    @Autowired
+    private PojoFacadeService pojoFacadeService;
 
     @AfterEach()
     void deleteAllSavedClasses() {
-        this.pojoRepository.deleteAll();
+        pojoFacadeService.deleteAllRessources();
     }
 
     @BeforeEach()
     void SetUp() {
-        pojoRepository.deleteAll();
-    }
+pojoFacadeService.deleteAllRessources();    }
 
     @Nested
     @DisplayName("When the developer request a java File")

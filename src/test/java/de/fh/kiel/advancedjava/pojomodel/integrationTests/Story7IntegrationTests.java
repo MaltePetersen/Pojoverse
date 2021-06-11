@@ -2,6 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,8 @@ public class Story7IntegrationTests {
 
     @Autowired
     private MockMvc mvc;
-
+    @Autowired
+    private PojoFacadeService pojoFacadeService;
     @Autowired
     private PojoRepository pojoRepository;
     @Autowired
@@ -35,12 +37,12 @@ public class Story7IntegrationTests {
     class uploadEmptyHullDto {
         @AfterEach()
         void deleteAllSavedClasses() {
-            pojoRepository.deleteAll();
+            pojoFacadeService.deleteAllRessources();
         }
 
         @BeforeEach()
         void SetUp() {
-            pojoRepository.deleteAll();
+            pojoFacadeService.deleteAllRessources();
         }
 
 

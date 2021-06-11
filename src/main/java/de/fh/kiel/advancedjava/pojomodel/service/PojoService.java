@@ -62,13 +62,7 @@ public class PojoService {
         pojoFacadeService.delete(pojo);
     }
 
-    public Pojo deleteAttribute(AttributeDeleteDTO attributeDeleteDTO) {
-        var pojo = pojoRepository.findById(attributeDeleteDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExistException(attributeDeleteDTO.getClassName()));
 
-        var attr = pojo.getAttributes().stream().filter(attribute -> attribute.getName().equals(attributeDeleteDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExistException(attributeDeleteDTO.getAttributeName(), attributeDeleteDTO.getClassName()));
-
-        return pojoFacadeService.deleteAttributeFromPojo(pojo, attr);
-    }
 
     public Pojo getPojo(String completePath) {
         return pojoRepository.findById(completePath).orElseThrow(() -> new PojoDoesNotExistException(completePath));
@@ -80,16 +74,12 @@ public class PojoService {
 
     public List<Pojo> importPojos(List<Pojo> pojos) {
 
-        deleteAllRessources();
+        pojoFacadeService.deleteAllRessources();
         pojos.forEach(pojoFacadeService::createPojo);
         return pojoRepository.findAll();
     }
 
-    private void deleteAllRessources(){
-        pojoRepository.deleteAll();
-        attributeRepository.deleteAll();
-        packageRepository.deleteAll();
-    }
+
 
 
     public List<Pojo> savePojos(byte[] jar) {
