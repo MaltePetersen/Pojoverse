@@ -18,10 +18,6 @@ public class Attribute {
 
     @Id
     private String id;
-    @Version
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    private Long version;
     private String name;
     private String accessModifier;
     //isOnlySet if the class is of type java.util.list
