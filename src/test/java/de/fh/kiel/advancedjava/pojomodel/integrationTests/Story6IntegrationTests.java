@@ -1,29 +1,24 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
-        import com.fasterxml.jackson.core.type.TypeReference;
-        import com.fasterxml.jackson.databind.ObjectMapper;
-        import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
-        import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
-        import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
-        import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
-        import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
-        import org.junit.jupiter.api.*;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-        import org.springframework.boot.test.context.SpringBootTest;
-        import org.springframework.http.MediaType;
-        import org.springframework.test.web.servlet.MockMvc;
-        import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import com.fasterxml.jackson.core.type.TypeReference;
+import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
+import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
+import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-        import java.io.IOException;
-        import java.nio.file.Files;
-        import java.nio.file.Paths;
-        import java.util.HashSet;
-        import java.util.List;
-        import java.util.Set;
+import java.util.List;
+import java.util.Set;
 
-        import static org.junit.jupiter.api.Assertions.assertEquals;
-        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -32,29 +27,25 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 public class Story6IntegrationTests {
 
     @Autowired
+    PackageRepository packageRepository;
+    @Autowired
     private MockMvc mvc;
-
     @Autowired
     private PojoRepository pojoRepository;
-
     @Autowired
     private TestingUtil testingUtil;
-
     @Autowired
     private AttributeRepository attributeRepository;
 
-    @Autowired
-    PackageRepository packageRepository;
-
     @AfterEach()
-    void deleteAllSavedClasses(){
+    void deleteAllSavedClasses() {
         this.pojoRepository.deleteAll();
         attributeRepository.deleteAll();
         packageRepository.deleteAll();
     }
 
     @BeforeEach()
-    void SetUp(){
+    void SetUp() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
     }
@@ -64,6 +55,7 @@ public class Story6IntegrationTests {
                 .content(pojo)
                 .accept(MediaType.APPLICATION_JSON));
     }
+
     @Nested
     @DisplayName("When the developer sends a request for the content of package in the package only one pojo exists")
     class sendRequest {
@@ -84,6 +76,7 @@ public class Story6IntegrationTests {
             }), testingUtil.createListOrSetFromJSON(testingUtil.getJSONValue("defaultClass"), new TypeReference<List<Pojo>>() {
             }));
         }
+
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
         void getAllParentPackage() throws Exception {
@@ -96,6 +89,7 @@ public class Story6IntegrationTests {
             }), testingUtil.createListOrSetFromJSON(testingUtil.getJSONValue("defaultClass"), new TypeReference<Set<Pojo>>() {
             }));
         }
+
         @Test
         @DisplayName("Then the endpoint should return an excetion")
         void throwException() throws Exception {
@@ -105,6 +99,7 @@ public class Story6IntegrationTests {
                     .andReturn().getResponse().getContentAsString().contains("\"message\":\"de.fh.kiel.advancedjavas does not exist\"");
         }
     }
+
     @Nested
     @DisplayName("When the developer sends a request for the content of package in the package only one pojo exists")
     class sendRequests {
@@ -125,7 +120,9 @@ public class Story6IntegrationTests {
                     .andReturn().getResponse().getContentAsString();
             assertEquals((testingUtil.createListOrSetFromJSON(content, new TypeReference<Set<Pojo>>() {
             })), (testingUtil.createListOrSetFromJSON(testingUtil.getJSONValue("packagesPojos"), new TypeReference<Set<Pojo>>() {
-            })));    }
+            })));
+        }
+
         @Test
         @DisplayName("Then the endpoint should return an 200 ok")
         void getAllParentPackage() throws Exception {
@@ -138,6 +135,7 @@ public class Story6IntegrationTests {
             }), (testingUtil.createListOrSetFromJSON(testingUtil.getJSONValue("packagesPojos"), new TypeReference<Set<Pojo>>() {
             })));
         }
+
         @Test
         @DisplayName("Then the endpoint should return an excetion")
         void throwException() throws Exception {

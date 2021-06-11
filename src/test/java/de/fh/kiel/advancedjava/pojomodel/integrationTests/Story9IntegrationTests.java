@@ -11,12 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,13 +33,13 @@ public class Story9IntegrationTests {
     private TestingUtil testingUtil;
 
     @AfterEach()
-    void deleteAllSavedClasses(){
+    void deleteAllSavedClasses() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
     }
 
     @BeforeEach()
-    void SetUp(){
+    void SetUp() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
     }
@@ -66,9 +62,10 @@ public class Story9IntegrationTests {
                     .content(testingUtil.getJSONValue("attributeChangeDTO")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();
-            assertFalse( pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().anyMatch((data)-> data.getName().equals("name")));
+            assertFalse(pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().anyMatch((data) -> data.getName().equals("name")));
         }
     }
+
     @Nested
     @DisplayName("When the developer sends a bad deleteAttrbute request")
     class badDeleteAttribute {

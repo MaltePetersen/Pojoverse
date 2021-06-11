@@ -1,8 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
-import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
@@ -13,11 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -40,12 +34,12 @@ public class Story11IntegrationTests {
 
 
     @AfterEach()
-    void deleteAllSavedClasses(){
+    void deleteAllSavedClasses() {
         this.pojoRepository.deleteAll();
     }
 
     @BeforeEach()
-    void SetUp(){
+    void SetUp() {
         pojoRepository.deleteAll();
     }
 
@@ -64,15 +58,15 @@ public class Story11IntegrationTests {
         @Test
         @DisplayName("Then the endpoint should return an 200 ok and return a java file")
         void createJavaFile() throws Exception {
-            var content =  mvc.perform(MockMvcRequestBuilders.get("/pojo/class/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
+            var content = mvc.perform(MockMvcRequestBuilders.get("/pojo/class/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
-                    assertTrue(content.contains("package de.fh.kiel.advancedjava.pojomodel.exampleData;"));
-                    assertTrue( content.contains("public class DefaultClass {"));
-                    assertTrue(  content.contains("private Long id;"));
-                    assertTrue(  content.contains("private String name;"));
-                    assertTrue(  content.contains("}"));
+            assertTrue(content.contains("package de.fh.kiel.advancedjava.pojomodel.exampleData;"));
+            assertTrue(content.contains("public class DefaultClass {"));
+            assertTrue(content.contains("private Long id;"));
+            assertTrue(content.contains("private String name;"));
+            assertTrue(content.contains("}"));
         }
     }
 

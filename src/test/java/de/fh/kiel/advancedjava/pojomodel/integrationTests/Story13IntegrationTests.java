@@ -14,8 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.io.File;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,12 +32,12 @@ public class Story13IntegrationTests {
     private TestingUtil testingUtil;
 
     @AfterEach()
-    void deleteAllSavedClasses(){
+    void deleteAllSavedClasses() {
         this.pojoRepository.deleteAll();
     }
 
     @BeforeEach()
-    void SetUp(){
+    void SetUp() {
         pojoRepository.deleteAll();
     }
 
@@ -58,7 +57,7 @@ public class Story13IntegrationTests {
             var folder = new File(".");
             File[] listOfFiles = folder.listFiles();
             assert listOfFiles != null;
-            assertFalse( Arrays.stream(listOfFiles).anyMatch(file -> file.getName().equals("file.txt")));
+            assertFalse(Arrays.stream(listOfFiles).anyMatch(file -> file.getName().equals("file.txt")));
         }
     }
 

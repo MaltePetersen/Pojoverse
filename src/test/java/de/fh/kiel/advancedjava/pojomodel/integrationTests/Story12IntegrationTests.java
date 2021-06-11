@@ -29,12 +29,12 @@ public class Story12IntegrationTests {
     private TestingUtil testingUtil;
 
     @AfterEach()
-    void deleteAllSavedClasses(){
+    void deleteAllSavedClasses() {
         this.pojoRepository.deleteAll();
     }
 
     @BeforeEach()
-    void SetUp(){
+    void SetUp() {
         pojoRepository.deleteAll();
     }
 
@@ -55,7 +55,7 @@ public class Story12IntegrationTests {
                     .content(testingUtil.getJSONValue("attributeAddListDTO")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();
-            var att = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().filter((data)-> data.getName().equals("something")).findFirst();
+            var att = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().filter((data) -> data.getName().equals("something")).findFirst();
 
             assertEquals("java.util.List", att.get().getClazz().getCompletePath());
             assertEquals("private", att.get().getAccessModifier());

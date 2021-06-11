@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
-import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -29,7 +29,7 @@ public class Story2IntegrationTests {
     private static String classWithClasses;
 
 
-    private static String pathToBase64Folder ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/base64Encoded/";
+    private static String pathToBase64Folder = "/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/base64Encoded/";
     @Autowired
     private MockMvc mvc;
 
@@ -49,34 +49,36 @@ public class Story2IntegrationTests {
     }
 
     @AfterEach()
-    void deleteAllSavedClasses(){
+    void deleteAllSavedClasses() {
         this.pojoRepository.deleteAll();
     }
 
     @BeforeEach()
-    void SetUp(){
+    void SetUp() {
         pojoRepository.deleteAll();
     }
 
-        @Nested
-        @DisplayName("When the class does not exist")
-        class DoesNotExist {
-            @Test
-            @DisplayName("Then the endpoint should return an 400 bad request")
-            void deletePojo() throws Exception {
-                mvc.perform(MockMvcRequestBuilders.delete("/pojo/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
-                        .accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isBadRequest())
-                        .andReturn();
-            }
+    @Nested
+    @DisplayName("When the class does not exist")
+    class DoesNotExist {
+        @Test
+        @DisplayName("Then the endpoint should return an 400 bad request")
+        void deletePojo() throws Exception {
+            mvc.perform(MockMvcRequestBuilders.delete("/pojo/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
         }
+    }
+
     @Nested
     @DisplayName("When the class exist and it does not have any depenpends")
     class ClassExists {
         @BeforeEach()
-        void SetUp(){
+        void SetUp() {
             pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").aPackage(packageService.createPackage("de.fh.kiel.advancedjava.pojomodel.exampleData")).emptyHull(false).build());
         }
+
         @Test
         @DisplayName("Then the endpoint should return 200 ok")
         void deletePojo() throws Exception {
@@ -86,6 +88,7 @@ public class Story2IntegrationTests {
                     .andReturn();
         }
     }
+
     @Nested
     @DisplayName("When the class exist and it does have depenpends")
     class ClassExistsWithDepentens {
@@ -95,6 +98,7 @@ public class Story2IntegrationTests {
                     .content(classWithClasses)
                     .accept(MediaType.APPLICATION_JSON));
         }
+
         @Test
         @DisplayName("Then the endpoint should return 200 ok, but should not delete the Pojo, instead it should be converted to an empty hull")
         void deletePojo() throws Exception {
@@ -102,12 +106,12 @@ public class Story2IntegrationTests {
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn();
-           assertTrue( pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClasses").get().isEmptyHull());
+            assertTrue(pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClasses").get().isEmptyHull());
             assertEquals(Collections.emptySet(), pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClasses").get().getAttributes());
 
         }
     }
 
-    }
+}
 
 

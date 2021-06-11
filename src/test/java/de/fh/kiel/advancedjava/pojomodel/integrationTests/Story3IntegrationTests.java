@@ -24,7 +24,7 @@ public class Story3IntegrationTests {
     private static String jar;
 
 
-    private static String pathToBase64Folder ="/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/base64Encoded/";
+    private static String pathToBase64Folder = "/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/base64Encoded/";
     @Autowired
     private MockMvc mvc;
 
@@ -41,12 +41,12 @@ public class Story3IntegrationTests {
     }
 
     @AfterEach()
-    void deleteAllSavedClasses(){
+    void deleteAllSavedClasses() {
         this.pojoRepository.deleteAll();
     }
 
     @BeforeEach()
-    void SetUp(){
+    void SetUp() {
         pojoRepository.deleteAll();
     }
 

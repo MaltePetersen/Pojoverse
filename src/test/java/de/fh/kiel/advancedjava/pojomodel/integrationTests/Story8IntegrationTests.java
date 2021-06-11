@@ -10,13 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.util.NestedServletException;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -39,13 +34,13 @@ public class Story8IntegrationTests {
 
 
     @AfterEach()
-    void deleteAllSavedClasses(){
+    void deleteAllSavedClasses() {
         this.pojoRepository.deleteAll();
         attributeRepository.deleteAll();
     }
 
     @BeforeEach()
-    void SetUp(){
+    void SetUp() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
     }
@@ -67,11 +62,11 @@ public class Story8IntegrationTests {
                     .content(testingUtil.getJSONValue("attributeAddDTO")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn();
-                var att = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().filter((data)-> data.getName().equals("something")).findFirst();
-                 att.get();
+            var att = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes().stream().filter((data) -> data.getName().equals("something")).findFirst();
+            att.get();
 
-                assertEquals("java.lang.Integer", att.get().getClazz().getCompletePath());
-                assertEquals("private", att.get().getAccessModifier());
+            assertEquals("java.lang.Integer", att.get().getClazz().getCompletePath());
+            assertEquals("private", att.get().getAccessModifier());
         }
     }
 
@@ -84,7 +79,7 @@ public class Story8IntegrationTests {
         @Test
         @DisplayName("Then the endpoint should return an 200 bad request")
         void attributeChange() throws Exception {
-             mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
+            mvc.perform(MockMvcRequestBuilders.post("/attribute/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
                     .content(testingUtil.getJSONValue("attributeAddDTO")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isBadRequest())
                     .andReturn();

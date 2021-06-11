@@ -22,7 +22,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
@@ -32,30 +33,30 @@ public class AttributeServiceTest {
     private TestingUtil testingUtil;
 
 
-
     @Test
-    void pojoDoesNotExist(@Mock PojoRepository pojoRepository, @Mock AttributeRepository attributeRepository, @Mock PojoFacadeService pojoFacadeService){
+    void pojoDoesNotExist(@Mock PojoRepository pojoRepository, @Mock AttributeRepository attributeRepository, @Mock PojoFacadeService pojoFacadeService) {
         var attributeService = new AttributeService(pojoRepository, pojoFacadeService, attributeRepository);
         Mockito.when(pojoRepository.findById(any(String.class))).thenReturn(Optional.empty());
         assertThrows(PojoDoesNotExistException.class, () -> attributeService.addAttribute("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", new AddAttributeDTO("some", "int", "public", null)));
     }
 
     @Test
-    void attributeAlreadyExists(@Mock PojoRepository pojoRepository, @Mock AttributeRepository attributeRepository, @Mock PojoFacadeService pojoFacadeService){
+    void attributeAlreadyExists(@Mock PojoRepository pojoRepository, @Mock AttributeRepository attributeRepository, @Mock PojoFacadeService pojoFacadeService) {
         var attributeService = new AttributeService(pojoRepository, pojoFacadeService, attributeRepository);
         Mockito.when(pojoRepository.findById(any(String.class))).thenReturn(Optional.of(testingUtil.getPojo(Class.DEFAULT_CLASS.name)));
         Mockito.when(attributeRepository.existsById(any(String.class))).thenReturn(true);
         Mockito.when(pojoFacadeService.generateAttributeId(any(), any())).thenReturn("test");
         assertThrows(AttributeAlreadyExistsException.class, () -> attributeService.addAttribute("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", new AddAttributeDTO("some", "int", "public", null)));
     }
+
     @Test
     void addAttribute(@Mock PojoRepository pojoRepository, @Mock AttributeRepository attributeRepository, @Mock PojoFacadeService pojoFacadeService) throws JsonProcessingException {
         var attributeService = new AttributeService(pojoRepository, pojoFacadeService, attributeRepository);
         Mockito.when(pojoRepository.findById(any(String.class))).thenReturn(Optional.of(testingUtil.getPojo(Class.DEFAULT_CLASS.name)));
         Mockito.when(attributeRepository.existsById(any(String.class))).thenReturn(false);
         Mockito.when(pojoFacadeService.generateAttributeId(any(), any())).thenReturn("test");
-        var pojo = deepCopy( testingUtil.getPojo(Class.DEFAULT_CLASS.name));
-        pojo.getAttributes().add(Attribute.builder().id("test").name( "some").build());
+        var pojo = deepCopy(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
+        pojo.getAttributes().add(Attribute.builder().id("test").name("some").build());
         Mockito.when(pojoFacadeService.addAttribute(any(), any())).thenReturn(pojo);
 
         var actual = attributeService.addAttribute("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", new AddAttributeDTO("some", "int", "public", null));
@@ -65,7 +66,7 @@ public class AttributeServiceTest {
     Pojo deepCopy(Pojo pojo) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        return  objectMapper.readValue(objectMapper.writeValueAsString(pojo), Pojo.class);
+        return objectMapper.readValue(objectMapper.writeValueAsString(pojo), Pojo.class);
 
     }
 }

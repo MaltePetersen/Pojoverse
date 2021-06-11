@@ -1,9 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -22,6 +19,8 @@ public class Attribute {
     @Id
     private String id;
     @Version
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private Long version;
     private String name;
     private String accessModifier;
@@ -31,31 +30,5 @@ public class Attribute {
     @Relationship("DeclaringClass")
     private Pojo clazz;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        var attribute = (Attribute) o;
-        return Objects.equals(id, attribute.id) &&
-                Objects.equals(name, attribute.name) &&
-                Objects.equals(accessModifier, attribute.accessModifier) &&
-                Objects.equals(genericType, attribute.genericType) &&
-                Objects.equals(clazz, attribute.clazz);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, accessModifier, genericType, clazz);
-    }
-
-    @Override
-    public String toString() {
-        return "Attribute{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", accessModifier='" + accessModifier + '\'' +
-                ", genericType=" + genericType +
-                ", clazz=" + clazz +
-                '}';
-    }
 }

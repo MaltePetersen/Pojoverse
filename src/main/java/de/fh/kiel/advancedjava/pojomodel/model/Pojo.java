@@ -1,9 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -26,6 +23,8 @@ public class Pojo {
     private String completePath;
     private String className;
     private Package aPackage;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @Version
     private Long version;
 
@@ -46,35 +45,7 @@ public class Pojo {
         this.aPackage = aPackage;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        var pojo = (Pojo) o;
-        return emptyHull == pojo.emptyHull &&
-                Objects.equals(completePath, pojo.completePath) &&
-                Objects.equals(className, pojo.className) &&
-                Objects.equals(aPackage, pojo.aPackage) &&
-                Objects.equals(attributes, pojo.attributes) &&
-                Objects.equals(parentClass, pojo.parentClass) &&
-                Objects.equals(interfaces, pojo.interfaces);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(emptyHull, completePath, className, aPackage, attributes, parentClass, interfaces);
-    }
 
-    @Override
-    public String toString() {
-        return "Pojo{" +
-                "emptyHull=" + emptyHull +
-                ", completePath='" + completePath + '\'' +
-                ", className='" + className + '\'' +
-                ", aPackage=" + aPackage +
-                ", attributes=" + attributes +
-                ", parentClass=" + parentClass +
-                ", interfaces=" + interfaces +
-                '}';
-    }
+
 }

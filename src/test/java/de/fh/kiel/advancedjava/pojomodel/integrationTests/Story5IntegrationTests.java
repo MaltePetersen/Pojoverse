@@ -1,27 +1,23 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
-        import com.fasterxml.jackson.core.type.TypeReference;
-        import com.fasterxml.jackson.databind.ObjectMapper;
-        import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
-        import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
-        import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
-        import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
-        import org.junit.jupiter.api.*;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-        import org.springframework.boot.test.context.SpringBootTest;
-        import org.springframework.http.MediaType;
-        import org.springframework.test.web.servlet.MockMvc;
-        import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
+import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-        import java.io.IOException;
-        import java.nio.file.Files;
-        import java.nio.file.Paths;
-        import java.util.List;
+import java.util.List;
 
-        import static org.junit.jupiter.api.Assertions.assertEquals;
-        import static org.junit.jupiter.api.Assertions.assertTrue;
-        import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,29 +39,28 @@ public class Story5IntegrationTests {
 
 
     @AfterEach()
-    void deleteAllSavedClasses(){
+    void deleteAllSavedClasses() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
     }
 
     @BeforeEach()
-    void SetUp(){
+    void SetUp() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
     }
-
 
 
     @Nested
     @DisplayName("When the developer wants to upload all pojos")
     class uploadPojos {
         @AfterEach()
-        void deleteAllSavedClasses(){
+        void deleteAllSavedClasses() {
             pojoRepository.deleteAll();
         }
 
         @BeforeEach()
-        void SetUp(){
+        void SetUp() {
             pojoRepository.deleteAll();
             attributeRepository.deleteAll();
         }
@@ -74,7 +69,7 @@ public class Story5IntegrationTests {
         @Test
         @DisplayName("Then the endpoint should return an 200 ok and all files should be uploaded")
         void allFilesShouldBeUploaded() throws Exception {
-          var content = mvc.perform(MockMvcRequestBuilders.post("/pojos/multiple")
+            var content = mvc.perform(MockMvcRequestBuilders.post("/pojos/multiple")
                     .content(testingUtil.getJSONValue("pojos")).contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();

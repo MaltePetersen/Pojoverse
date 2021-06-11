@@ -36,37 +36,41 @@ public class JavaFileServiceTest {
     JavaFileService javaFileService;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
     }
+
     @Test
-    void createDefaultJavaFile(){
+    void createDefaultJavaFile() {
         pojoRepository.save(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
-        var actual =  javaFileService.createOptimziedJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
+        var actual = javaFileService.createOptimziedJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
         assertTrue(actual.contains("package de.fh.kiel.advancedjava.pojomodel.exampleData;"));
-        assertFalse( actual.contains("java.lang"));
-        assertTrue( actual.contains("public class DefaultClass {"));
-        assertTrue(  actual.contains("private Long id;"));
-        assertTrue(  actual.contains("private String name;"));
-        assertTrue(  actual.contains("}"));
+        assertFalse(actual.contains("java.lang"));
+        assertTrue(actual.contains("public class DefaultClass {"));
+        assertTrue(actual.contains("private Long id;"));
+        assertTrue(actual.contains("private String name;"));
+        assertTrue(actual.contains("}"));
     }
+
     @Test
-    void createInterfaceJavaFile(){
+    void createInterfaceJavaFile() {
         pojoRepository.save(testingUtil.getPojo(Class.INTERFACES.name));
         var actual = javaFileService.createOptimziedJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.Interfaces");
         assertTrue(actual.contains("package de.fh.kiel.advancedjava.pojomodel.exampleData;"));
-        assertTrue( actual.contains("public class Interfaces implements Here,There {"));
+        assertTrue(actual.contains("public class Interfaces implements Here,There {"));
 
     }
+
     @Test
-    void createParentJavaFile(){
+    void createParentJavaFile() {
         pojoRepository.save(testingUtil.getPojo(Class.CLASS_WITH_PARENT.name));
         var actual = javaFileService.createOptimziedJavaFile("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithParents");
         assertTrue(actual.contains("import de.fh.Test;"));
-        assertTrue( actual.contains("public class ClassWithParents extends Test {"));
+        assertTrue(actual.contains("public class ClassWithParents extends Test {"));
 
     }
+
     @Test
     void createFileWithGeneric() throws JsonProcessingException {
         var pojo = deepCopy(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
@@ -77,13 +81,13 @@ public class JavaFileServiceTest {
         assertTrue(actual.contains("import java.util.List;"));
         assertTrue(actual.contains("import fh.test.Example;"));
 
-        assertTrue(  actual.contains("public List<Example> test;"));
+        assertTrue(actual.contains("public List<Example> test;"));
     }
 
     Pojo deepCopy(Pojo pojo) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
 
-        return  objectMapper.readValue(objectMapper.writeValueAsString(pojo), Pojo.class);
+        return objectMapper.readValue(objectMapper.writeValueAsString(pojo), Pojo.class);
 
     }
 

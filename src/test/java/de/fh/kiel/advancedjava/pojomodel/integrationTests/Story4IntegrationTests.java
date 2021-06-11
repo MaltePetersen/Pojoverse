@@ -10,11 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -35,12 +32,12 @@ public class Story4IntegrationTests {
 
 
     @AfterEach()
-    void deleteAllSavedClasses(){
+    void deleteAllSavedClasses() {
         this.pojoRepository.deleteAll();
     }
 
     @BeforeEach()
-    void SetUp(){
+    void SetUp() {
         pojoRepository.deleteAll();
     }
 
@@ -59,13 +56,14 @@ public class Story4IntegrationTests {
         @Test
         @DisplayName("Then the endpoint should return an 200 ok and a list of all")
         void createPojos() throws Exception {
-            assertNotEquals("[]",mvc.perform(MockMvcRequestBuilders.get("/pojos")
+            assertNotEquals("[]", mvc.perform(MockMvcRequestBuilders.get("/pojos")
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString());
 
         }
     }
+
     @Nested
     @DisplayName("When he request but none exist")
     class GetAllPojosNoExist {
@@ -73,7 +71,7 @@ public class Story4IntegrationTests {
         @Test
         @DisplayName("Then the endpoint should return an 200 ok and []")
         void createPojos() throws Exception {
-            assertEquals("[]",mvc.perform(MockMvcRequestBuilders.get("/pojos")
+            assertEquals("[]", mvc.perform(MockMvcRequestBuilders.get("/pojos")
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString());

@@ -77,6 +77,7 @@ public class PojoServiceTest {
         pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").aPackage(packageService.createPackage("de.fh.kiel.advancedjava.pojomodel.exampleData")).emptyHull(false).build());
         assertThrows(PojoAlreadyExistsException.class, () -> pojoService.readByteCodeAndCreatePojo(testingUtil.getClassValue("DefaultClass")));
     }
+
     //TODO test könnte fehlerhaft sein!
     @Test
     void deletePojoToEmptyHull() {
@@ -84,31 +85,34 @@ public class PojoServiceTest {
         attributeRepository.deleteAll();
         pojoRepository.save(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
         pojoService.deletePojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
-        var actual= pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get();
+        var actual = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get();
         assertEquals(Collections.emptySet(), actual.getAttributes());
         assertTrue(actual.isEmptyHull());
     }
+
     @Test
     void createPojoEmptyHullFromJSON() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
-        var expected = pojoService.createPojoEmptyHullFromJSON(new PojoEmptyHullDTO("de.fh","Test"));
-        var actual= pojoRepository.findById("de.fh.Test").get();
+        var expected = pojoService.createPojoEmptyHullFromJSON(new PojoEmptyHullDTO("de.fh", "Test"));
+        var actual = pojoRepository.findById("de.fh.Test").get();
         assertEquals(expected, actual);
     }
+
     @Test
-    void getPojo(){
+    void getPojo() {
         var expected = pojoRepository.save(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
         var actual = pojoService.getPojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
         assertEquals(expected, actual);
     }
+
     @Test
     void deleteAttribute() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
         pojoRepository.save(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
-        assertNotNull   (pojoService.deleteAttribute(new AttributeDeleteDTO("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData", "id")));
-        var actual= pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get();
+        assertNotNull(pojoService.deleteAttribute(new AttributeDeleteDTO("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "de.fh.kiel.advancedjava.pojomodel.exampleData", "id")));
+        var actual = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get();
         assertFalse(actual.getAttributes().stream().anyMatch(attribute -> attribute.getName().equals("id")));
     }
 }

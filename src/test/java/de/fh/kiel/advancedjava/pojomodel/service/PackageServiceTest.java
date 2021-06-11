@@ -14,7 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class PackageServiceTest {
@@ -23,36 +24,40 @@ public class PackageServiceTest {
     @Autowired
     TestingUtil testingUtil;
     @Autowired
-    private PojoRepository pojoRepository;
-    @Autowired
     AttributeRepository attributeRepository;
+    @Autowired
+    private PojoRepository pojoRepository;
     @Autowired
     private PackageService packageService;
     @Autowired
     private PackageRepository packageRepository;
+
     @BeforeEach
-    void deletePackages(){
+    void deletePackages() {
         packageRepository.deleteAll();
     }
 
     @Test
-    void generateSubPackage(){
+    void generateSubPackage() {
 
         var aPackage = new Package("de", "de", new Package("de.fh", "fh", new Package("de.fh.kiel", "kiel", null)));
         packageService.createPackage("de.fh.kiel");
 
-        assertEquals(packageRepository.findById("de").get(),aPackage );
+        assertEquals(packageRepository.findById("de").get(), aPackage);
     }
+
     @Test
-    void generatePackage(){
-        assertEquals(packageService.createPackage("de"), new Package("de", "de", null) );
+    void generatePackage() {
+        assertEquals(packageService.createPackage("de"), new Package("de", "de", null));
     }
+
     @Test
-    void generatePackageInvalidinput(){
-        assertThrows(PackageNameNotAllowedException.class,() -> packageService.createPackage("de..fh"));
+    void generatePackageInvalidinput() {
+        assertThrows(PackageNameNotAllowedException.class, () -> packageService.createPackage("de..fh"));
     }
+
     @Test
-    void getAllPojosFromAPackage(){
+    void getAllPojosFromAPackage() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
         var expected = Collections.singletonList(pojoRepository.save(testingUtil.getPojo(Class.DEFAULT_CLASS.name)));
