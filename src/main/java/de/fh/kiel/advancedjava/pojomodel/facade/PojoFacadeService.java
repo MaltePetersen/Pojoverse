@@ -1,7 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.facade;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExistsException;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.model.*;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
@@ -66,7 +66,7 @@ public class PojoFacadeService {
     private void pojoExistsAndIsNotEmptyHull(String completePath) {
         pojoRepository.findById(completePath).ifPresent(pojo -> {
             if (!pojo.isEmptyHull()) {
-                throw new PojoAlreadyExists(pojo.getCompletePath());
+                throw new PojoAlreadyExistsException(pojo.getCompletePath());
             }
         });
     }

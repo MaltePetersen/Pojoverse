@@ -1,7 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExistsException;
 import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoInfo;
@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
@@ -53,7 +52,7 @@ public class ASMFacadeServiceTest {
         Mockito.when(pojoRepository.findById(any(String.class))).thenReturn(Optional.of(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").build()));
 
 
-      assertThrows(PojoAlreadyExists.class,() -> asmFacadeService.read(testingUtil.getClassValue("DefaultClass")));
+      assertThrows(PojoAlreadyExistsException.class,() -> asmFacadeService.read(testingUtil.getClassValue("DefaultClass")));
 
 
     }

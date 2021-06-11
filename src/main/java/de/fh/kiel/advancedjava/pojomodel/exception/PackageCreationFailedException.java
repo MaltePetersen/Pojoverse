@@ -1,7 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.exception;
 
-public class PackageCreationFailed extends RuntimeException {
-    public PackageCreationFailed(String packageName) {
+public class PackageCreationFailedException extends RuntimeException {
+    public PackageCreationFailedException(String packageName) {
         super("The creation of the package " + packageName + " failed.");
     }
 }

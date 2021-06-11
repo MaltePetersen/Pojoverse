@@ -4,7 +4,7 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
-import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
+import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64Exception;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.JavaFileService;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
@@ -39,7 +39,7 @@ public class PojoController {
         try {
             pojoAsByteCode = Base64.getDecoder().decode(base64EncodedByteCodePojo);
         } catch (IllegalArgumentException i) {
-            throw new NoValidBase64();
+            throw new NoValidBase64Exception();
         }
         var pojo = pojoService.readByteCodeAndCreatePojo(pojoAsByteCode);
 

@@ -1,8 +1,8 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
-import de.fh.kiel.advancedjava.pojomodel.exception.PackageCreationFailed;
-import de.fh.kiel.advancedjava.pojomodel.exception.PackageDoesNotExist;
-import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowed;
+import de.fh.kiel.advancedjava.pojomodel.exception.PackageCreationFailedException;
+import de.fh.kiel.advancedjava.pojomodel.exception.PackageDoesNotExistException;
+import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowedException;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
@@ -26,7 +26,7 @@ public class PackageService {
 
     public List<Pojo> getPojos(String packageName) {
         if (validPackageNameStructure(packageName)) {
-            var aPackage = packageRepository.findById(packageName).orElseThrow(() -> new PackageDoesNotExist(packageName));
+            var aPackage = packageRepository.findById(packageName).orElseThrow(() -> new PackageDoesNotExistException(packageName));
             return getPojosFromSubPackages(aPackage);
         }
         return Collections.emptyList();
@@ -58,9 +58,9 @@ public class PackageService {
             Collections.addAll(complete, aPackage);
             var generatePackage = generatePackage(current, complete);
             packageRepository.save(generatePackage);
-            return packageRepository.findById(packageName).orElseThrow(() -> new PackageCreationFailed(packageName));
+            return packageRepository.findById(packageName).orElseThrow(() -> new PackageCreationFailedException(packageName));
         }
-        throw new PackageNameNotAllowed(packageName);
+        throw new PackageNameNotAllowedException(packageName);
     }
 
 

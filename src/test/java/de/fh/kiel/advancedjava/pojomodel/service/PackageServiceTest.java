@@ -2,7 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
-import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowed;
+import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowedException;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
@@ -10,9 +10,7 @@ import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.w3c.dom.Attr;
 
 import java.util.Collections;
 
@@ -51,7 +49,7 @@ public class PackageServiceTest {
     }
     @Test
     void generatePackageInvalidinput(){
-        assertThrows(PackageNameNotAllowed.class,() -> packageService.createPackage("de..fh"));
+        assertThrows(PackageNameNotAllowedException.class,() -> packageService.createPackage("de..fh"));
     }
     @Test
     void getAllPojosFromAPackage(){

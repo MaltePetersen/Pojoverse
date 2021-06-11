@@ -2,7 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.asm.PojoClassReader;
 import de.fh.kiel.advancedjava.pojomodel.asm.PojoClassVisitor;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExistsException;
 import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoInfo;
@@ -44,7 +44,7 @@ public class ASMFacadeService {
             return new PojoInfo(classReader.getCompletePath(), classReader.getClassName(), classReader.getPackageName(), classReader.getSuperCompletePath(), classReader.getSuperName(), classReader.getSuperPackageName(), attributesInfos, new HashSet<>(Arrays.asList(classReader.getInterfaces())));
 
         }
-        throw new PojoAlreadyExists(classReader.getCompletePath());
+        throw new PojoAlreadyExistsException(classReader.getCompletePath());
     }
 
     private boolean pojoDoesNotAlreadyExist(String completePath) {

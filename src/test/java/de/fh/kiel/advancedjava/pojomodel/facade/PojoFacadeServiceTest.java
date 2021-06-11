@@ -6,8 +6,8 @@ import de.fh.kiel.advancedjava.pojomodel.AttributeName;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
-import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowed;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
+import de.fh.kiel.advancedjava.pojomodel.exception.PackageNameNotAllowedException;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExistsException;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
@@ -81,7 +81,7 @@ public class PojoFacadeServiceTest {
     void createPojoAlreadyExists()  {
         var pojo = testingUtil.getPojo(Class.DEFAULT_CLASS.name);
         pojoFacadeService.createPojo(pojo.getCompletePath(), pojo.getClassName(), pojo.getAPackage().getId(), pojo.getParentClass().getCompletePath(), pojo.getParentClass().getClassName(), pojo.getParentClass().getAPackage().getId(),pojo.getInterfaces(), pojo.getAttributes());
-        assertThrows(PojoAlreadyExists.class , () -> pojoFacadeService.createPojo(pojo.getCompletePath(), pojo.getClassName(), pojo.getAPackage().getId(), pojo.getParentClass().getCompletePath(), pojo.getParentClass().getClassName(), pojo.getParentClass().getAPackage().getId(),pojo.getInterfaces(), pojo.getAttributes()));
+        assertThrows(PojoAlreadyExistsException.class , () -> pojoFacadeService.createPojo(pojo.getCompletePath(), pojo.getClassName(), pojo.getAPackage().getId(), pojo.getParentClass().getCompletePath(), pojo.getParentClass().getClassName(), pojo.getParentClass().getAPackage().getId(),pojo.getInterfaces(), pojo.getAttributes()));
     }
 
     @Test
@@ -138,7 +138,7 @@ public class PojoFacadeServiceTest {
     @Test
     @DisplayName("Create a new Package but it already exists")
     void createPackageAlreadyExists()  {
-        assertThrows(PackageNameNotAllowed.class,() -> pojoFacadeService.createPackage("de..fh"));
+        assertThrows(PackageNameNotAllowedException.class,() -> pojoFacadeService.createPackage("de..fh"));
     }
     @Test
     @DisplayName("Add a new Attribute to a Pojo with a generic")

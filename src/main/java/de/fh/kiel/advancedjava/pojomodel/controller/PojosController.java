@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.controller;
 
-import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
+import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64Exception;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.PojosService;
 import org.springframework.http.MediaType;
@@ -28,7 +28,7 @@ public class PojosController {
         try {
             pojoAsByteCode = Base64.getDecoder().decode(base64EncodedJar);
         } catch (IllegalArgumentException i) {
-            throw new NoValidBase64();
+            throw new NoValidBase64Exception();
         }
 
         return ResponseEntity.ok(pojosService.extractJar(pojoAsByteCode));

@@ -2,9 +2,9 @@ package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
-import de.fh.kiel.advancedjava.pojomodel.exception.AttributeDoesNotExist;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
+import de.fh.kiel.advancedjava.pojomodel.exception.AttributeDoesNotExistException;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExistsException;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
@@ -43,7 +43,7 @@ public class PojoService {
         var completePath = buildCompletePath(emptyHull.getPackageName(), emptyHull.getClassName());
 
         if (pojoRepository.existsById(completePath))
-            throw new PojoAlreadyExists(completePath);
+            throw new PojoAlreadyExistsException(completePath);
 
         return pojoFacadeService.createEmptyHull(completePath, emptyHull.getClassName(), emptyHull.getPackageName());
     }
@@ -60,9 +60,9 @@ public class PojoService {
     }
 
     public Pojo deleteAttribute(AttributeDeleteDTO attributeDeleteDTO) {
-        var pojo = pojoRepository.findById(attributeDeleteDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExist(attributeDeleteDTO.getClassName()));
+        var pojo = pojoRepository.findById(attributeDeleteDTO.getClassName()).orElseThrow(() -> new PojoDoesNotExistException(attributeDeleteDTO.getClassName()));
 
-        var attr = pojo.getAttributes().stream().filter(attribute -> attribute.getName().equals(attributeDeleteDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExist(attributeDeleteDTO.getAttributeName(), attributeDeleteDTO.getClassName()));
+        var attr = pojo.getAttributes().stream().filter(attribute -> attribute.getName().equals(attributeDeleteDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExistException(attributeDeleteDTO.getAttributeName(), attributeDeleteDTO.getClassName()));
 
         pojo.getAttributes().remove(attr);
 
@@ -70,7 +70,7 @@ public class PojoService {
     }
 
     public Pojo getPojo(String completePath) {
-        return pojoRepository.findById(completePath).orElseThrow(() -> new PojoDoesNotExist(completePath));
+        return pojoRepository.findById(completePath).orElseThrow(() -> new PojoDoesNotExistException(completePath));
     }
 
     private String buildCompletePath(String packageName, String className) {

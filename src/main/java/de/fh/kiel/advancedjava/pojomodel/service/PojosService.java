@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
-import de.fh.kiel.advancedjava.pojomodel.exception.CouldNotReadJar;
+import de.fh.kiel.advancedjava.pojomodel.exception.CouldNotReadJarException;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoInfo;
@@ -51,7 +51,7 @@ public class PojosService {
         try (OutputStream os = new FileOutputStream(file)) {
             os.write(input);
         } catch (IOException e) {
-            throw new CouldNotReadJar();
+            throw new CouldNotReadJarException();
         }
         return savePojos(file);
     }

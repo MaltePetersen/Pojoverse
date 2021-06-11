@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
-import de.fh.kiel.advancedjava.pojomodel.exception.AttributeAlreadyExists;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
+import de.fh.kiel.advancedjava.pojomodel.exception.AttributeAlreadyExistsException;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
@@ -37,7 +37,7 @@ public class AttributeServiceTest {
     void pojoDoesNotExist(@Mock PojoRepository pojoRepository, @Mock AttributeRepository attributeRepository, @Mock PojoFacadeService pojoFacadeService){
         var attributeService = new AttributeService(pojoRepository, pojoFacadeService, attributeRepository);
         Mockito.when(pojoRepository.findById(any(String.class))).thenReturn(Optional.empty());
-        assertThrows(PojoDoesNotExist.class, () -> attributeService.addAttribute("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", new AddAttributeDTO("some", "int", "public", null)));
+        assertThrows(PojoDoesNotExistException.class, () -> attributeService.addAttribute("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", new AddAttributeDTO("some", "int", "public", null)));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class AttributeServiceTest {
         Mockito.when(pojoRepository.findById(any(String.class))).thenReturn(Optional.of(testingUtil.getPojo(Class.DEFAULT_CLASS.name)));
         Mockito.when(attributeRepository.existsById(any(String.class))).thenReturn(true);
         Mockito.when(pojoFacadeService.generateAttributeId(any(), any())).thenReturn("test");
-        assertThrows(AttributeAlreadyExists.class, () -> attributeService.addAttribute("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", new AddAttributeDTO("some", "int", "public", null)));
+        assertThrows(AttributeAlreadyExistsException.class, () -> attributeService.addAttribute("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", new AddAttributeDTO("some", "int", "public", null)));
     }
     @Test
     void addAttribute(@Mock PojoRepository pojoRepository, @Mock AttributeRepository attributeRepository, @Mock PojoFacadeService pojoFacadeService) throws JsonProcessingException {

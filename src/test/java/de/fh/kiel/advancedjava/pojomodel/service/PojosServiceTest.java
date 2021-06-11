@@ -3,7 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel.service;
 import de.fh.kiel.advancedjava.pojomodel.AttributeName;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
-import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64;
+import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64Exception;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -72,7 +72,7 @@ public class PojosServiceTest {
         try {
             pojosAsByteCode = Base64.getDecoder().decode(testingUtil.getBase64Value("jar"));
         } catch (IllegalArgumentException | IOException i) {
-            throw new NoValidBase64();
+            throw new NoValidBase64Exception();
         }
         var actual = pojosService.extractJar(pojosAsByteCode);
         var expected = pojosService.getAllPojos();

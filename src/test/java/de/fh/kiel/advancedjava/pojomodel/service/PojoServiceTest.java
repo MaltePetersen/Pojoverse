@@ -4,6 +4,7 @@ import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExistsException;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -74,7 +75,7 @@ public class PojoServiceTest {
     @DisplayName("When the pojo already Exists Then null should be returned")
     void pojoAlreadyExist() throws Exception {
         pojoRepository.save(Pojo.builder().completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").className("DefaultClass").aPackage(packageService.createPackage("de.fh.kiel.advancedjava.pojomodel.exampleData")).emptyHull(false).build());
-        assertThrows(de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExists.class, () -> pojoService.readByteCodeAndCreatePojo(testingUtil.getClassValue("DefaultClass")));
+        assertThrows(PojoAlreadyExistsException.class, () -> pojoService.readByteCodeAndCreatePojo(testingUtil.getClassValue("DefaultClass")));
     }
     //TODO test könnte fehlerhaft sein!
     @Test

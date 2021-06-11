@@ -1,8 +1,8 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.JavaFileDTO;
-import de.fh.kiel.advancedjava.pojomodel.exception.IsEmptyHull;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
+import de.fh.kiel.advancedjava.pojomodel.exception.IsEmptyHullException;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.model.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -32,10 +32,10 @@ public class JavaFileService {
 
     public String createOptimziedJavaFile(String pojoId) {
 
-        var pojo = pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExist(pojoId));
+        var pojo = pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExistException(pojoId));
 
         if (pojo.isEmptyHull())
-            throw new IsEmptyHull(pojoId);
+            throw new IsEmptyHullException(pojoId);
 
         var javaFile = new JavaFileDTO(pojo.getClassName(), createPackage(pojo.getAPackage().getId()));
 

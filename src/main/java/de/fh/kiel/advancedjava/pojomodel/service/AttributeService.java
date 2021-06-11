@@ -1,8 +1,8 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
-import de.fh.kiel.advancedjava.pojomodel.exception.AttributeAlreadyExists;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
+import de.fh.kiel.advancedjava.pojomodel.exception.AttributeAlreadyExistsException;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
@@ -26,10 +26,10 @@ public class AttributeService {
 
 
     public Pojo addAttribute(String pojoId, AddAttributeDTO addAttributeDTO) {
-        var pojo = pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExist(pojoId));
+        var pojo = pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExistException(pojoId));
 
         if ( attributeRepository.existsById(pojoFacadeService.generateAttributeId(pojoId, addAttributeDTO.getName())) )
-            throw new AttributeAlreadyExists(addAttributeDTO.getName(), pojoId);
+            throw new AttributeAlreadyExistsException(addAttributeDTO.getName(), pojoId);
 
 
         return pojoFacadeService.addAttribute(addAttributeDTO, pojo);

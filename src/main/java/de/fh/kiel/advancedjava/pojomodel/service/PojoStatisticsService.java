@@ -1,7 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
-import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExist;
+import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class PojoStatisticsService {
     }
 
     public PojoStatistics getStatistics(String pojoName) {
-        var pojo = pojoRepository.findById(pojoName).orElseThrow(() -> new PojoDoesNotExist(pojoName));
+        var pojo = pojoRepository.findById(pojoName).orElseThrow(() -> new PojoDoesNotExistException(pojoName));
 
         var numberOfClassesWithTheSameName = pojoRepository.findAllByClassName(pojo.getClassName()).size();
         var numberOfClassesInTheSamePackage = pojoRepository.findAllByaPackage_Id(pojo.getAPackage().getId()).size();
