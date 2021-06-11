@@ -40,22 +40,18 @@ pitest {
     //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"
     junit5PluginVersion = '0.12'
     /*
-    Junit facade test is green but pitest is not? Facade is structured like all other service tests.
-    Therefore I am excluding it.
     The integration test give great coverage but if I run them with pitest the run is like 8 minutes.
      */
-    excludedTestClasses = ['de.fh.kiel.advancedjava.pojomodel.facade.**',
-                           'de.fh.kiel.advancedjava.pojomodel.integrationTests.**']
+    excludedTestClasses = ['de.fh.kiel.advancedjava.pojomodel.integrationTests.**']
     /*
     These classes are not included because they are not covered for good reason, or their test are not included:
-    tests not included -> facade; controller (are tested through the integration tests)
+    tests not included ->  controller (are tested through the integration tests)
     just pojos -> dto, model
     utitlty application which is not part of the application -> CreateBase64Classes
     These would reduce the mution coverage because they are not covered but it makes no sense to cover them so
     it just makes the stats look worse. I a real world application I would do the same, instead of beginning to cover the pojos
      */
-    excludedClasses = ['de.fh.kiel.advancedjava.pojomodel.facade.**',
-                       'de.fh.kiel.advancedjava.pojomodel.controller.**',
+    excludedClasses = ['de.fh.kiel.advancedjava.pojomodel.controller.**',
                        'de.fh.kiel.advancedjava.pojomodel.dto.**',
                        'de.fh.kiel.advancedjava.pojomodel.model.**',
                        'de.fh.kiel.advancedjava.pojomodel.CreateBase64Classes'

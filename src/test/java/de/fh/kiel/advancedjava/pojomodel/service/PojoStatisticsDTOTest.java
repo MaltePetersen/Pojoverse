@@ -2,7 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
-import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
+import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatisticsDTO;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,7 +15,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class PojoStatisticsTest {
+public class PojoStatisticsDTOTest {
 
     @Autowired
     PojoStatisticsService pojoStatisticsService;
@@ -38,7 +38,7 @@ public class PojoStatisticsTest {
 
     @Test
     void createStats() {
-        var expected = new PojoStatistics("DefaultClass", "exampleData", 2, "Object", Collections.emptySet(), 0, 0, 1, 1);
+        var expected = new PojoStatisticsDTO("DefaultClass", "exampleData", 2, "Object", Collections.emptySet(), 0, 0, 1, 1);
         var actual = pojoStatisticsService.getStatistics("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
         assertEquals(expected, actual);
     }

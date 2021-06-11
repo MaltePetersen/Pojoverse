@@ -27,7 +27,7 @@ public class TestingUtil {
     private final Map<String, Pojo> pojos = new HashMap<>();
     private final Map<String, Pojo> emptyHulls = new HashMap<>();
     private final Map<String, PojoInfo> pojoInfos = new HashMap<>();
-    private final Map<String, Attribute> attributes = new HashMap<>();
+    private final Map<String, de.fh.kiel.advancedjava.pojomodel.model.Attribute> attributes = new HashMap<>();
     private Package aPackage = new Package("de.fh.kiel.advancedjava.pojomodel.exampleData", "exampleData", null);
     private Package javaLang = new Package("java.lang", "lang", null);
 
@@ -95,12 +95,12 @@ public class TestingUtil {
                 .className("ClassWithPrimtives")
                 .aPackage(aPackage)
                 .attributes(Stream.of(
-                        Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtivesis")
+                        de.fh.kiel.advancedjava.pojomodel.model.Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtivesis")
                                 .name("is")
                                 .accessModifier("")
                                 .clazz(new Pojo("java.lang.Boolean", "Boolean", javaLang))
                                 .build(),
-                        Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtivesid")
+                        de.fh.kiel.advancedjava.pojomodel.model.Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithPrimtivesid")
                                 .name("id")
                                 .accessModifier("")
                                 .clazz(new Pojo("java.lang.Integer", "Integer", javaLang))
@@ -116,12 +116,12 @@ public class TestingUtil {
                 .parentClass(new Pojo("java.lang.Object", "Object", new Package("java.lang", "lang", null)))
                 .emptyHull(false)
                 .attributes(Stream.of(
-                        Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassname")
+                        de.fh.kiel.advancedjava.pojomodel.model.Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassname")
                                 .name("name")
                                 .accessModifier("private")
                                 .clazz(new Pojo("java.lang.String", "String", javaLang))
                                 .build(),
-                        Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassid")
+                        de.fh.kiel.advancedjava.pojomodel.model.Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassid")
                                 .name("id")
                                 .accessModifier("private")
                                 .clazz(new Pojo("java.lang.Long", "Long", javaLang))
@@ -157,7 +157,7 @@ public class TestingUtil {
     }
 
     public void loadAttributes() {
-        attributes.put(AttributeName.DEFAULT_CLASSNAME.name, Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassname")
+        attributes.put(Attribute.DEFAULT_CLASSNAME.name, de.fh.kiel.advancedjava.pojomodel.model.Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassname")
                 .name("name")
                 .accessModifier("private")
                 .clazz(new Pojo("java.lang.String", "String", javaLang))
@@ -206,7 +206,7 @@ public class TestingUtil {
         return pojoInfos.get(name);
     }
 
-    public Attribute getAttribute(String name) {
+    public de.fh.kiel.advancedjava.pojomodel.model.Attribute getAttribute(String name) {
         return attributes.get(name);
     }
 

@@ -2,7 +2,7 @@ package de.fh.kiel.advancedjava.pojomodel.facade;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.fh.kiel.advancedjava.pojomodel.AttributeName;
+import de.fh.kiel.advancedjava.pojomodel.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.dto.AddAttributeDTO;
@@ -120,7 +120,7 @@ public class PojoFacadeServiceTest {
     @DisplayName("Create a new Attribute")
     void createAttribute() {
         var pojo = testingUtil.getPojo(Class.DEFAULT_CLASS.name);
-        var attribute = testingUtil.getAttribute(AttributeName.DEFAULT_CLASSNAME.name);
+        var attribute = testingUtil.getAttribute(Attribute.DEFAULT_CLASSNAME.name);
         var savedAttribute = pojoFacadeService.createAttribute(attribute.getName(), attribute.getClazz().getCompletePath(), attribute.getAccessModifier(), attribute.getClazz().getClassName(), attribute.getClazz().getAPackage().getId(), pojo.getCompletePath());
         assertEquals(attribute, savedAttribute);
     }
@@ -129,7 +129,7 @@ public class PojoFacadeServiceTest {
     @DisplayName("Create a new Attribute but it already exists ")
     void createAttributeAlreadyExists() {
         var pojo = testingUtil.getPojo(Class.DEFAULT_CLASS.name);
-        var attribute = testingUtil.getAttribute(AttributeName.DEFAULT_CLASSNAME.name);
+        var attribute = testingUtil.getAttribute(Attribute.DEFAULT_CLASSNAME.name);
         pojoFacadeService.createAttribute(attribute.getName(), attribute.getClazz().getCompletePath(), attribute.getAccessModifier(), attribute.getClazz().getClassName(), attribute.getClazz().getAPackage().getId(), pojo.getCompletePath());
         var savedAttribute = pojoFacadeService.createAttribute(attribute.getName(), attribute.getClazz().getCompletePath(), attribute.getAccessModifier(), attribute.getClazz().getClassName(), attribute.getClazz().getAPackage().getId(), pojo.getCompletePath());
 

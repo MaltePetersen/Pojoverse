@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
-import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
+import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatisticsDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -18,14 +18,14 @@ public class PojoStatisticsService {
         this.attributeRepository = attributeRepository;
     }
 
-    public PojoStatistics getStatistics(String pojoName) {
+    public PojoStatisticsDTO getStatistics(String pojoName) {
         var pojo = pojoRepository.findById(pojoName).orElseThrow(() -> new PojoDoesNotExistException(pojoName));
 
         var numberOfClassesWithTheSameName = pojoRepository.findAllByClassName(pojo.getClassName()).size();
         var numberOfClassesInTheSamePackage = pojoRepository.findAllByaPackage_Id(pojo.getAPackage().getId()).size();
         var numberOfAttributesWithDatatype = attributeRepository.findAllByClazz_CompletePath(pojo.getCompletePath()).size();
         var numberOfDirectSubClasses = pojoRepository.findAllByParentClass_CompletePath(pojo.getCompletePath()).size();
-        return PojoStatistics.builder()
+        return PojoStatisticsDTO.builder()
                 .classname(pojo.getClassName())
                 .packageName(pojo.getAPackage().getName())
                 .numberOfAttributes(pojo.getAttributes() != null ? pojo.getAttributes().size() : 0)

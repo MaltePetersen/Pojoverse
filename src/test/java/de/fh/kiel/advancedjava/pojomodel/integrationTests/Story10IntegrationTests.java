@@ -1,7 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
-import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
+import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatisticsDTO;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
@@ -62,7 +62,7 @@ public class Story10IntegrationTests {
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
 
-            assertEquals(testingUtil.createObjectFromJSON(content, PojoStatistics.class), testingUtil.createObjectFromJSON(testingUtil.getJSONValue("defaultClassStats"), PojoStatistics.class));
+            assertEquals(testingUtil.createObjectFromJSON(content, PojoStatisticsDTO.class), testingUtil.createObjectFromJSON(testingUtil.getJSONValue("defaultClassStats"), PojoStatisticsDTO.class));
         }
     }
 

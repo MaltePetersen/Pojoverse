@@ -1,6 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
-import de.fh.kiel.advancedjava.pojomodel.AttributeName;
+import de.fh.kiel.advancedjava.pojomodel.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64Exception;
@@ -45,7 +45,7 @@ public class PojosServiceTest {
     @Test
     void importPojos() {
         pojoRepository.save(testingUtil.getPojo(Class.CLASS_WITH_PRIMTIVES.name));
-        attributeRepository.save(testingUtil.getAttribute(AttributeName.DEFAULT_CLASSNAME.name));
+        attributeRepository.save(testingUtil.getAttribute(Attribute.DEFAULT_CLASSNAME.name));
         var pojos = Collections.singletonList(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
         var expected = new ArrayList<Pojo>();
         expected.add(pojos.get(0));

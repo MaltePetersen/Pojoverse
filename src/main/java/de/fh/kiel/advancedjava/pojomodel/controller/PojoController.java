@@ -3,7 +3,7 @@ package de.fh.kiel.advancedjava.pojomodel.controller;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
-import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatistics;
+import de.fh.kiel.advancedjava.pojomodel.dto.PojoStatisticsDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64Exception;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.JavaFileService;
@@ -81,7 +81,7 @@ public class PojoController {
     }
 
     @GetMapping("statistics/{name}")
-    public ResponseEntity<PojoStatistics> getPojoStatistics(@PathVariable("name") String pojoName) {
+    public ResponseEntity<PojoStatisticsDTO> getPojoStatistics(@PathVariable("name") String pojoName) {
         return ResponseEntity.ok(pojoStatisticsService.getStatistics(pojoName));
     }
 

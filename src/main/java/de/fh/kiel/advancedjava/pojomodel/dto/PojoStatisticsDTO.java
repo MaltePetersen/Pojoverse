@@ -11,7 +11,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PojoStatistics {
+public class PojoStatisticsDTO {
     private String classname;
     private String packageName;
     private int numberOfAttributes;
