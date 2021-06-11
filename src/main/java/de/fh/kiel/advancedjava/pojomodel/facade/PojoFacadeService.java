@@ -31,11 +31,9 @@ public class PojoFacadeService {
     private final PojoRepository pojoRepository;
     private final AttributeRepository attributeRepository;
     private final PackageService packageService;
-    private final Util util;
 
-    public PojoFacadeService(PojoRepository pojoRepository, AttributeRepository attributeRepository, PackageService packageService, Util util) {
+    public PojoFacadeService(PojoRepository pojoRepository, AttributeRepository attributeRepository, PackageService packageService) {
         this.pojoRepository = pojoRepository;
-        this.util = util;
         this.attributeRepository = attributeRepository;
         this.packageService = packageService;
     }
@@ -87,8 +85,8 @@ public class PojoFacadeService {
         pojo.setInterfaces(interfaces);
         pojo.setAttributes(attributes);
         pojo.setEmptyHull(false);
-        pojoRepository.deleteById(pojo.getCompletePath());
-        return pojoRepository.save(pojo);
+
+        return save(pojo);
     }
 
     public Attribute createAttribute(String name, String dataTypeCompletePath, String accessModifier, String className, String packageName, String pojoCompletePath) {
@@ -112,8 +110,7 @@ public class PojoFacadeService {
         addGenericListInformationIfNeeded(dataType, attribute, addAttributeDTO);
 
         pojo.getAttributes().add(attribute);
-        pojoRepository.deleteById(pojo.getCompletePath());
-        return pojoRepository.save(pojo);
+        return save(pojo);
     }
 
     private void addGenericListInformationIfNeeded(Pojo dataType, Attribute attribute, AddAttributeDTO addAttributeDTO) {
@@ -126,7 +123,7 @@ public class PojoFacadeService {
 
     private Pojo transformPrimitivesAndFindIfThePojoExists(String pojoCompletePath) {
         String transformedTypes = Primitiv.getWrapperByPrimitive(pojoCompletePath);
-        return createPojo(transformedTypes, util.parseClassName(transformedTypes), util.parsePackageName(transformedTypes));
+        return createPojo(transformedTypes, ParseUtil.parseClassName(transformedTypes), ParseUtil.parsePackageName(transformedTypes));
     }
 
     public String generateAttributeId(String pojoId, String attributeName) {
@@ -136,4 +133,10 @@ public class PojoFacadeService {
     public Package createPackage(String packageName) {
         return packageService.createPackage(packageName);
     }
+
+    public Pojo save(Pojo pojo){
+        pojoRepository.deleteById(pojo.getCompletePath());
+        return pojoRepository.save(pojo);
+    }
+
 }
