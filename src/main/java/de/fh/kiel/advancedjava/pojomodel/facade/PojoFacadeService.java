@@ -87,7 +87,7 @@ public class PojoFacadeService {
         pojo.setInterfaces(interfaces);
         pojo.setAttributes(attributes);
         pojo.setEmptyHull(false);
-
+        pojoRepository.deleteById(pojo.getCompletePath());
         return pojoRepository.save(pojo);
     }
 
@@ -112,7 +112,7 @@ public class PojoFacadeService {
         addGenericListInformationIfNeeded(dataType, attribute, addAttributeDTO);
 
         pojo.getAttributes().add(attribute);
-
+        pojoRepository.deleteById(pojo.getCompletePath());
         return pojoRepository.save(pojo);
     }
 

@@ -54,6 +54,7 @@ public class PojoService {
         if (attributeRepository.findAllByClazz_CompletePath(pojoName).isEmpty()) {
             pojo.setAttributes(Collections.emptySet());
             pojo.setEmptyHull(true);
+            pojoRepository.deleteById(pojo.getCompletePath());
             pojoRepository.save(pojo);
         } else
             pojoRepository.deleteById(pojo.getCompletePath());
@@ -65,7 +66,7 @@ public class PojoService {
         var attr = pojo.getAttributes().stream().filter(attribute -> attribute.getName().equals(attributeDeleteDTO.getAttributeName())).findFirst().orElseThrow(() -> new AttributeDoesNotExistException(attributeDeleteDTO.getAttributeName(), attributeDeleteDTO.getClassName()));
 
         pojo.getAttributes().remove(attr);
-
+        pojoRepository.deleteById(pojo.getCompletePath());
         return pojoRepository.save(pojo);
     }
 

@@ -23,10 +23,7 @@ public class Pojo {
     private String completePath;
     private String className;
     private Package aPackage;
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @Version
-    private Long version;
+
 
     @Relationship(type = "attributes")
     private Set<Attribute> attributes = Collections.emptySet();
