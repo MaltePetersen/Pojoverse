@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -14,6 +15,25 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(example = "      {\n" +
+        "        \"id\": \"de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassname\",\n" +
+        "        \"name\": \"name\",\n" +
+        "        \"accessModifier\": \"private\",\n" +
+        "        \"genericType\": null,\n" +
+        "        \"clazz\": {\n" +
+        "          \"emptyHull\": true,\n" +
+        "          \"completePath\": \"java.lang.String\",\n" +
+        "          \"className\": \"String\",\n" +
+        "          \"attributes\": [],\n" +
+        "          \"parentClass\": null,\n" +
+        "          \"interfaces\": [],\n" +
+        "          \"apackage\": {\n" +
+        "            \"id\": \"java.lang\",\n" +
+        "            \"name\": \"lang\",\n" +
+        "            \"subPackage\": null\n" +
+        "          }\n" +
+        "        }\n" +
+        "      }")
 public class Attribute {
 
     @Id

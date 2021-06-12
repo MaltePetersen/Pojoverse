@@ -99,11 +99,9 @@ public class Story2IntegrationTests {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(classWithClasses)
-                    .accept(MediaType.APPLICATION_JSON));
+                    .content(classWithClasses));
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(testingUtil.getBase64Value("defaultClass"))
-                    .accept(MediaType.APPLICATION_JSON));
+                    .content(testingUtil.getBase64Value("defaultClass")));
         }
 
         @Test

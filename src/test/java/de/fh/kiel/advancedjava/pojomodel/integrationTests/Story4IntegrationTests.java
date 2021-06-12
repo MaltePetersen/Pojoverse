@@ -46,8 +46,7 @@ public class Story4IntegrationTests {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(testingUtil.getBase64Value("defaultClass"))
-                    .accept(MediaType.APPLICATION_JSON))
+                    .content(testingUtil.getBase64Value("defaultClass")))
                     .andExpect(status().isOk())
                     .andReturn();
         }
