@@ -7,6 +7,7 @@ import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,13 +27,13 @@ public class Pojo {
 
 
     @Relationship(type = "attributes")
-    private Set<Attribute> attributes = Collections.emptySet();
+    private Set<Attribute> attributes = new HashSet<>();
 
     @Relationship(type = "parent")
     private Pojo parentClass;
 
     @Relationship(type = "interfaces")
-    private Set<String> interfaces = Collections.emptySet();
+    private Set<String> interfaces = new HashSet<>();
 
 
     public Pojo(String completePath, String className, Package aPackage) {
