@@ -1,16 +1,13 @@
 package de.fh.kiel.advancedjava.pojomodel.dto;
 
+import de.fh.kiel.advancedjava.pojomodel.controller.ApiDocumentation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-@Schema(example = "{\n" +
-        "  \"className\": \"de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass\",\n" +
-        "  \"packageName\": \"de.fh.kiel.advancedjava.pojomodel.exampleData\",\n" +
-        "  \"attributeName\": \"name\"\n" +
-        "}\n")
+@Schema(example = ApiDocumentation.ATTRIBUTE_DELETE_DTO)
 public class AttributeDeleteDTO {
     private String className;
     private String packageName;

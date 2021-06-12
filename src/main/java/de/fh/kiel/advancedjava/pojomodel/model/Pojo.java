@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
+import de.fh.kiel.advancedjava.pojomodel.controller.ApiDocumentation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,54 +18,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Schema(example = "{\n" +
-        "  \"emptyHull\": false,\n" +
-        "  \"completePath\": \"de.fh.kiel.advancedjava.pojomodel.exampleData.AnotherClassWithPrimitives\",\n" +
-        "  \"className\": \"AnotherClassWithPrimitives\",\n" +
-        "  \"packageName\": \"de.fh.kiel.advancedjava.pojomodel.exampleData\",\n" +
-        "  \"attributes\": [\n" +
-        "    {\n" +
-        "      \"id\": \"de.fh.kiel.advancedjava.pojomodel.exampleData.AnotherClassWithPrimitivesid\",\n" +
-        "      \"name\": \"id\",\n" +
-        "      \"accessModifier\": \"\",\n" +
-        "      \"genericType\": null,\n" +
-        "      \"clazz\": {\n" +
-        "        \"emptyHull\": true,\n" +
-        "        \"completePath\": \"java.lang.Integer\",\n" +
-        "        \"className\": \"Integer\",\n" +
-        "        \"packageName\": \"java.lang\",\n" +
-        "        \"attributes\": [],\n" +
-        "        \"parentClass\": null,\n" +
-        "        \"interfaces\": null\n" +
-        "      }\n" +
-        "    },\n" +
-        "    {\n" +
-        "      \"id\": \"de.fh.kiel.advancedjava.pojomodel.exampleData.AnotherClassWithPrimitivesis\",\n" +
-        "      \"name\": \"is\",\n" +
-        "      \"accessModifier\": \"\",\n" +
-        "      \"genericType\": null,\n" +
-        "      \"clazz\": {\n" +
-        "        \"emptyHull\": true,\n" +
-        "        \"completePath\": \"java.lang.Boolean\",\n" +
-        "        \"className\": \"Boolean\",\n" +
-        "        \"packageName\": \"java.lang\",\n" +
-        "        \"attributes\": [],\n" +
-        "        \"parentClass\": null,\n" +
-        "        \"interfaces\": null\n" +
-        "      }\n" +
-        "    }\n" +
-        "  ],\n" +
-        "  \"parentClass\": {\n" +
-        "    \"emptyHull\": true,\n" +
-        "    \"completePath\": \"java.lang.Object\",\n" +
-        "    \"className\": \"Object\",\n" +
-        "    \"packageName\": \"java.lang\",\n" +
-        "    \"attributes\": [],\n" +
-        "    \"parentClass\": null,\n" +
-        "    \"interfaces\": null\n" +
-        "  },\n" +
-        "  \"interfaces\": []\n" +
-        "}")
+@Schema(example = ApiDocumentation.POJO)
 public class Pojo {
 
     private boolean emptyHull;

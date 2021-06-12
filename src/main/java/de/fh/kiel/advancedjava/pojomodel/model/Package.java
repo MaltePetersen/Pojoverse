@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
+import de.fh.kiel.advancedjava.pojomodel.controller.ApiDocumentation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,11 +15,7 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 @AllArgsConstructor
 @NoArgsConstructor
 @Node
-@Schema(example = "{\n" +
-        "              \"id\": \"java.lang\",\n" +
-        "              \"name\": \"lang\",\n" +
-        "              \"subPackage\": null\n" +
-        "            }")
+@Schema(example = ApiDocumentation.PACKAGE)
 public class Package {
     @Id
     private String id;

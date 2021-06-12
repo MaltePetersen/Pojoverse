@@ -23,7 +23,6 @@ import java.util.Base64;
 @RestController()
 @RequestMapping("pojo")
 public class PojoController {
-    private static final String base64PojoExample = "yv66vgAAADsAGAoAAgADBwAEDAAFAAYBABBqYXZhL2xhbmcvT2JqZWN0AQAGPGluaXQ+AQADKClWBwAIAQA+ZGUvZmgva2llbC9hZHZhbmNlZGphdmEvcG9qb21vZGVsL2V4YW1wbGVEYXRhL0NsYXNzV2l0aENsYXNzZXMBABphbm90aGVyQ2xhc3NXaXRoUHJpbWl0aXZlcwEASkxkZS9maC9raWVsL2FkdmFuY2VkamF2YS9wb2pvbW9kZWwvZXhhbXBsZURhdGEvQW5vdGhlckNsYXNzV2l0aFByaW1pdGl2ZXM7AQASY2xhc3NXaXRoUHJpbXRpdmVzAQBCTGRlL2ZoL2tpZWwvYWR2YW5jZWRqYXZhL3Bvam9tb2RlbC9leGFtcGxlRGF0YS9DbGFzc1dpdGhQcmltdGl2ZXM7AQAiY2xhc3NXaXRoUHJpbXRpdmVzQW5kQWNjZXNzTW9kaWVycwEAUkxkZS9maC9raWVsL2FkdmFuY2VkamF2YS9wb2pvbW9kZWwvZXhhbXBsZURhdGEvQ2xhc3NXaXRoUHJpbXRpdmVzQW5kQWNjZXNzTW9kaWVyczsBAAxkZWZhdWx0Q2xhc3MBADxMZGUvZmgva2llbC9hZHZhbmNlZGphdmEvcG9qb21vZGVsL2V4YW1wbGVEYXRhL0RlZmF1bHRDbGFzczsBAARDb2RlAQAPTGluZU51bWJlclRhYmxlAQASTG9jYWxWYXJpYWJsZVRhYmxlAQAEdGhpcwEAQExkZS9maC9raWVsL2FkdmFuY2VkamF2YS9wb2pvbW9kZWwvZXhhbXBsZURhdGEvQ2xhc3NXaXRoQ2xhc3NlczsBAApTb3VyY2VGaWxlAQAVQ2xhc3NXaXRoQ2xhc3Nlcy5qYXZhACEABwACAAAABAACAAkACgAAAAIACwAMAAAAAgANAA4AAAACAA8AEAAAAAEAAQAFAAYAAQARAAAALwABAAEAAAAFKrcAAbEAAAACABIAAAAGAAEAAAADABMAAAAMAAEAAAAFABQAFQAAAAEAFgAAAAIAFw==";
     private final PojoService pojoService;
     private final JavaFileService javaFileService;
     private final PojoStatisticsService pojoStatisticsService;
@@ -38,7 +37,7 @@ public class PojoController {
     @Operation(summary = "Base64 Class Upload", description = "On this endpoint the user can upload base64 encoded class files. " +
             "This endpoint is not the most useful for a normal user but really useful for integration testing, because we can handle the endpoint like" +
             "any other REST-controller.")
-    public ResponseEntity<Pojo> createPojo(@Parameter(schema = @Schema(example = base64PojoExample)) @RequestBody() String base64EncodedByteCodePojo) {
+    public ResponseEntity<Pojo> createPojo(@Parameter(schema = @Schema(example = ApiDocumentation.BASE_64_POJO)) @RequestBody() String base64EncodedByteCodePojo) {
         byte[] pojoAsByteCode;
 
         try {

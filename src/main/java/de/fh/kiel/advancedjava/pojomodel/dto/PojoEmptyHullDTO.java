@@ -1,15 +1,13 @@
 package de.fh.kiel.advancedjava.pojomodel.dto;
 
+import de.fh.kiel.advancedjava.pojomodel.controller.ApiDocumentation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-@Schema(example = "{\n" +
-        "  \"packageName\": \"de.fh.test\",\n" +
-        "  \"className\": \"hello\"\n" +
-        "}")
+@Schema(example = ApiDocumentation.POJO_EMPTY_HULL_DTO)
 public class PojoEmptyHullDTO {
 
     private String packageName;
