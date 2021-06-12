@@ -48,22 +48,22 @@ public class Story1IntegrationTests {
     @DisplayName("When we send a new compiled Class in base64 to the endpoint")
     class NewClass {
         @Test
-        @DisplayName("Then the endpoint should return 200 OK as an answer also with just objects")
+        @DisplayName("Then the endpoint should return 201 created as an answer also with just objects")
         void getPojoDefaultClass() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(testingUtil.getBase64Value("defaultClass"))
                     .contentType(MediaType.TEXT_PLAIN_VALUE))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andReturn();
         }
 
         @Test
-        @DisplayName("Then the endpoint should return 200 OK as an answer also with primitives")
+        @DisplayName("Then the endpoint should return 201 created as an answer also with primitives")
         void getPojoPrimitiveClass() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(testingUtil.getBase64Value("classWithPrimtives"))
                     .contentType(MediaType.TEXT_PLAIN_VALUE))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andReturn();
         }
     }
@@ -77,12 +77,12 @@ public class Story1IntegrationTests {
         }
 
         @Test
-        @DisplayName("Then the endpoint should return 200 OK as an answer")
+        @DisplayName("Then the endpoint should return 201 created as an answer")
         void getPojo() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(testingUtil.getBase64Value("defaultClass"))
                     .contentType(MediaType.TEXT_PLAIN_VALUE))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andReturn();
         }
 
@@ -96,12 +96,12 @@ public class Story1IntegrationTests {
             }
 
             @Test
-            @DisplayName("Then the endpoint should return an is Bad Request status")
+            @DisplayName("Then the endpoint should return an is internal server error")
             void createTheSamePojoAgain() throws Exception {
                 mvc.perform(MockMvcRequestBuilders.post("/pojo")
                         .content(testingUtil.getBase64Value("defaultClass"))
                         .accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isBadRequest())
+                        .andExpect(status().isInternalServerError())
                         .andReturn();
             }
         }
@@ -110,12 +110,12 @@ public class Story1IntegrationTests {
         @DisplayName("When the class is not base64 encoded")
         class InputNotBase64 {
             @Test
-            @DisplayName("Then the endpoint should return an 400 Bad Request")
+            @DisplayName("Then the endpoint should return an 500 internal Server error")
             void getPojo() throws Exception {
                 mvc.perform(MockMvcRequestBuilders.post("/pojo")
                         .content(testingUtil.getBase64Value("notBase64EncodedClass"))
                         .accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isBadRequest())
+                        .andExpect(status().isInternalServerError())
                         .andReturn();
             }
         }

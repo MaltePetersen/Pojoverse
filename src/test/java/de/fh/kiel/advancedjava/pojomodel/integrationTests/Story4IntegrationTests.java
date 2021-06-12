@@ -47,12 +47,12 @@ public class Story4IntegrationTests {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .contentType(MediaType.TEXT_PLAIN_VALUE)
                     .content(testingUtil.getBase64Value("defaultClass")))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andReturn();
         }
 
         @Test
-        @DisplayName("Then the endpoint should return an 200 ok and a list of all")
+        @DisplayName("Then the endpoint should return an 200 created and a list of all")
         void createPojos() throws Exception {
             assertNotEquals("[]", mvc.perform(MockMvcRequestBuilders.get("/pojos")
                     .contentType(MediaType.TEXT_PLAIN_VALUE))

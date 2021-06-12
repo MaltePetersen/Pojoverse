@@ -80,7 +80,7 @@ public class Story9IntegrationTests {
             mvc.perform(MockMvcRequestBuilders.put("/pojo")
                     .content(testingUtil.getJSONValue("badAttributeChangeDTO"))
                     .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.ALL)).andExpect(status().isBadRequest())
+                    .accept(MediaType.ALL)).andExpect(status().isInternalServerError())
                     .andReturn();
         }
     }

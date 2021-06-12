@@ -48,9 +48,10 @@ Every call has already some example data in it and in the exampleData folder in 
 ## Running the tests
 
 The system has three different types of tests:
-1.Integration Tests these are mockMVC-Tests which test the controllers
-2. Unit Tests which are testing the services
-3. PiTest for mutation testing
+
+1. Integration Tests these are mockMVC-Tests which test the controllers/ They are written in a behaviour driven style.
+2. Unit Tests which are testing the services.
+3. PiTest for mutation testing.
 
 Run the intergration and unit tests with:
 
@@ -60,6 +61,9 @@ And the mutation tests with:
 
     gradle pitest
 
+
+To display the displayNames of the tests you need to to change the default test runner
+from gradle to intellj
 ## Build
 
 To build the system just run: 

@@ -55,12 +55,12 @@ public class Story3IntegrationTests {
     @DisplayName("When he sends the jar encoded as base64")
     class DoesNotExist {
         @Test
-        @DisplayName("Then the endpoint should return an 200 ok")
+        @DisplayName("Then the endpoint should return an 201 created")
         void createPojos() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojos")
                     .content(jar)
                     .contentType(MediaType.TEXT_PLAIN_VALUE))
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andReturn();
         }
     }

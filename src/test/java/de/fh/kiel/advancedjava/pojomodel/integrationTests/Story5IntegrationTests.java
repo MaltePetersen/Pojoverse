@@ -68,11 +68,11 @@ public class Story5IntegrationTests {
 
 
         @Test
-        @DisplayName("Then the endpoint should return an 200 ok and all files should be uploaded")
+        @DisplayName("Then the endpoint should return an 201 created and all files should be uploaded")
         void allFilesShouldBeUploaded() throws Exception {
             var content = mvc.perform(MockMvcRequestBuilders.post("/pojos/multiple")
                     .content(testingUtil.getJSONValue("pojos")).contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.ALL)).andExpect(status().isOk())
+                    .accept(MediaType.ALL)).andExpect(status().isCreated())
                     .andReturn().getResponse().getContentAsString();
             var objectMapper = new ObjectMapper();
             assertEquals(objectMapper.readValue(content, ExportDTO.class), new ExportDTO(pojoRepository.findAll(), packageRepository.findAll()));

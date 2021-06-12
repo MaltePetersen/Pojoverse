@@ -47,11 +47,11 @@ public class Story7IntegrationTests {
 
 
         @Test
-        @DisplayName("Then the endpoint should return an 200 ok and the emptyHll should be created")
+        @DisplayName("Then the endpoint should return an 201 created and the emptyHll should be created")
         void allFilesShouldBeUploaded() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo/emptyHull")
                     .content(testingUtil.getJSONValue("emptyHull")).contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.ALL)).andExpect(status().isOk())
+                    .accept(MediaType.ALL)).andExpect(status().isCreated())
                     .andReturn();
             var pojo = pojoRepository.findById("de.fh.test.hello").get();
             assertEquals("hello", pojo.getClassName());

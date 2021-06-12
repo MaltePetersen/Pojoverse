@@ -7,6 +7,7 @@ import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,16 +39,14 @@ public class PojosController {
         } catch (IllegalArgumentException i) {
             throw new NoValidBase64Exception();
         }
-
-        return ResponseEntity.ok(pojoService.savePojos(pojoAsByteCode));
+        return new ResponseEntity<>(pojoService.savePojos(pojoAsByteCode), HttpStatus.CREATED);
     }
 
     @PostMapping("/multiple")
     @Operation(summary = "Import an ExportDTO", description = "On this endpoint the user can import with an ExportDTO. Caution: " +
             "The import will delete all other data.")
     public ResponseEntity<ExportDTO> createPojos(@RequestBody() ExportDTO exportDTOs) {
-
-        return ResponseEntity.ok(pojoService.importPojos(exportDTOs));
+        return new ResponseEntity<>(pojoService.importPojos(exportDTOs), HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -56,7 +55,8 @@ public class PojosController {
             "is already a jar-file for testing with multiple classes in it.")
     public ResponseEntity<List<Pojo>> createPojos(
             @RequestPart("file") MultipartFile file) throws IOException {
-        return ResponseEntity.ok(pojoService.savePojos(file.getBytes()));
+
+        return new ResponseEntity<>(pojoService.savePojos(file.getBytes()), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Get all pojos and packages", description = "This endpoint returns an exportDTO including all pojos and packages. " +
