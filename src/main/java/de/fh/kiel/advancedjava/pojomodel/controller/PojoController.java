@@ -68,26 +68,26 @@ public class PojoController {
 
     @DeleteMapping("/{name}")
     @Operation(summary = "Delete a pojo", description = "On this endpoint the user can delete pojos")
-    public ResponseEntity<?> deletePojo(@PathVariable("name") String pojoName) {
+    public ResponseEntity<?> deletePojo(@Parameter(name="Classname", description = "including the packagename", example = "package.class") @PathVariable("name") String pojoName) {
         pojoService.deletePojo(pojoName);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/class/{name}")
     @Operation(summary = "Java File from Pojo", description = "On this endpoint the user can generate a Java file from a pojo")
-    public ResponseEntity<String> generateJavaCode(@PathVariable("name") String pojoName) {
+    public ResponseEntity<String> generateJavaCode(@Parameter(name="Classname", description = "including the packagename", example = "package.class") @PathVariable("name") String pojoName) {
         return ResponseEntity.ok(javaFileService.createJavaFile(pojoName));
     }
 
     @GetMapping("/{name}")
     @Operation(summary = "Get a pojo", description = "On this endpoint the user can get a pojo ressource")
-    public ResponseEntity<Pojo> getPojo(@PathVariable("name") String pojoName) {
+    public ResponseEntity<Pojo> getPojo(@Parameter(name="Classname", description = "including the packagename", example = "package.class")  @PathVariable("name") String pojoName) {
         return ResponseEntity.ok(pojoService.getPojo(pojoName));
     }
 
     @GetMapping("statistics/{name}")
     @Operation(summary = "Generate pojo statistics", description = "On this endpoint the user can generate pojo statsitics")
-    public ResponseEntity<PojoStatisticsDTO> getPojoStatistics(@PathVariable("name") String pojoName) {
+    public ResponseEntity<PojoStatisticsDTO> getPojoStatistics(@Parameter(name="Classname", description = "including the packagename", example = "package.class") @PathVariable("name") String pojoName) {
         return ResponseEntity.ok(pojoStatisticsService.getStatistics(pojoName));
     }
 
