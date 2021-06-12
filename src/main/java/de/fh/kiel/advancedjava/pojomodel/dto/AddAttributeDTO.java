@@ -5,8 +5,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-/*
-genericType will only be used if the attribute is of type java.util.list
+/**
+ * genericType will only be used if the attribute is of type java.util.list
  */
 @Data
 @AllArgsConstructor

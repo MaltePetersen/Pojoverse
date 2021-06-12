@@ -27,7 +27,7 @@ public class PojosController {
     }
 
     @PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
-    @Operation(summary = "Base64 Jar Upload", description = "On this endpoint the user can upload base64 encoded Jar. " +
+    @Operation(summary = "Base64 Jar-Upload", description = "On this endpoint the user can upload base64 encoded Jar. " +
             "This endpoint is not the most useful for a normal user but really useful for integration testing, because we can handle the endpoint like" +
             "any other REST-controller.")
     public ResponseEntity<List<Pojo>> createPojos(@Parameter(schema = @Schema(example = ApiDocumentation.BASE_64_JAR)) @RequestBody() String base64EncodedJar) {
@@ -44,23 +44,23 @@ public class PojosController {
 
     @PostMapping("/multiple")
     @Operation(summary = "Import an ExportDTO", description = "On this endpoint the user can import with an ExportDTO. Caution: " +
-            "The import will delete all other data")
+            "The import will delete all other data.")
     public ResponseEntity<ExportDTO> createPojos(@RequestBody() ExportDTO exportDTOs) {
 
         return ResponseEntity.ok(pojoService.importPojos(exportDTOs));
     }
 
     @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "Multipart Jar Upload", description = "On this endpoint the user can upload a jar." +
+    @Operation(summary = "Multipart Jar-Upload", description = "On this endpoint the user can upload a jar." +
             "In the path: src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/jars/jar-file.jar +" +
-            "is already a jar-file for testing with multiple classes in it")
+            "is already a jar-file for testing with multiple classes in it.")
     public ResponseEntity<List<Pojo>> createPojos(
             @RequestPart("file") MultipartFile file) throws IOException {
         return ResponseEntity.ok(pojoService.savePojos(file.getBytes()));
     }
 
     @Operation(summary = "Get all pojos and packages", description = "This endpoint returns an exportDTO including all pojos and packages. " +
-            "The packages are also included because without them an import of the files would not yield the same graph as before")
+            "The packages are also included because without them an import of the files would not yield the same graph as before.")
     @GetMapping
     public ExportDTO getPojos() {
         return pojoService.getAllPojos();

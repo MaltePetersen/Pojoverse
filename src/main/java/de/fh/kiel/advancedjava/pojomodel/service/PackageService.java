@@ -63,7 +63,13 @@ public class PackageService {
         throw new PackageNameNotAllowedException(packageName);
     }
 
-
+    /**
+     * @Jan-Phillip Thanks for the code example on how to optimize this recursive function.
+     * I tried it but it did not work out. Therefore I decided to focus on other aspects
+     * because I know from my experience it is easy to sink hours into making a recursive
+     * function work properly and the benefit is a bit less code and minimal Optimisation.
+     * Or other words there were just more fun parts to focus on :-)
+     */
     private Package generatePackage(ArrayList<String> current, ArrayList<String> complete) {
         Package aPackage;
         String id;

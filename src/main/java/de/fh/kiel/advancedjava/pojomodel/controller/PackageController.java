@@ -23,7 +23,7 @@ public class PackageController {
     }
 
     @GetMapping("/{packageName}")
-    @Operation(summary = "Get al pojo in a package", description = "On this endpoint the user can get all pojos in package")
+    @Operation(summary = "Get all pojos which are in a packacke or subpackage", description = "This endpoint returns all pojos which are in a specified package or subpackage.")
     public ResponseEntity<List<Pojo>> getAllPojosFromPackage(@PathVariable String packageName) {
         return ResponseEntity.ok(this.packageService.getPojos(packageName));
     }

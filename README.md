@@ -42,7 +42,7 @@ after that start the application with:
 
     gradle bootRun
 
-You can open http://localhost:8080/swagger-ui.html to interact with the system. 
+You can open http://localhost:8080 to interact with the system. 
 Every call has already some example data in it and in the exampleData folder in tests is even more data.
 
 ## Running the tests

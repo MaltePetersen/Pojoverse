@@ -16,26 +16,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Die Facade wurde zuerst erstellt, weil Optimistic Locking genutzt wurde und dies mehr Komplexotat geschaffen hat, weil
- * die Versions verwaltet werden mussten. Dies hat aber für einige Probleme gesorgt beim Mehrfach Upload, weil dann
- * das Optimisitc Locking die schnelle Änderung von Empty Hulls zu Pojos nicht zugelassen hat in bestimmten Fällen.
- * Grundsätzlich war der Vorteil des Optimistic Locking, das save genutzt werden konnte ohne vorher ein delete der
- * Ressource durchführen zu müssen. Nach dem ich aber rausgefunden habe, das Cascading deletes nicht möglich sind, heißt
- * wenn ein Pojo gelöscht werden muss, muss trotzdem manuell auch die Ressource gelöscht werden. Dies hat für mich den Vorteil
- * genommen der sauberen Implentierung der Spring Methoden, wodurch ich Optimisitc Locking entfernt habe und stattdessen,
- * in der Facade eigene CRUD Methoden definiere, die dann die richtigen Methoden kombinieren.
- * Beispiel: update/save pojo -> pojo.deleteByID(id); pojo.save(pojo);
- * <p>
- * Hier drunter habe ich die vorherige Begründung für Optmistic Locking stehen gelassen, damit ihr die gesamte Entscheidungsfindung
- * auf einen Blick habt. In einem professionellen Projekt würde ich diese löschen und sie wäre durch git immer noch einsehbar.
- * <p>
- * Das Facade soll die Komplexität der Datenbank Operation, die durch die Nutung von Optimistic Locking entstehen,
- * auffangen (@Version...). Der Rest der Services soll nicht die wissen müssen wie die Daten abgefragt werden vor der
- * Nutzung. Gleichzeitig soll dieser Service keine Buisness Funktionalität kennen.
- * Vorher wurde ein PojoService und ein AttributeService genutzt. Mit diesem Ansatz bräuchten beide Service sich gegenseitg,
- * weil ein Pojo Abhängigkeiten zu Attributes hat und ein Attribute durch den Datentyp ebenfalls Pojo erzeugen muss.
- * Wodurch eine zyklische Dependency entsteht, dies macht klar das dieser Designansatz für dieses Objekt nicht das richtige ist
- * und deshalb eine Ebene die alls zusammenfasst aber seine Komplexität von der Rest der Applikation kapselt
+ * This facade wraps all pojo db transactions because Spring Data Neo4j does not support stuff like
+ * cascading deletes (https://community.neo4j.com/t/deletebyid-is-not-deleting-exisiting-relationships/38376/2)
+ * and save only updates if we use optimistic Locking or use the generated value property (but this will also lead to the similar
+ * problems down the line).Therefore this facade serves as an abstraction layer between Spring Data Neo4j and this application.
+ * This layer can not be split into a pojo and attribute layer because pojo and attribute have so much in common that this would cause
+ * circular dependencies.
  **/
 @Service
 public class PojoFacadeService {
