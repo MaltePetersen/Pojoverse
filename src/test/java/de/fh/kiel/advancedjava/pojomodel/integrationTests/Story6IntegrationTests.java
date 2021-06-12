@@ -53,7 +53,7 @@ public class Story6IntegrationTests {
     void performGetPojo(String pojo) throws Exception {
         mvc.perform(MockMvcRequestBuilders.post("/pojo")
                 .content(pojo)
-                .accept(MediaType.APPLICATION_JSON));
+                .contentType(MediaType.TEXT_PLAIN_VALUE));
     }
 
     @Nested

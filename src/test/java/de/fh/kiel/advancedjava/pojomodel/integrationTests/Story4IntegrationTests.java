@@ -46,6 +46,7 @@ public class Story4IntegrationTests {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
+                    .contentType(MediaType.TEXT_PLAIN_VALUE)
                     .content(testingUtil.getBase64Value("defaultClass")))
                     .andExpect(status().isOk())
                     .andReturn();
@@ -55,7 +56,7 @@ public class Story4IntegrationTests {
         @DisplayName("Then the endpoint should return an 200 ok and a list of all")
         void createPojos() throws Exception {
             assertNotEquals("[]", mvc.perform(MockMvcRequestBuilders.get("/pojos")
-                    .accept(MediaType.APPLICATION_JSON))
+                    .contentType(MediaType.TEXT_PLAIN_VALUE))
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString());
 

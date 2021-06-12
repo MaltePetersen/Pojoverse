@@ -35,7 +35,7 @@ public class PojoController {
         this.pojoStatisticsService = pojoStatisticsService;
     }
 
-    @PostMapping()
+    @PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
     @Operation(summary = "Base64 Class Upload", description = "On this endpoint the user can upload base64 encoded class files. " +
             "This endpoint is not the most useful for a normal user but really useful for integration testing, because we can handle the endpoint like" +
             "any other REST-controller.")

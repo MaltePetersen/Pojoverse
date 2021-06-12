@@ -52,7 +52,7 @@ public class Story1IntegrationTests {
         void getPojoDefaultClass() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(testingUtil.getBase64Value("defaultClass"))
-                    .accept(MediaType.APPLICATION_JSON))
+                    .contentType(MediaType.TEXT_PLAIN_VALUE))
                     .andExpect(status().isOk())
                     .andReturn();
         }
@@ -62,7 +62,7 @@ public class Story1IntegrationTests {
         void getPojoPrimitiveClass() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(testingUtil.getBase64Value("classWithPrimtives"))
-                    .accept(MediaType.APPLICATION_JSON))
+                    .contentType(MediaType.TEXT_PLAIN_VALUE))
                     .andExpect(status().isOk())
                     .andReturn();
         }
@@ -81,7 +81,7 @@ public class Story1IntegrationTests {
         void getPojo() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(testingUtil.getBase64Value("defaultClass"))
-                    .accept(MediaType.APPLICATION_JSON))
+                    .contentType(MediaType.TEXT_PLAIN_VALUE))
                     .andExpect(status().isOk())
                     .andReturn();
         }

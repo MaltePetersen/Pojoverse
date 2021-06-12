@@ -60,7 +60,7 @@ public class Story3IntegrationTests {
         void createPojos() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojos")
                     .content(jar)
-                    .accept(MediaType.APPLICATION_JSON))
+                    .contentType(MediaType.TEXT_PLAIN_VALUE))
                     .andExpect(status().isOk())
                     .andReturn();
         }

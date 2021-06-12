@@ -49,7 +49,8 @@ public class Story9IntegrationTests {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(testingUtil.getBase64Value("defaultClass")));
+                    .content(testingUtil.getBase64Value("defaultClass"))
+                    .contentType(MediaType.TEXT_PLAIN_VALUE));
 
         }
 

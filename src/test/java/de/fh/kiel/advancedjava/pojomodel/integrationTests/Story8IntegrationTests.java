@@ -49,7 +49,7 @@ public class Story8IntegrationTests {
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(testingUtil.getBase64Value("defaultClass"))
-                    .accept(MediaType.APPLICATION_JSON));
+                    .contentType(MediaType.TEXT_PLAIN_VALUE));
         }
 
         @Test
