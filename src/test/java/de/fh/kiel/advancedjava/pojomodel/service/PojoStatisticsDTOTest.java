@@ -16,7 +16,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class PojoStatisticsDTOTest {
+class PojoStatisticsDTOTest {
 
     @Autowired
     PojoStatisticsService pojoStatisticsService;

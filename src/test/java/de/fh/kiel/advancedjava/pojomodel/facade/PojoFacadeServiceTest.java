@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
-public class PojoFacadeServiceTest {
+class PojoFacadeServiceTest {
 
     @Autowired
     PojoFacadeService pojoFacadeService;

@@ -7,6 +7,7 @@ import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoInfo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
+import org.springframework.asm.ClassReader;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -39,7 +40,7 @@ public class ASMFacadeService {
         if (pojoDoesNotAlreadyExist(classReader.getCompletePath())) {
 
             var pojoClassVisitor = new PojoClassVisitor();
-            classReader.accept(pojoClassVisitor, PojoClassReader.SKIP_DEBUG | PojoClassReader.SKIP_FRAMES);
+            classReader.accept(pojoClassVisitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
             Set<AttributeInfo> attributesInfos = pojoClassVisitor.getAttributes();
             return new PojoInfo(classReader.getCompletePath(), classReader.getClassName(), classReader.getPackageName(), classReader.getSuperCompletePath(), classReader.getSuperName(), classReader.getSuperPackageName(), attributesInfos, new HashSet<>(Arrays.asList(classReader.getInterfaces())));
 

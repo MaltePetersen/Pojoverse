@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class ASMFacadeServiceTest {
+class ASMFacadeServiceTest {
 
     private ASMFacadeService asmFacadeService;
 

@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
-public class AttributeServiceTest {
+class AttributeServiceTest {
     @Autowired
     private TestingUtil testingUtil;
 

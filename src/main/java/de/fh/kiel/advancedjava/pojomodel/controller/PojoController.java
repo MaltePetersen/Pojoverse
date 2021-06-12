@@ -68,9 +68,9 @@ public class PojoController {
 
     @DeleteMapping("/{name}")
     @Operation(summary = "Delete a pojo", description = "On this endpoint the user can delete pojos")
-    public ResponseEntity<?> deletePojo(@Parameter(name = "Classname", description = "including the packagename", example = "package.class") @PathVariable("name") String pojoName) {
+    public ResponseEntity<Object> deletePojo(@Parameter(name = "Classname", description = "including the packagename", example = "package.class") @PathVariable("name") String pojoName) {
         pojoService.deletePojo(pojoName);
-        return ResponseEntity.ok().build();
+       return ResponseEntity.ok().build();
     }
 
     @GetMapping("/class/{name}")

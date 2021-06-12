@@ -7,7 +7,6 @@ import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.model.PojoInfo;
-import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import de.fh.kiel.advancedjava.pojomodel.util.ParseUtil;
@@ -25,12 +24,10 @@ public class PojoService {
     private final ASMFacadeService asmFacadeService;
     private final PackageRepository packageRepository;
     private final JarReaderService jarReaderService;
-    private final AttributeRepository attributeRepository;
 
 
-    PojoService(AttributeRepository attributeRepository, JarReaderService jarReaderService, PackageRepository packageRepository, PojoRepository pojoRepository, ASMFacadeService asmFacadeService, PojoFacadeService pojoFacadeService
+    PojoService(JarReaderService jarReaderService, PackageRepository packageRepository, PojoRepository pojoRepository, ASMFacadeService asmFacadeService, PojoFacadeService pojoFacadeService
     ) {
-        this.attributeRepository = attributeRepository;
         this.packageRepository = packageRepository;
         this.jarReaderService = jarReaderService;
         this.pojoRepository = pojoRepository;
@@ -75,7 +72,6 @@ public class PojoService {
         pojoFacadeService.deleteAllRessources();
         packageRepository.saveAll(exportDTO.getPackageList());
         pojoRepository.saveAll(exportDTO.getPojoList());
-        //    pojos.forEach(pojoFacadeService::createPojo);
         return getAllPojos();
     }
 

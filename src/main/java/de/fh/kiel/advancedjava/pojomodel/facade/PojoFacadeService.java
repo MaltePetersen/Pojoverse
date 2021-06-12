@@ -165,8 +165,6 @@ public class PojoFacadeService {
      */
     public void delete(Pojo pojo) {
         pojo.getAttributes().forEach(attributeRepository::delete);
-        var test = attributeRepository.findAll();
-        //var testSpecifiy = attributeRepository.findAll().stream().filter(attribute -> attribute.getClazz().getCompletePath().equals(pojo.getCompletePath())).findFirst();
         if (!attributeRepository.findAllByClazz_CompletePath(pojo.getCompletePath()).isEmpty()) {
             pojo.setAttributes(Collections.emptySet());
             pojo.setEmptyHull(true);

@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @DisplayName("Given the Pojo should be saved in the db")
-public class PojoServiceTest {
+class PojoServiceTest {
 
     @Autowired
     PojoService pojoService;
