@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.info.License;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenAPIDefinition( info =  @Info(
+@OpenAPIDefinition(info = @Info(
         title = "Pojo",
         version = "0.0",
         description = "A project Java course FH Kiel",

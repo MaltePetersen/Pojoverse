@@ -37,7 +37,7 @@ public class JarReaderService {
 
     private List<PojoInfo> createPojoInfos(File jarFile) {
         var classes = new ArrayList<PojoInfo>();
-        try(var jar = new JarFile(jarFile)) {
+        try (var jar = new JarFile(jarFile)) {
             jar.stream().forEach(entry -> readEntry(jar, entry, classes));
             return classes;
         } catch (IOException e) {

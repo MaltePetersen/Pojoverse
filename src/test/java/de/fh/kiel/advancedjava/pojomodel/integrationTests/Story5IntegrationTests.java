@@ -1,11 +1,9 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.dto.ExportDTO;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
-import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -16,8 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,12 +43,12 @@ public class Story5IntegrationTests {
 
     @AfterEach()
     void deleteAllSavedClasses() {
-      pojoFacadeService.deleteAllRessources();
+        pojoFacadeService.deleteAllRessources();
     }
 
     @BeforeEach()
     void SetUp() {
-      pojoFacadeService.deleteAllRessources();
+        pojoFacadeService.deleteAllRessources();
     }
 
 

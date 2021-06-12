@@ -29,10 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class Story2IntegrationTests {
 
     private static String classWithClasses;
+    private static String pathToBase64Folder = "/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/base64Encoded/";
     @Autowired
     TestingUtil testingUtil;
-
-    private static String pathToBase64Folder = "/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/base64Encoded/";
     @Autowired
     private MockMvc mvc;
 
@@ -99,11 +98,11 @@ public class Story2IntegrationTests {
         @BeforeEach()
         void SetUp() throws Exception {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(classWithClasses)                    .contentType(MediaType.TEXT_PLAIN_VALUE)
-);
+                    .content(classWithClasses).contentType(MediaType.TEXT_PLAIN_VALUE)
+            );
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
-                    .content(testingUtil.getBase64Value("defaultClass"))                    .contentType(MediaType.TEXT_PLAIN_VALUE)
-);
+                    .content(testingUtil.getBase64Value("defaultClass")).contentType(MediaType.TEXT_PLAIN_VALUE)
+            );
         }
 
         @Test

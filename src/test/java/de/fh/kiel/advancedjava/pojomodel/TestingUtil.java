@@ -3,8 +3,10 @@ package de.fh.kiel.advancedjava.pojomodel;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fh.kiel.advancedjava.pojomodel.model.AttributeInfo;
 import de.fh.kiel.advancedjava.pojomodel.model.Package;
-import de.fh.kiel.advancedjava.pojomodel.model.*;
+import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
+import de.fh.kiel.advancedjava.pojomodel.model.PojoInfo;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

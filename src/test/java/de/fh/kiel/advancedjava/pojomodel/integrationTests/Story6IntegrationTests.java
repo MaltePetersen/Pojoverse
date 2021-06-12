@@ -42,7 +42,7 @@ public class Story6IntegrationTests {
 
     @AfterEach()
     void deleteAllSavedClasses() {
-       pojoFacadeService.deleteAllRessources();
+        pojoFacadeService.deleteAllRessources();
     }
 
     @BeforeEach()

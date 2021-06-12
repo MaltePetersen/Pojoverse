@@ -24,12 +24,11 @@ public class PojoStatisticsDTOTest {
     @Autowired
     PojoRepository pojoRepository;
     @Autowired
-    private PojoFacadeService pojoFacadeService;
-    @Autowired
     AttributeRepository attributeRepository;
-
     @Autowired
     TestingUtil testingUtil;
+    @Autowired
+    private PojoFacadeService pojoFacadeService;
 
     @BeforeEach
     void setUp() {

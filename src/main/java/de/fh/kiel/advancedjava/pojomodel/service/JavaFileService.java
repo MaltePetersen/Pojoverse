@@ -11,15 +11,15 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 /**
- *  The general design idea behind this service is to deliberately not use a lot the templateing features tyhmeleaf offers
- *  The reason for that is because because templating a txt in thymeleaf is badly documented and the syntax is bad to read.
- *  This is in stark contrast to the html templating in thymeleaf which is greatly documented.
- *  In a real world project with a lot of template which might change a lot or which might even be written by the customer
- *  I would use for example velocity for creating txt files. In this example it is just one file we need which structure will not change a lot
- *  therefore a solution where the String generation is more focused in java is accptable to me and it has the benefit that we do not need to add
- *  another lib to the project.
- *  Note: Interfaces is just a one string because interfaces are only used at one place in the template therefore we can autogenearate the whole string
- *  which will be inserted there instead of using thymeleaf
+ * The general design idea behind this service is to deliberately not use a lot the templateing features tyhmeleaf offers
+ * The reason for that is because because templating a txt in thymeleaf is badly documented and the syntax is bad to read.
+ * This is in stark contrast to the html templating in thymeleaf which is greatly documented.
+ * In a real world project with a lot of template which might change a lot or which might even be written by the customer
+ * I would use for example velocity for creating txt files. In this example it is just one file we need which structure will not change a lot
+ * therefore a solution where the String generation is more focused in java is accptable to me and it has the benefit that we do not need to add
+ * another lib to the project.
+ * Note: Interfaces is just a one string because interfaces are only used at one place in the template therefore we can autogenearate the whole string
+ * which will be inserted there instead of using thymeleaf
  */
 @Service
 public class JavaFileService {

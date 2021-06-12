@@ -6,7 +6,6 @@ import org.springframework.asm.ClassVisitor;
 import org.springframework.asm.FieldVisitor;
 import org.springframework.asm.Opcodes;
 
-
 import java.lang.reflect.Modifier;
 import java.util.HashSet;
 import java.util.Optional;

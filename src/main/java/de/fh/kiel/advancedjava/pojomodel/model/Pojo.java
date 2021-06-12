@@ -1,15 +1,15 @@
 package de.fh.kiel.advancedjava.pojomodel.model;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import org.springframework.data.annotation.Version;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
 
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Node
@@ -91,8 +91,6 @@ public class Pojo {
         this.className = className;
         this.aPackage = aPackage;
     }
-
-
 
 
 }

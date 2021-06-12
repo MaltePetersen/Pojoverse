@@ -1,9 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
-import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.ExportDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
-import de.fh.kiel.advancedjava.pojomodel.exception.AttributeDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExistsException;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
@@ -30,7 +28,7 @@ public class PojoService {
     private final AttributeRepository attributeRepository;
 
 
-    PojoService(AttributeRepository attributeRepository, JarReaderService jarReaderService ,PackageRepository packageRepository, PojoRepository pojoRepository, ASMFacadeService asmFacadeService, PojoFacadeService pojoFacadeService
+    PojoService(AttributeRepository attributeRepository, JarReaderService jarReaderService, PackageRepository packageRepository, PojoRepository pojoRepository, ASMFacadeService asmFacadeService, PojoFacadeService pojoFacadeService
     ) {
         this.attributeRepository = attributeRepository;
         this.packageRepository = packageRepository;
@@ -64,7 +62,6 @@ public class PojoService {
     }
 
 
-
     public Pojo getPojo(String completePath) {
         return pojoRepository.findById(completePath).orElseThrow(() -> new PojoDoesNotExistException(completePath));
     }
@@ -78,11 +75,9 @@ public class PojoService {
         pojoFacadeService.deleteAllRessources();
         packageRepository.saveAll(exportDTO.getPackageList());
         pojoRepository.saveAll(exportDTO.getPojoList());
-    //    pojos.forEach(pojoFacadeService::createPojo);
+        //    pojos.forEach(pojoFacadeService::createPojo);
         return getAllPojos();
     }
-
-
 
 
     public List<Pojo> savePojos(byte[] jar) {
@@ -94,7 +89,7 @@ public class PojoService {
         return pojoRepository.findAll();
     }
 
-    private void checkIfAPojoAlreadyExist(List<PojoInfo> pojoInfos){
+    private void checkIfAPojoAlreadyExist(List<PojoInfo> pojoInfos) {
         pojoInfos.forEach(pojoInfo -> {
             var pojo = pojoRepository.findById(pojoInfo.getCompletePath());
             if (pojo.isPresent() && !pojo.get().isEmptyHull())

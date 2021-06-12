@@ -30,7 +30,7 @@ public class AttributeService {
     public Pojo addAttribute(String pojoId, AddAttributeDTO addAttributeDTO) {
         var pojo = pojoRepository.findById(pojoId).orElseThrow(() -> new PojoDoesNotExistException(pojoId));
 
-        if ( attributeRepository.existsById(pojoFacadeService.generateAttributeId(pojoId, addAttributeDTO.getName())) )
+        if (attributeRepository.existsById(pojoFacadeService.generateAttributeId(pojoId, addAttributeDTO.getName())))
             throw new AttributeAlreadyExistsException(addAttributeDTO.getName(), pojoId);
 
 

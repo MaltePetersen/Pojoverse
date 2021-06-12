@@ -31,7 +31,7 @@ public class PojosController {
     @Operation(summary = "Base64 Jar Upload", description = "On this endpoint the user can upload base64 encoded Jar. " +
             "This endpoint is not the most useful for a normal user but really useful for integration testing, because we can handle the endpoint like" +
             "any other REST-controller.")
-    public ResponseEntity<List<Pojo>> createPojos(@Parameter( schema = @Schema(example = base64JarExample)) @RequestBody() String base64EncodedJar) {
+    public ResponseEntity<List<Pojo>> createPojos(@Parameter(schema = @Schema(example = base64JarExample)) @RequestBody() String base64EncodedJar) {
         byte[] pojoAsByteCode;
 
         try {

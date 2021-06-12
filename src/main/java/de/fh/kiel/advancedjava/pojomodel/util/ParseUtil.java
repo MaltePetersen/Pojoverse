@@ -2,7 +2,8 @@ package de.fh.kiel.advancedjava.pojomodel.util;
 
 public class ParseUtil {
 
-    private ParseUtil(){}
+    private ParseUtil() {
+    }
 
     public static String parsePackageName(String completePath) {
         if (completePath.lastIndexOf(".") != -1)
@@ -15,6 +16,7 @@ public class ParseUtil {
             return completePath.substring(completePath.lastIndexOf(".") + 1);
         return completePath;
     }
+
     public static String parseCompletePath(String packageName, String className) {
         return packageName + "." + className;
     }

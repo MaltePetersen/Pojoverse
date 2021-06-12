@@ -25,10 +25,10 @@ import java.util.stream.Collectors;
  * genommen der sauberen Implentierung der Spring Methoden, wodurch ich Optimisitc Locking entfernt habe und stattdessen,
  * in der Facade eigene CRUD Methoden definiere, die dann die richtigen Methoden kombinieren.
  * Beispiel: update/save pojo -> pojo.deleteByID(id); pojo.save(pojo);
- *
+ * <p>
  * Hier drunter habe ich die vorherige Begründung für Optmistic Locking stehen gelassen, damit ihr die gesamte Entscheidungsfindung
  * auf einen Blick habt. In einem professionellen Projekt würde ich diese löschen und sie wäre durch git immer noch einsehbar.
- *
+ * <p>
  * Das Facade soll die Komplexität der Datenbank Operation, die durch die Nutung von Optimistic Locking entstehen,
  * auffangen (@Version...). Der Rest der Services soll nicht die wissen müssen wie die Daten abgefragt werden vor der
  * Nutzung. Gleichzeitig soll dieser Service keine Buisness Funktionalität kennen.
@@ -84,8 +84,8 @@ public class PojoFacadeService {
         return save(pojo);
     }
 
-    public Pojo createEmptyHull(String completePath, String className, String packageName){
-      return pojoRepository.save(createPojo(completePath, className, packageName));
+    public Pojo createEmptyHull(String completePath, String className, String packageName) {
+        return pojoRepository.save(createPojo(completePath, className, packageName));
     }
 
     private Pojo createPojo(String completePath, String className, String packageName) {
@@ -149,21 +149,21 @@ public class PojoFacadeService {
         return packageService.createPackage(packageName);
     }
 
-    private Pojo save(Pojo pojo){
-     var attributes =  attributeRepository.findAllByClazz_CompletePath(pojo.getCompletePath());
-     attributes.forEach(attribute -> attribute.setClazz(pojo));
-    pojoRepository.delete(pojo);
+    private Pojo save(Pojo pojo) {
+        var attributes = attributeRepository.findAllByClazz_CompletePath(pojo.getCompletePath());
+        attributes.forEach(attribute -> attribute.setClazz(pojo));
+        pojoRepository.delete(pojo);
         var saved = pojoRepository.save(pojo);
         attributeRepository.saveAll(attributes);
-    return saved;
+        return saved;
     }
 
     /**
-     *  This methods delete a pojo it needs to use delete all attributes manually because Spring Data Neo4j currently does not
-     *  support cascading deletes:
-     *  https://community.neo4j.com/t/deletebyid-is-not-deleting-exisiting-relationships/38376/2
+     * This methods delete a pojo it needs to use delete all attributes manually because Spring Data Neo4j currently does not
+     * support cascading deletes:
+     * https://community.neo4j.com/t/deletebyid-is-not-deleting-exisiting-relationships/38376/2
      */
-    public void delete(Pojo pojo){
+    public void delete(Pojo pojo) {
         pojo.getAttributes().forEach(attributeRepository::delete);
         var test = attributeRepository.findAll();
         //var testSpecifiy = attributeRepository.findAll().stream().filter(attribute -> attribute.getClazz().getCompletePath().equals(pojo.getCompletePath())).findFirst();
@@ -175,7 +175,7 @@ public class PojoFacadeService {
             pojoRepository.delete(pojo);
     }
 
-    public Pojo deleteAttributeFromPojo(Pojo pojo, Attribute attribute){
+    public Pojo deleteAttributeFromPojo(Pojo pojo, Attribute attribute) {
 
         pojo.getAttributes().remove(attribute);
         attributeRepository.delete(attribute);
@@ -183,7 +183,7 @@ public class PojoFacadeService {
         return save(pojo);
     }
 
-    public void deleteAllRessources(){
+    public void deleteAllRessources() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
         packageRepository.deleteAll();
