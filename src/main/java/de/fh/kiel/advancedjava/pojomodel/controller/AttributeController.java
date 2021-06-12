@@ -21,8 +21,8 @@ public class AttributeController {
 
     @Operation(summary = "Add an attribute to a pojo")
     @ApiResponse(responseCode = "200", description = "Attribute was succesfully added to the pojo")
-    @PostMapping("/{className}")
-    public ResponseEntity<Pojo> addAttribute(@Parameter(name = "Classname", description = "including the packagename", example = "package.class") @PathVariable String className, @RequestBody AddAttributeDTO addAttributeDTO) {
+    @PostMapping("/{ClassName}")
+    public ResponseEntity<Pojo> addAttribute(@Parameter(name = "ClassName", description = "including the packagename", example = "package.class") @PathVariable(name = "ClassName") String className, @RequestBody AddAttributeDTO addAttributeDTO) {
         return ResponseEntity.ok(this.attributeService.addAttribute(className, addAttributeDTO));
     }
 

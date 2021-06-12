@@ -35,9 +35,11 @@ public class PojoController {
     }
 
     @PostMapping(consumes = MediaType.TEXT_PLAIN_VALUE)
-    @Operation(summary = "Upload a class-file encoded as a Base64-String", description = "On this endpoint the user can upload base64-encoded class files. " +
-            "This endpoint is not the most useful for a normal user but useful for integration testing, because we can handle the endpoint like" +
-            "any other REST-controller.")
+    @Operation(summary = "Upload a class-file encoded as a Base64-String", description = """
+               On this endpoint the user can upload base64-encoded class files.
+               This endpoint is not the most useful for a normal user but useful for integration testing, because we can handle the endpoint like
+               any other REST-controller.
+            """)
     public ResponseEntity<Pojo> createPojo(@Parameter(schema = @Schema(example = ApiDocumentation.BASE_64_POJO)) @RequestBody() String base64EncodedByteCodePojo) {
         byte[] pojoAsByteCode;
 
@@ -65,28 +67,28 @@ public class PojoController {
         return new ResponseEntity<>((pojo), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{name}")
+    @DeleteMapping("/{ClassName}")
     @Operation(summary = "Delete a Pojo", description = "On this endpoint the user can delete Pojos.")
-    public ResponseEntity<Object> deletePojo(@Parameter(name = "Classname", description = "including the packagename", example = "package.class") @PathVariable("name") String pojoName) {
+    public ResponseEntity<Object> deletePojo(@Parameter(name = "ClassName", description = "including the packagename", example = "package.class") @PathVariable("ClassName") String pojoName) {
         pojoService.deletePojo(pojoName);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/class/{name}")
+    @GetMapping("/class/{ClassName}")
     @Operation(summary = "Generate a Java-file from a pojo", description = "On this endpoint the user can generate a Java file from a pojo.")
-    public ResponseEntity<String> generateJavaCode(@Parameter(name = "Classname", description = "including the packagename", example = "package.class") @PathVariable("name") String pojoName) {
+    public ResponseEntity<String> generateJavaCode(@Parameter(name = "ClassName", description = "including the packagename", example = "package.class") @PathVariable("ClassName") String pojoName) {
         return ResponseEntity.ok(javaFileService.createJavaFile(pojoName));
     }
 
-    @GetMapping("/{name}")
+    @GetMapping("/{ClassName}")
     @Operation(summary = "Get a pojo", description = "On this endpoint the user can get a pojo ressources.")
-    public ResponseEntity<Pojo> getPojo(@Parameter(name = "Classname", description = "including the packagename", example = "package.class") @PathVariable("name") String pojoName) {
+    public ResponseEntity<Pojo> getPojo(@Parameter(name = "ClassName", description = "including the packagename", example = "package.class") @PathVariable("ClassName") String pojoName) {
         return ResponseEntity.ok(pojoService.getPojo(pojoName));
     }
 
-    @GetMapping("statistics/{name}")
+    @GetMapping("statistics/{ClassName}")
     @Operation(summary = "Generate pojo statistics", description = "On this endpoint the user can generate pojo statsitics.")
-    public ResponseEntity<PojoStatisticsDTO> getPojoStatistics(@Parameter(name = "Classname", description = "including the packagename", example = "package.class") @PathVariable("name") String pojoName) {
+    public ResponseEntity<PojoStatisticsDTO> getPojoStatistics(@Parameter(name = "ClassName", description = "including the packagename", example = "package.class") @PathVariable("ClassName") String pojoName) {
         return ResponseEntity.ok(pojoStatisticsService.getStatistics(pojoName));
     }
 
