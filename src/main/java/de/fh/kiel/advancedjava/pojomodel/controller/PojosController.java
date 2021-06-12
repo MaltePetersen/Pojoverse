@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.controller;
 
+import de.fh.kiel.advancedjava.pojomodel.dto.ExportDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64Exception;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.service.PojoService;
@@ -35,9 +36,9 @@ public class PojosController {
     }
 
     @PostMapping("/multiple")
-    public ResponseEntity<List<Pojo>> createPojos(@RequestBody() List<Pojo> pojos) {
+    public ResponseEntity<ExportDTO> createPojos(@RequestBody() ExportDTO exportDTOs) {
 
-        return ResponseEntity.ok(pojoService.importPojos(pojos));
+        return ResponseEntity.ok(pojoService.importPojos(exportDTOs));
     }
 
     @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -47,7 +48,7 @@ public class PojosController {
     }
 
     @GetMapping
-    public List<Pojo> getPojos() {
+    public ExportDTO getPojos() {
         return pojoService.getAllPojos();
     }
 

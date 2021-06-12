@@ -82,7 +82,25 @@ public class TestingUtil {
 
 
         pojos.put(Class.ANOTHER_CLASS_WITH_PRIMITIVES.name, new Pojo());
-        pojos.put(Class.CLASS_WITH_CLASSES.name, new Pojo());
+        pojos.put(Class.CLASS_WITH_CLASSES.name, Pojo.builder()
+                .completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClasses")
+                .className("ClassWithClasses")
+                .aPackage(aPackage)
+                .parentClass(new Pojo("java.lang.Object", "Object", new Package("java.lang", "lang", null)))
+                .emptyHull(false)
+                .attributes(Stream.of(
+                        de.fh.kiel.advancedjava.pojomodel.model.Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClassesname")
+                                .name("name")
+                                .accessModifier("private")
+                                .clazz(new Pojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass", "DefaultClass", aPackage))
+                                .build(),
+                        de.fh.kiel.advancedjava.pojomodel.model.Attribute.builder().id("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClassid")
+                                .name("id")
+                                .accessModifier("private")
+                                .clazz(new Pojo("java.lang.Long", "Long", javaLang))
+                                .build()).collect(Collectors.toCollection(HashSet::new)))
+                .interfaces(Collections.emptySet())
+                .build());
         pojos.put(Class.CLASS_WITH_PARENT.name, Pojo.builder()
                 .completePath("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithParents")
                 .className("ClassWithParents")

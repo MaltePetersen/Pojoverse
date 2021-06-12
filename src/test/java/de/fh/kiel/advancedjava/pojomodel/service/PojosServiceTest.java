@@ -3,10 +3,12 @@ package de.fh.kiel.advancedjava.pojomodel.service;
 import de.fh.kiel.advancedjava.pojomodel.Attribute;
 import de.fh.kiel.advancedjava.pojomodel.Class;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.dto.ExportDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.NoValidBase64Exception;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
+import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,8 @@ public class PojosServiceTest {
     PojoRepository pojoRepository;
 
     @Autowired
+    PackageRepository packageRepository;
+    @Autowired
     AttributeRepository attributeRepository;
 
     @Autowired
@@ -47,21 +51,21 @@ public class PojosServiceTest {
     void importPojos() {
         pojoRepository.save(testingUtil.getPojo(Class.CLASS_WITH_PRIMTIVES.name));
         attributeRepository.save(testingUtil.getAttribute(Attribute.DEFAULT_CLASSNAME.name));
-        var pojos = Collections.singletonList(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
+        var pojos = new ExportDTO(Collections.singletonList(testingUtil.getPojo(Class.DEFAULT_CLASS.name)), Collections.emptyList());
         var expected = new ArrayList<Pojo>();
-        expected.add(pojos.get(0));
-        expected.add(pojos.get(0).getParentClass());
-        pojos.get(0).getAttributes().forEach((attribute -> expected.add(attribute.getClazz())));
+        expected.add(pojos.getPojoList().get(0));
+        expected.add(pojos.getPojoList().get(0).getParentClass());
+        pojos.getPojoList().get(0).getAttributes().forEach((attribute -> expected.add(attribute.getClazz())));
         var actual = pojoService.importPojos(pojos);
-        assertEquals(expected.size(), actual.size());
-        assertTrue(expected.containsAll(actual));
-        assertTrue(actual.containsAll(expected));
+        assertEquals(expected.size(), actual.getPojoList().size());
+        assertTrue(expected.containsAll(actual.getPojoList()));
+        assertTrue(actual.getPojoList().containsAll(expected));
     }
 
     @Test
     void getAllPojos() {
         pojoRepository.save(testingUtil.getPojo(Class.CLASS_WITH_PRIMTIVES.name));
-        var expected = pojoRepository.findAll();
+        var expected = new ExportDTO(pojoRepository.findAll(), packageRepository.findAll());
         var actual = pojoService.getAllPojos();
         assertEquals(expected, actual);
     }
@@ -76,7 +80,7 @@ public class PojosServiceTest {
             throw new NoValidBase64Exception();
         }
         var actual = pojoService.savePojos(pojosAsByteCode);
-        var expected = pojoService.getAllPojos();
+        var expected = pojoService.getAllPojos().getPojoList();
         assertEquals(10, actual.size());
         assertEquals(expected, actual);
     }

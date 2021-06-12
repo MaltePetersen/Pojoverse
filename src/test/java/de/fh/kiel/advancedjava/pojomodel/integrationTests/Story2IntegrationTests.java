@@ -1,5 +1,6 @@
 package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 
+import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
@@ -28,7 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class Story2IntegrationTests {
 
     private static String classWithClasses;
-
+    @Autowired
+    TestingUtil testingUtil;
 
     private static String pathToBase64Folder = "/Users/mpetersen/Desktop/pojo-malte/src/test/java/de/fh/kiel/advancedjava/pojomodel/exampleData/base64Encoded/";
     @Autowired
@@ -99,17 +101,18 @@ public class Story2IntegrationTests {
             mvc.perform(MockMvcRequestBuilders.post("/pojo")
                     .content(classWithClasses)
                     .accept(MediaType.APPLICATION_JSON));
+            mvc.perform(MockMvcRequestBuilders.post("/pojo")
+                    .content(testingUtil.getBase64Value("defaultClass"))
+                    .accept(MediaType.APPLICATION_JSON));
         }
 
         @Test
         @DisplayName("Then the endpoint should return 200 ok, but should not delete the Pojo, instead it should be converted to an empty hull")
         void deletePojo() throws Exception {
-            mvc.perform(MockMvcRequestBuilders.delete("/pojo/de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClasses")
-                    .accept(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andReturn();
-            assertTrue(pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClasses").get().isEmptyHull());
-            assertEquals(Collections.emptySet(), pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.ClassWithClasses").get().getAttributes());
+            mvc.perform(MockMvcRequestBuilders.delete("/pojo/de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass")
+                    .accept(MediaType.APPLICATION_JSON));
+            assertTrue(pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().isEmptyHull());
+            assertEquals(Collections.emptySet(), pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get().getAttributes());
 
         }
     }

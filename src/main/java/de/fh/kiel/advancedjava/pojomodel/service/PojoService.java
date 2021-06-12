@@ -1,6 +1,7 @@
 package de.fh.kiel.advancedjava.pojomodel.service;
 
 import de.fh.kiel.advancedjava.pojomodel.dto.AttributeDeleteDTO;
+import de.fh.kiel.advancedjava.pojomodel.dto.ExportDTO;
 import de.fh.kiel.advancedjava.pojomodel.dto.PojoEmptyHullDTO;
 import de.fh.kiel.advancedjava.pojomodel.exception.AttributeDoesNotExistException;
 import de.fh.kiel.advancedjava.pojomodel.exception.PojoAlreadyExistsException;
@@ -68,15 +69,17 @@ public class PojoService {
         return pojoRepository.findById(completePath).orElseThrow(() -> new PojoDoesNotExistException(completePath));
     }
 
-    public List<Pojo> getAllPojos() {
-        return pojoRepository.findAll();
+    public ExportDTO getAllPojos() {
+        return new ExportDTO(pojoRepository.findAll(), packageRepository.findAll());
     }
 
-    public List<Pojo> importPojos(List<Pojo> pojos) {
+    public ExportDTO importPojos(ExportDTO exportDTO) {
 
         pojoFacadeService.deleteAllRessources();
-        pojos.forEach(pojoFacadeService::createPojo);
-        return pojoRepository.findAll();
+        packageRepository.saveAll(exportDTO.getPackageList());
+        pojoRepository.saveAll(exportDTO.getPojoList());
+    //    pojos.forEach(pojoFacadeService::createPojo);
+        return getAllPojos();
     }
 
 

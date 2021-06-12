@@ -150,8 +150,12 @@ public class PojoFacadeService {
     }
 
     private Pojo save(Pojo pojo){
-        pojoRepository.delete(pojo);
-        return pojoRepository.save(pojo);
+     var attributes =  attributeRepository.findAllByClazz_CompletePath(pojo.getCompletePath());
+     attributes.forEach(attribute -> attribute.setClazz(pojo));
+    pojoRepository.delete(pojo);
+        var saved = pojoRepository.save(pojo);
+        attributeRepository.saveAll(attributes);
+    return saved;
     }
 
     /**
@@ -161,8 +165,9 @@ public class PojoFacadeService {
      */
     public void delete(Pojo pojo){
         pojo.getAttributes().forEach(attributeRepository::delete);
-
-        if (attributeRepository.findAllByClazz_CompletePath(pojo.getCompletePath()).isEmpty()) {
+        var test = attributeRepository.findAll();
+        //var testSpecifiy = attributeRepository.findAll().stream().filter(attribute -> attribute.getClazz().getCompletePath().equals(pojo.getCompletePath())).findFirst();
+        if (!attributeRepository.findAllByClazz_CompletePath(pojo.getCompletePath()).isEmpty()) {
             pojo.setAttributes(Collections.emptySet());
             pojo.setEmptyHull(true);
             save(pojo);

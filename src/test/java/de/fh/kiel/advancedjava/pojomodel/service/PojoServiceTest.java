@@ -81,12 +81,12 @@ public class PojoServiceTest {
     void deletePojoToEmptyHull() {
         pojoRepository.deleteAll();
         attributeRepository.deleteAll();
+        pojoRepository.save(testingUtil.getPojo(Class.CLASS_WITH_CLASSES.name));
         pojoRepository.save(testingUtil.getPojo(Class.DEFAULT_CLASS.name));
         pojoService.deletePojo("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass");
         var actual = pojoRepository.findById("de.fh.kiel.advancedjava.pojomodel.exampleData.DefaultClass").get();
         assertEquals(Collections.emptySet(), actual.getAttributes());
         assertTrue(actual.isEmptyHull());
-        assertEquals(Collections.emptyList(), attributeRepository.findAll());
     }
 
     @Test

@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DisplayName("Given the developer wants export all pojos")
+@DisplayName("Given the developer wants to export all pojos")
 @Nested
 public class Story4IntegrationTests {
 
@@ -70,7 +70,7 @@ public class Story4IntegrationTests {
         @Test
         @DisplayName("Then the endpoint should return an 200 ok and []")
         void createPojos() throws Exception {
-            assertEquals("[]", mvc.perform(MockMvcRequestBuilders.get("/pojos")
+            assertEquals("{\"pojoList\":[],\"packageList\":[]}", mvc.perform(MockMvcRequestBuilders.get("/pojos")
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString());

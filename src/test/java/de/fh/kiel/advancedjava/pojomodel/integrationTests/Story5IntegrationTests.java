@@ -3,9 +3,11 @@ package de.fh.kiel.advancedjava.pojomodel.integrationTests;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.fh.kiel.advancedjava.pojomodel.TestingUtil;
+import de.fh.kiel.advancedjava.pojomodel.dto.ExportDTO;
 import de.fh.kiel.advancedjava.pojomodel.facade.PojoFacadeService;
 import de.fh.kiel.advancedjava.pojomodel.model.Pojo;
 import de.fh.kiel.advancedjava.pojomodel.repository.AttributeRepository;
+import de.fh.kiel.advancedjava.pojomodel.repository.PackageRepository;
 import de.fh.kiel.advancedjava.pojomodel.repository.PojoRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,8 @@ public class Story5IntegrationTests {
     @Autowired
     private PojoRepository pojoRepository;
 
+    @Autowired
+    private PackageRepository packageRepository;
     @Autowired
     private AttributeRepository attributeRepository;
 
@@ -75,8 +79,7 @@ public class Story5IntegrationTests {
                     .accept(MediaType.ALL)).andExpect(status().isOk())
                     .andReturn().getResponse().getContentAsString();
             var objectMapper = new ObjectMapper();
-            assertEquals(objectMapper.readValue(content, new TypeReference<List<Pojo>>() {
-            }), pojoRepository.findAll());
+            assertEquals(objectMapper.readValue(content, ExportDTO.class), new ExportDTO(pojoRepository.findAll(), packageRepository.findAll()));
         }
     }
 
