@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class JavaFileServiceTest {
+class JavaFileServiceTest {
 
     @Autowired
     TestingUtil testingUtil;
