@@ -35,6 +35,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // Always run tests, even when nothing changed.
+    dependsOn 'cleanTest'
+    // Show test results.
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 pitest {
     //adds dependency to org.pitest:pitest-junit5-plugin and sets "testPlugin" to "junit5"

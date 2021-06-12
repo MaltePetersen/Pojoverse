@@ -1,15 +1,82 @@
+# Pojoverse
 
-Swagger Link: http://localhost:8080/swagger-ui.html
-# The Task (Due: 2021-06-21 08:00:00)
+This application is able to store, update, delete, visualize simple POJO's (Plain old Java objects).
+This project was build as a project in the Advanced Java Cource at the FH Kiel.
+
+## Techstack
+- Spring Boot
+- Neo4J
+- ObjectWeb ASM
+- Open Api 3.0
+- Gradle
+
+## Testing & Code Quality
+- Junit 5
+- Mockito
+- PiTest 
+- Sonarlint
+
+## Getting Started
+
+These instructions will give you a copy of the project up and running on
+your local machine for development and testing purposes. See deployment
+for notes on deploying the project on a live system.
+
+### Prerequisites
+
+Requirements for the software and other tools to build, test and push 
+- [Java 15](https://sdkman.io/jdks)
+- [Neo4j Graph DB](https://neo4j.com/)
+
+### Installing
+
+A step by step series of examples that tell you how to get a development
+environment running
+
+Say what the step will be
+
+    start the neo4j db
+ 
+and update your password and insert it into application.properties
+after that start the application with:
+
+    gradle bootRun
+
+You can open http://localhost:8080/swagger-ui.html to interact with the system. 
+Every call has already some example data in it and in the exampleData folder in tests is even more data.
+
+## Running the tests
+
+The system has three different types of tests:
+1.Integration Tests these are mockMVC-Tests which test the controllers
+2. Unit Tests which are testing the services
+3. PiTest for mutation testing
+
+Run the intergration and unit tests with:
+
+    gradle test
+    
+And the mutation tests with:
+
+    gradle pitest
+
+## Build
+
+To build the system just run: 
+    gradle bootJar
+
+## Requirements
+
+### The Task (Due: 2021-06-21 08:00:00)
 Your task is to implement a simplified application that is able to store, update, delete, visualize (and so on) simple POJO's (Plain old Java objects). You task is to achieve this by using a neo4j graph database to model, store and visualize your POJO's. You have to build a REST-API on top of this database, which e.g. must enable users to upload new or update existing POJO's in the database. You only have to provide the REST-API calls to interact with your API and you don't need to add an additional user interface for communicating in a more user friendly way (and you won't get any extra points for that either ;)).
 
 In order to keep the project simple, we will not use client authentication and authorization. In real life projects you would – of course – implement those features.
 The stories are listed in the preferred order of implementation.
 
-### User Stories (120 points max out of 100 points)
+#### User Stories (120 points max out of 100 points)
 Each story gives you up to 5 to 25 points max (depending on other quality criteria)
 
-#### Story 1 (25 pts)
+##### Story 1 (25 pts)
 As a developer I want to add new POJO's to my model I'm currently working on and add and visualize the dependencies and attributes of this class.
 
 *acceptance criteria*
@@ -27,7 +94,7 @@ As a developer I want to add new POJO's to my model I'm currently working on and
 * for primitives like int, double, boolean, ... use the corresponding wrapper type in your model
 * you may omit generic datatypes and arrays in this task
 
-#### Story 2 (10 pts)
+##### Story 2 (10 pts)
 As a developer I want to remove a POJO from my model.
 
 *acceptance criteria*
@@ -36,7 +103,7 @@ As a developer I want to remove a POJO from my model.
 *  if the POJO is existing and not referenced - delete the POJO from your model
 *  if the POJO is existing and referenced - only delete the attributes of the modelled POJO (convert it to an empty hull)
 
-#### Story 3 (10 pts)
+##### Story 3 (10 pts)
 As a developer I want to add multiple POJO's at once to my model I'm currently working on and add and visualize the dependencies and attributes of all these classes.
 
 *acceptance criteria*
@@ -46,7 +113,7 @@ As a developer I want to add multiple POJO's at once to my model I'm currently w
 *  if a class was already added to the model, don't add any of the classes in the uploaded JAR file and return an appropiate error to the caller
 *  all attributes mentioned in Story 1 have to be stored in the database
 
-#### Story 4 (10 pts)
+##### Story 4 (10 pts)
 As a developer I want to export the currently stored POJO's in order to have a snapshot of the work, that I can reimport in cases of data loss or working in parallel on different projects. 
 
 *acceptance criteria*
@@ -55,7 +122,7 @@ As a developer I want to export the currently stored POJO's in order to have a s
 *  if I reimport the exported data, the graph must be identical to the one that I exported 
 *  a JSON/XML schema is provided for documentation
 
-#### Story 5 (10 pts)
+##### Story 5 (10 pts)
 As a developer I need to import preexisting POJO's in order ...
 *  ... to inspect POJO's when I don't have the original class files of the POJO's of interest
 *  ... to be able to quickly load a different set of POJO's when I work on multiple projects in parallel
@@ -67,14 +134,14 @@ As a developer I need to import preexisting POJO's in order ...
 *  JSON/XML files with incorrect syntax (e.g. missing parentheses, invalid character) are rejected with an apropriate error message 
 *  JSON/XML files with incorrect schema (e.g. undefined field name) are rejected with an appropriate error message
 
-#### Story 6 (5 pts)
+##### Story 6 (5 pts)
 As a developer I want to know which classes (POJO) reside in a package of my model.
 
 *acceptance criteria*
 * a list of all classes (classname and package name) directly located in the package or a subpackage shall be returned (recursive!)
 * if the package is unknown or does not contain any classes return an empty list to the caller
 
-#### Story 7 (5 pts)
+##### Story 7 (5 pts)
 As a developer I want to add a new POJO to my model, without providing a Java-class in binary format.
 
 *acceptance criteria*
@@ -85,7 +152,7 @@ As a developer I want to add a new POJO to my model, without providing a Java-cl
 * the added POJO shall not have any attributes after the POJO was added to the model
 
 
-#### Story 8 (5 pts)
+##### Story 8 (5 pts)
 As a developer I want to add a new attribute to an existing POJO of my model.
 
 *acceptance criteria*
@@ -96,7 +163,7 @@ As a developer I want to add a new attribute to an existing POJO of my model.
 * if the attribute is already existing in the POJO, don't add it and return an appropriate error message
 
 
-#### Story 9 (5 pts)
+##### Story 9 (5 pts)
 As a developer I want to remove an existing attribute of a POJO.
 
 *acceptance criteria*
@@ -105,7 +172,7 @@ As a developer I want to remove an existing attribute of a POJO.
 * if class or attribute is not existing, return an appropriate error
 * if all provided input parameters are valid, remove the attribute from the POJO
 
-#### Story 9 (10 pts)
+##### Story 9 (10 pts)
 As a developer I want to get attributes and statistics for a single POJO.
 
 *acceptance criteria*
@@ -123,7 +190,7 @@ As a developer I want to get attributes and statistics for a single POJO.
 *  if the class/POJO couldn't be found - return an appropiate error to the caller
 
 
-#### Story 11 (10 pts)
+##### Story 11 (10 pts)
 As a developer I want to generate simple Java code for the POJO's stored in the database.
 
 *acceptance criteria*
@@ -133,7 +200,7 @@ As a developer I want to generate simple Java code for the POJO's stored in the 
 *  the generated could should be well formatted (e.g. good use of indentations (doesn't need to be perfect) and line breaks)
 *  no code is generated for empty hulls  
 
-#### Story 12 (5 pts)
+##### Story 12 (5 pts)
 As a developer I want to add a new attribute of type java.util.List to an existing POJO of my model. The generic type of the list is mandatory.
 
 e.g.: private java.util.List<String> attr;
@@ -147,7 +214,7 @@ e.g.: private java.util.List<String> attr;
 * if the attribute is already existing in the POJO, don't add it and return an appropriate error message
 * the generated code for these attributes contain the generic type information
 
-#### Story 13 (10 pts)
+##### Story 13 (10 pts)
 As a developer I want to be sure that my application is secured against bytecode exploits in classes / JAR-Files that are getting uploaded to the application.
 
 *acceptance criteria*
@@ -197,25 +264,20 @@ Keep the principles DRY, KISS, POLS and YAGNI in mind when you develop your appl
 
 **You must document the chosen architecture (package structure, layering, ...) and your submitted code must conform to the rule defined by this documentation**
 
-# REST-API
+### REST-API
 **You must provide a documentation for the REST-API of your submitted application, where all endpoints are listed, documented and explained. You may use Swagger-Annotations to fulfill this task.**
 
-# Configurations & Links
-### Links
-[Neo4j database download](https://neo4j.com/download-center/#releases)
 
-[Cypher Manual](https://neo4j.com/docs/cypher-manual/current/)
+## Authors
 
-[Spring Data and neo4j](https://spring.io/guides/gs/accessing-data-neo4j/)
+  - **Malte Petersen** - *Developer* -
+    [MaltePetersen](https://github.com/MaltePetersen)
 
-[Git cheat sheet](https://ndpsoftware.com/git-cheatsheet.html)
+## License
 
-[Consuming a REST service using Spring's RestTemplate (1)](https://howtodoinjava.com/spring-restful/spring-restful-client-resttemplate-example/)
+This project is licensed under the [Apache 2.0](LICENSE.md) license - see the [LICENSE.md](LICENSE.md) file for details
 
-[Consuming a REST service using Spring's RestTemplate (2)](https://www.baeldung.com/rest-template)
+## Acknowledgments
 
-[ASM bytecode analysis framework](https://asm.ow2.io/index.html)
-
-
-
-
+  - Johanna for some good tips recarding ASM
+  - Jan-Phillip for his Code Review

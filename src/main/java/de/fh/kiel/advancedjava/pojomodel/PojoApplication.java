@@ -9,7 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @OpenAPIDefinition(info = @Info(
-        title = "Pojo",
+        title = "pojoverse",
         version = "1.0",
         description = """
                This application is able to store, update, delete, visualize simple POJO's (Plain old Java objects).
@@ -17,7 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
                You can login into the db here: http://localhost:7474/browser/
                A user can interact with the system through this REST-APi.                                
                 """ ,
-        license = @License(name = "Apache 2.0", url = "https://github.com/MaltePetersen"),
+        license = @License(name = "Apache 2.0", url = "https://www.apache.org/licenses/LICENSE-2.0.html"),
         contact = @Contact(url = "https://github.com/MaltePetersen", name = "Malte Petersen", email = "malte.petersen11@gmail.com")
 ), externalDocs = @ExternalDocumentation(description = "Gitlab", url = "https://gitlab.iue.fh-kiel.de/advanced-java-2021/pojo-malte"))
 @SpringBootApplication
